@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{3C8A63EB-7A67-2820-4DE2-E4C13C39949E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{D47D6205-46FA-6A5E-7E84-0A60299A9B3B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BambooTrackerInterface", "BambooTrackerInterface\BambooTrackerInterface.vcxproj", "{ED9A51D0-7E51-41E2-B96D-E4EB5E136DAB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BambooTrackerInterface (Android)", "BambooTrackerInterface (Android)\BambooTrackerInterface (Android).vcxproj", "{13FBFEBF-8B66-4F07-8584-2212A2C11DAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3C8A63EB-7A67-2820-4DE2-E4C13C39949E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C8A63EB-7A67-2820-4DE2-E4C13C39949E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C8A63EB-7A67-2820-4DE2-E4C13C39949E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C8A63EB-7A67-2820-4DE2-E4C13C39949E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D47D6205-46FA-6A5E-7E84-0A60299A9B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D47D6205-46FA-6A5E-7E84-0A60299A9B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D47D6205-46FA-6A5E-7E84-0A60299A9B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D47D6205-46FA-6A5E-7E84-0A60299A9B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED9A51D0-7E51-41E2-B96D-E4EB5E136DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED9A51D0-7E51-41E2-B96D-E4EB5E136DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED9A51D0-7E51-41E2-B96D-E4EB5E136DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED9A51D0-7E51-41E2-B96D-E4EB5E136DAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13FBFEBF-8B66-4F07-8584-2212A2C11DAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13FBFEBF-8B66-4F07-8584-2212A2C11DAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13FBFEBF-8B66-4F07-8584-2212A2C11DAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13FBFEBF-8B66-4F07-8584-2212A2C11DAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,322 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Any CPU">
+      <Configuration>Debug</Configuration>
+      <Platform>Any CPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Any CPU">
+      <Configuration>Release</Configuration>
+      <Platform>Any CPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\abstract_instrument_property.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\BambooTrackerPlayer.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\binary_container.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\btm_io.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl_wrapper.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\chip.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\configuration.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\effect.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\effect_iterator.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\emu2149.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\envelope_fm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\fm.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\instrument.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\instruments_manager.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\io_utils.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\jamming.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\lfo_fm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\module.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\module_io.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\note.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna_controller.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\pattern.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\playback.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\precise_timer.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\resampler.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\sample_adpcm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\sequence_property.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\song.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\step.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\tick_counter.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\track.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\abstract_instrument_property.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\BambooTrackerPlayer.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\bamboo_tracker.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\bamboo_tracker_defs.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\binary_container.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\btm_io.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl_wrapper.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\chip.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\chip_def.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\configuration.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\echo_buffer.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\effect.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\effect_iterator.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\emu2149.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\emutypes.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\enum_hash.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\envelope_fm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\file_io_error.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\fm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instrument.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instruments_manager.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instrument_property_defs.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\io_file_type.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\io_utils.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\jamming.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\lfo_fm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\mamedef.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\module.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\module_io.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\note.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna_controller.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\pattern.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\playback.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\precise_timer.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\resampler.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sample_adpcm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\scci.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\SCCIDefines.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sequence_iterator_interface.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sequence_property.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\song.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\step.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\tick_counter.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\track.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\utils.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\version.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymb_codec.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{ed9a51d0-7e51-41e2-b96d-e4eb5e136dab}</ProjectGuid>
+    <RootNamespace>BambooTrackerInterface</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'">
+    <IncludePath>C:\Users\Max\Documents\Projects;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Max\Documents\Projects;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Any CPU'">Qt5Core.dll;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
