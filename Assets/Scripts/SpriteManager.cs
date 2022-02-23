@@ -73,6 +73,13 @@ namespace SplineTest
             Awake();
         }
 
+        public void ForceUpdate() //aaagh
+        {
+            spriteObject.transform.position = screenPos;
+            spriteObject.transform.localScale = spriteScale;
+            colliderObject.transform.position = physPos;
+        }
+
         void Update() //These positions are controlled from above
         {
             spriteObject.transform.position = screenPos;

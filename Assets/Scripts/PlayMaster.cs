@@ -99,6 +99,7 @@ namespace SplineTest
         float brakeAmount;
         float turnxspeed;
         float centrifugalForce;
+        float centrifugalBalance;
         float horizonHeight;
         float bg1TravelDist;
         float bg2TravelDist;
@@ -109,12 +110,24 @@ namespace SplineTest
         public float offRoadDragFactor;
         float currentDragFactor;
         float currentSplit;
+        float currentPitch;
         public float centrifugalFactor;
         public float bg1TravelFactor;
         public float bg2TravelFactor;
         float winScoreBonusPerSecondLeft;
         float stageStartDistance;
         float stageEndDistance;
+
+        public GameObject devPanelObject;
+        public Text dDistNum;
+        public Text dCheckNum;
+        public Text dXoffNum;
+        public Text dTimeNum;
+        public Text dTurnNum;
+        public Text dSplitNum;
+        public Text dPitchNum;
+        public Text dCentriNum;
+        bool isDevPanelUp;
         
         float[] mTurnStrList;
         float[] mTurnStrPoints;
@@ -409,6 +422,7 @@ namespace SplineTest
 
         public void SetUp(int songNum)
         {
+            isDevPanelUp = false;
             pInput.SwitchCurrentActionMap("Playtime");
             playerCollider.GetComponent<PlayerColliderControl>().master = this;
             playUIRoot.SetActive(true);
@@ -554,7 +568,6 @@ namespace SplineTest
         {
             while(staticSpriteManagers[staticSpriteFirstLoaded].trueDistance < distance - spriteUnloadBehindDistance)
             {
-
 				staticSpriteManagers[staticSpriteFirstLoaded].physPos = new Vector3(0f,0f,-2000f);
 				staticSpriteManagers[staticSpriteFirstLoaded].enabled = false;
                 staticSpriteFirstLoaded++;
@@ -867,6 +880,163 @@ namespace SplineTest
             }
         }
 
+        void SkipCheckPoint() //dev utility only
+        {
+            if(stageNum >= (uint)currentTrack.tTimeList.Length) distance = currentTrack.endDistance;
+            else distance = currentTrack.tTimeList[stageNum].distance;
+            distance -= 200f;
+            fspeed = 600f;
+            while(distance >= currentTrack.tTurnStrList[currentTurnStrPoint].distance)
+            {
+                currentTurnStrPoint++;
+                if(currentTurnStrPoint >= mTurnStrLen){currentTurnStrPoint = mTurnStrLen - 1; break;}
+            }
+            while(distance >= currentTrack.tSplitAmtList[currentSplitAmtPoint].distance)
+            { 
+                currentSplitAmtPoint++;
+                if(currentSplitAmtPoint >= mSplitAmtLen){currentSplitAmtPoint = mSplitAmtLen - 1; break;}
+            }
+            while(distance >= currentTrack.tPitchStrList[currentPitchStrPoint].distance)
+            {
+                currentPitchStrPoint++;
+                if(currentPitchStrPoint >= mPitchStrLen){currentPitchStrPoint = mPitchStrLen - 1; break;}
+            }
+            while(distance >= currentTrack.tSpriteList[currentSpritePoint].distance)
+            {
+                currentSpritePoint++;
+                if(currentSpritePoint >= mSpriteLen){currentSpritePoint = mSpriteLen - 1; break;}
+            }
+            while(distance >= currentTrack.tColourList[currentColourPoint].distance)
+            {
+                currentColourPoint++;
+                if(currentColourPoint >= mColourLen){currentColourPoint = mColourLen - 1; break;}
+            }
+            while(distance >= currentTrack.tBGList[currentBGPoint].distance)
+            {
+                currentBGPoint++;
+                if(currentBGPoint >= mBGLen){currentBGPoint = mBGLen - 1; break;}
+            }
+            
+            currentind = currentTurnStrPoint;
+            startind = currentind - roadParamsKeepBehind;
+            if(startind <= 0)
+            {
+                startind = 0;
+            }
+            finind = currentind + roadParamsLookAhead;
+            if(finind >= mTurnStrLen)
+            {
+                finind = mTurnStrLen - 1;
+            }
+            indlen = finind - startind + 1;
+            spline.turnStrList = new float[indlen+2];
+            spline.turnStrPoints = new float[indlen+2];
+            spline.turnStrList[0] = mTurnStrList[startind];
+            spline.turnStrPoints[0] = mTurnStrPoints[startind];
+            for(int i = 0; i <= indlen; i++)
+            {
+                if(i == indlen)
+                {
+                    spline.turnStrList[i+1] = mTurnStrList[i+startind-1];
+                    spline.turnStrPoints[i+1] = 999999999f;
+                }
+                else
+                {
+                    spline.turnStrList[i+1] = mTurnStrList[i+startind];
+                    spline.turnStrPoints[i+1] = mTurnStrPoints[i+startind];
+                }
+            }
+
+            currentind = currentSplitAmtPoint;
+            startind = currentind - roadParamsKeepBehind;
+            if(startind <= 0)
+            {
+                startind = 0;
+            }
+            finind = currentind + roadParamsLookAhead;
+            if(finind >= mSplitAmtLen)
+            {
+                finind = mSplitAmtLen - 1;
+            }
+            indlen = finind - startind + 1;
+            spline.splitAmtList = new float[indlen+2];
+            spline.splitAmtPoints = new float[indlen+2];
+            spline.splitAmtList[0] = mSplitAmtList[startind];
+            spline.splitAmtPoints[0] = mSplitAmtPoints[startind];
+            for(int i = 0; i <= indlen; i++)
+            {
+                if(i == indlen)
+                {
+                    spline.splitAmtList[i+1] = mSplitAmtList[i+startind-1];
+                    spline.splitAmtPoints[i+1] = 999999999f;
+                }
+                else
+                {
+                    spline.splitAmtList[i+1] = mSplitAmtList[i+startind];
+                    spline.splitAmtPoints[i+1] = mSplitAmtPoints[i+startind];
+                }
+            }
+
+            currentind = currentPitchStrPoint;
+            startind = currentind - roadParamsKeepBehind;
+            if(startind <= 0)
+            {
+                startind = 0;
+            }
+            finind = currentind + roadParamsLookAhead;
+            if(finind >= mPitchStrLen)
+            {
+                finind = mPitchStrLen - 1;
+            }
+            indlen = finind - startind + 1;
+            spline.pitchStrList = new float[indlen+2];
+            spline.pitchStrPoints = new float[indlen+2];
+            spline.pitchStrList[0] = mPitchStrList[startind];
+            spline.pitchStrPoints[0] = mPitchStrPoints[startind];
+            for(int i = 0; i <= indlen; i++)
+            {
+                if(i == indlen)
+                {
+                    spline.pitchStrList[i+1] = mPitchStrList[i+startind-1];
+                    spline.pitchStrPoints[i+1] = 999999999f;
+                }
+                else
+                {
+                    spline.pitchStrList[i+1] = mPitchStrList[i+startind];
+                    spline.pitchStrPoints[i+1] = mPitchStrPoints[i+startind];
+                }
+            }
+
+            for(int i = 0; i < staticMSSpawnInfos.Length; i++)
+            {
+                if(staticMSSpawnInfos[i] == null)
+                {
+                    continue;
+                }
+                else if(staticMSSpawnInfos[i].lastSpriteSpawnDistance < (distance - spriteUnloadBehindDistance))
+                {
+                    UnloadStaticSpriteGroup(i);
+                    continue;
+                }
+            }
+            for(int i = 0; i < staticSpriteManagers.Length; i++)
+            {
+                staticSpriteManagers[i].physPos = new Vector3(0f,0f,-2000f);
+                staticSpriteManagers[i].screenPos = new Vector3(0f, 0f, -2000f);
+                staticSpriteManagers[i].ForceUpdate();
+                staticSpriteManagers[i].enabled = false;
+            }
+            UpdateStaticSprites();
+            for(int i = 0; i < dynamicSpriteObjects.Length; i++)
+            {
+                if(dynamicSpriteIsLoaded[i] && (dynamicSpriteDistance[i] < (distance - spriteUnloadBehindDistance) || dynamicSpriteDistance[i] > (distance + spriteDrawDistance)))
+                {
+                    UnloadDynamicSprite(i);
+                }
+            }
+            nextDynamicSpriteSpawnDist = distance + 1000f;
+        }
+
         void Update()
         {
             if(stageNum >= (uint)currentTrack.tTimeList.Length)
@@ -974,7 +1144,7 @@ namespace SplineTest
                     countdownText.text = ((int)countdownTime).ToString();
                     break;
                 case 1: //During play
-                    time -= Time.deltaTime;
+                    if(runTimer) time -= Time.deltaTime;
                     if (((time >= 0f) || !runTimer))
                     {
 #if UNITY_EDITOR
@@ -1008,7 +1178,9 @@ namespace SplineTest
                     xspeed = steerTSlider.value * turnPower;
 #endif
                     centrifugalForce = -centrifugalFactor * fspeed * fspeed * turnxspeed;
-                    xoffs += xspeed * Time.deltaTime + centrifugalForce * Time.deltaTime;
+                    centrifugalBalance = xspeed * Time.deltaTime + centrifugalForce * Time.deltaTime;
+                    xoffs += centrifugalBalance;
+                    centrifugalBalance *= (xspeed < 0.0f)?-1.0f:1.0f;
                     score += Mathf.Pow(fspeed, 1.4f) * edgeGrazeMultiplier * Time.deltaTime;
                     distance += fspeed * Time.deltaTime;
                     fspeed -= Time.deltaTime * currentDragFactor * fspeed * fspeed * (fspeed > 0 ? 1 : -1);
@@ -1379,8 +1551,56 @@ namespace SplineTest
                     }
                 }
             }
+            if(distance >= mBGPoints[mBGLen - 1])
+            {
+                colourInterp[0] = mBGList[mBGLen - 1].spriteColour;
+                bg1sprrend.sprite = mBGList[mBGLen - 1].bg1Sprite;
+                bg2sprrend.sprite = mBGList[mBGLen - 1].bg2Sprite;
+                bg1sprrend.color = colourInterp[0];
+                bg2sprrend.color = colourInterp[0];
+            }
+            if(distance >= mColourPoints[mColourLen - 1])
+            {
+                for(int i = 0; i < 256; i++)
+                {
+                    if(i >= mColourList[mColourLen - 1].Length)
+                    {
+                        continue;
+                    }
+                    colourInterp[i] = mColourList[mColourLen - 1][i];
+                }
+            }
             paletteMat.SetPalette(colourInterp);
             skyPal.SetPalette(colourInterp);
+            if(Keyboard.current.backquoteKey.wasPressedThisFrame)
+            {
+                isDevPanelUp = !isDevPanelUp;
+                if(isDevPanelUp) devPanelObject.SetActive(true);
+                else if(!isDevPanelUp) devPanelObject.SetActive(false);
+            }
+            if(isDevPanelUp)
+            {
+                dDistNum.text = distance.ToString("0");
+                if(stageNum >= (uint)currentTrack.tTimeList.Length) dCheckNum.text = currentTrack.endDistance.ToString("0");
+                else dCheckNum.text = currentTrack.tTimeList[stageNum].distance.ToString("0");
+                dXoffNum.text = xoffs.ToString("0.00");
+                dTimeNum.text = time.ToString("0.00");
+                dTurnNum.text = turnxspeed.ToString("0.00000");
+                dSplitNum.text = currentSplit.ToString("0.00");
+                if(currentPitchStrPoint <= 0)
+                {
+                    currentPitch = Mathf.Lerp(mPitchStrList[0], mPitchStrList[1], (distance-mPitchStrPoints[0])/(mPitchStrPoints[1]-mPitchStrPoints[0]));
+                }
+                else
+                {
+                    currentPitch = Mathf.Lerp(mPitchStrList[currentPitchStrPoint-1], mPitchStrList[currentPitchStrPoint], (distance-mPitchStrPoints[currentPitchStrPoint-1])/(mPitchStrPoints[currentPitchStrPoint]-mPitchStrPoints[currentPitchStrPoint-1]));
+                }
+                dPitchNum.text = currentPitch.ToString("0.00000");
+                dCentriNum.text = centrifugalBalance.ToString("0.00");
+                if(Keyboard.current.tKey.wasPressedThisFrame) runTimer = !runTimer;
+                if(Keyboard.current.cKey.wasPressedThisFrame) SkipCheckPoint();
+                if(Keyboard.current.rKey.wasPressedThisFrame) Reset();
+            }
         }
     }
 }
