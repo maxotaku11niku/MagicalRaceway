@@ -56,6 +56,7 @@ namespace SplineTest
     {
         public enum SpawnSide { RIGHT, LEFT, BOTH }
         public Sprite sprite;
+        public StaticSpriteDef spriteDef;
         public SpawnSide side;
         public int numSpr;
         public float separation;

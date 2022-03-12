@@ -423,12 +423,14 @@ namespace SplineTest
         public void SetUp(int songNum)
         {
             isDevPanelUp = false;
+            devPanelObject.SetActive(false);
             pInput.SwitchCurrentActionMap("Playtime");
             playerCollider.GetComponent<PlayerColliderControl>().master = this;
             playUIRoot.SetActive(true);
             HUDObject.SetActive(true);
             steerTSlider.ForceBoundsUpdate();
             gm.BTMSource.PlaySong(songNum);
+            runTimer = true;
             Reset();
             SetUpSky();
         }
