@@ -480,6 +480,7 @@ namespace SplineTest
             MultiSprite.SpawnSide currentSpawnSide = (sidefactor == 2) ? MultiSprite.SpawnSide.RIGHT : thisSpr.side;
             float realDist = -1000f;
             float realXOff = 1000f;
+            Vector3 collisionBounds;
             for(int i = 0; i < sidefactor; i++)
             {
                 if (sidefactor == 2) currentSpawnSide = (MultiSprite.SpawnSide)((i+1) % 2);
@@ -488,12 +489,13 @@ namespace SplineTest
 				sprobj = staticSpriteObjects[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage = staticSpriteManagers[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage.enabled = true;
-                sprmanage.physPos = new Vector3(realXOff, thisSpr.collisionBounds.y / 2f, realDist - distance);
-                sprmanage.spriteRenderer.sprite = thisSpr.sprite;
+                collisionBounds = thisSpr.spriteDef.GetRealCollisionBounds(thisSpr.baseScale);
+                sprmanage.physPos = new Vector3(realXOff, collisionBounds.y / 2f, realDist - distance);
+                sprmanage.spriteRenderer.sprite = thisSpr.spriteDef.sprite;
                 sprmanage.spriteRenderer.flipX = (sidefactor == 2) ? (thisSpr.flip ^ (thisSpr.flipOnOtherSide && ((i % 2) == 1))) : thisSpr.flip;
                 sprmanage.screenPos = spline.GetScreenPos(realDist, realXOff, thisSpr.yOffset);
                 sprmanage.spriteScale = Vector3.one * spline.GetScale(realDist) / thisSpr.baseScale;
-                sprmanage.collisionBox.size = thisSpr.collisionBounds;
+                sprmanage.collisionBox.size = collisionBounds;
                 sprmanage.spriteType = SpriteManager.SpriteType.STATIC;
                 sprmanage.canCollide = thisSpr.canCollide;
                 sprmanage.trueDistance = d;
@@ -522,6 +524,7 @@ namespace SplineTest
             MultiSprite.SpawnSide currentSpawnSide = (sidefactor == 2) ? MultiSprite.SpawnSide.RIGHT : thisSpr.side;
             float realDist = -1000f;
             float realXOff = 1000f;
+            Vector3 collisionBounds;
             for (int i = 0; i < sidefactor; i++)
             {
                 if (sidefactor == 2) currentSpawnSide = (MultiSprite.SpawnSide)((i+1) % 2);
@@ -530,12 +533,13 @@ namespace SplineTest
 				sprobj = staticSpriteObjects[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage = staticSpriteManagers[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage.enabled = true;
-                sprmanage.physPos = new Vector3(realXOff, thisSpr.collisionBounds.y / 2f, realDist - distance);
-                sprmanage.spriteRenderer.sprite = thisSpr.sprite;
+                collisionBounds = thisSpr.spriteDef.GetRealCollisionBounds(thisSpr.baseScale);
+                sprmanage.physPos = new Vector3(realXOff, collisionBounds.y / 2f, realDist - distance);
+                sprmanage.spriteRenderer.sprite = thisSpr.spriteDef.sprite;
                 sprmanage.spriteRenderer.flipX = (sidefactor == 2) ? (thisSpr.flip ^ (thisSpr.flipOnOtherSide && ((i % 2) == 1))) : thisSpr.flip;
                 sprmanage.screenPos = spline.GetScreenPos(realDist, realXOff, thisSpr.yOffset);
                 sprmanage.spriteScale = Vector3.one * spline.GetScale(realDist) / thisSpr.baseScale;
-                sprmanage.collisionBox.size = thisSpr.collisionBounds;
+                sprmanage.collisionBox.size = collisionBounds;
                 sprmanage.spriteType = SpriteManager.SpriteType.STATIC;
                 sprmanage.canCollide = thisSpr.canCollide;
                 sprmanage.trueDistance = d;

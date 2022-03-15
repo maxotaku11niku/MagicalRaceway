@@ -143,25 +143,31 @@ namespace SplineTest
             float scale = GetScale(dist);
             float relDist = dist - yOffset;
             float interpAmt = 0f;
+            float x, y, z;
             int stopind = 0;
-            for(int i = baseSplineHeight; i >= 0; i--)
+            if(relDist <= 0)
             {
-                if(relDist >= vcoordList[i])
-                {
-                    if(i == baseSplineHeight) return new Vector3(0f, 0f, -2000f);
-                    stopind = i;
-                    interpAmt = (relDist - vcoordList[i])/dyList[i+1];
-                    break;
-                }
-                else if(i == 0)
-                {
-                    return new Vector3(0f, 0f, -2000f);
-                }
+                x = ((xoff - xOffset - (ubendList[0] + relDist*((ubendList[1]-ubendList[0])/dyList[1])))*scale) + 160f;
+                y = (relDist + yoff + (vbendList[0] + relDist*((vbendList[1]-vbendList[0])/dyList[1])))*scale;
+                z = baseSplineHeight*(bottomScale - scale)/(bottomScale - topScale);
             }
-            float x = ((xoff - xOffset - (Mathf.Lerp(ubendList[stopind], ubendList[stopind+1], interpAmt)))*scale) + 160f;
-            float y = (relDist + yoff + (Mathf.Lerp(vbendList[stopind], vbendList[stopind+1], interpAmt)))*scale;
-            float z = baseSplineHeight*(bottomScale - scale)/(bottomScale - topScale);
-            if(Single.IsNaN(x) || Single.IsNaN(y) || (z < -32f)) //Clipping, sends sprites that shouldn't be seen to a place that cannot be seen
+            else
+            {
+                for(int i = baseSplineHeight; i >= 0; i--)
+                {
+                    if(relDist >= vcoordList[i])
+                    {
+                        if(i == baseSplineHeight) return new Vector3(0f, 0f, -2000f);
+                        stopind = i;
+                        interpAmt = (relDist - vcoordList[i])/dyList[i+1];
+                        break;
+                    }
+                }
+                x = ((xoff - xOffset - (Mathf.Lerp(ubendList[stopind], ubendList[stopind+1], interpAmt)))*scale) + 160f;
+                y = (relDist + yoff + (Mathf.Lerp(vbendList[stopind], vbendList[stopind+1], interpAmt)))*scale;
+                z = baseSplineHeight*(bottomScale - scale)/(bottomScale - topScale);
+            }
+            if(Single.IsNaN(x) || Single.IsNaN(y) || (z < -64f)) //Clipping, sends sprites that shouldn't be seen to a place that cannot be seen
             {
                 return new Vector3(0f, 0f, -2000f);
             }

@@ -230,6 +230,7 @@ public class TrackPreviewer : EditorWindow
         float realXOff;
         MultiSprite thisSpr;
         float d;
+        Vector3 collisionBounds;
         for (int i = 0; i < track.tSpriteList.Length; i++)
         {
             if (!((track.tSpriteList[i].distance + track.tSpriteList[i].val.separation * track.tSpriteList[i].val.numSpr) < (distance - playMaster.spriteUnloadBehindDistance)) && (distance + playMaster.spriteDrawDistance) >= track.tSpriteList[i].distance)
@@ -248,12 +249,13 @@ public class TrackPreviewer : EditorWindow
                     sprobj = Instantiate<GameObject>(playMaster.spritePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity, playMaster.gameObject.transform);
                     sprmanage = sprobj.GetComponent<SpriteManager>();
                     sprmanage.EditorPreviewInit();
-                    sprmanage.physPos = new Vector3(realXOff, thisSpr.collisionBounds.y / 2f, realDist - distance);
-                    sprmanage.spriteRenderer.sprite = thisSpr.sprite;
+                    collisionBounds = thisSpr.spriteDef.GetRealCollisionBounds(thisSpr.baseScale);
+                    sprmanage.physPos = new Vector3(realXOff, collisionBounds.y / 2f, realDist - distance);
+                    sprmanage.spriteRenderer.sprite = thisSpr.spriteDef.sprite;
                     sprmanage.spriteRenderer.flipX = (sidefactor == 2) ? (thisSpr.flip ^ (thisSpr.flipOnOtherSide && ((j % 2) == 1))) : thisSpr.flip;
                     sprmanage.screenPos = playMaster.spline.GetScreenPos(realDist, realXOff, thisSpr.yOffset);
                     sprmanage.spriteScale = Vector3.one * playMaster.spline.GetScale(realDist) / thisSpr.baseScale;
-                    sprmanage.collisionBox.size = thisSpr.collisionBounds;
+                    sprmanage.collisionBox.size = collisionBounds;
                     sprmanage.spriteType = SpriteManager.SpriteType.STATIC;
                     sprmanage.canCollide = thisSpr.canCollide;
                     sprmanage.trueDistance = d;

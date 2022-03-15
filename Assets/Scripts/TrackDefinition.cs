@@ -55,7 +55,6 @@ namespace SplineTest
     public class MultiSprite
     {
         public enum SpawnSide { RIGHT, LEFT, BOTH }
-        public Sprite sprite;
         public StaticSpriteDef spriteDef;
         public SpawnSide side;
         public int numSpr;
@@ -65,7 +64,6 @@ namespace SplineTest
         public float baseScale;
         public bool flip;
         public bool flipOnOtherSide;
-        public Vector3 collisionBounds;
         public bool canCollide;
     }
 
