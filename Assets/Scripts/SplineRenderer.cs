@@ -229,6 +229,7 @@ namespace SplineTest
             splineTexInvWidth = 1/((float)splineTexWidth);
             splineMesh = new Mesh();
             meshFilter.mesh = splineMesh;
+            Vector2[] calcUV;
             vertexArray = new Vector3[baseSplineHeight*4 + 4];
             uvArray = new Vector2[baseSplineHeight*4 + 4];
             triangleArray = new int[baseSplineHeight*12];
@@ -256,7 +257,7 @@ namespace SplineTest
                 vertexArray[i*4 + 1] = new Vector3(((float)baseSplineWidth)/2,i,i);
                 vertexArray[i*4 + 2] = new Vector3(((float)baseSplineWidth)/2,i,i);
                 vertexArray[i*4 + 3] = new Vector3((float)baseSplineWidth,i,i);
-                Vector2[] calcUV = CalculateUV(i);
+                calcUV = CalculateUV(i);
                 uvArray[i*4] = calcUV[1];
                 uvArray[i*4 + 1] = calcUV[2];
                 uvArray[i*4 + 2] = calcUV[3];
@@ -277,13 +278,17 @@ namespace SplineTest
                 triangleArray[i*12 +10] = i*4 + 3;
                 triangleArray[i*12 +11] = i*4 + 6;
             }
+            splineMesh.vertices = vertexArray; //Reassign arrays to update changes
+            splineMesh.uv = uvArray;
+            splineMesh.triangles = triangleArray;
         }
 
         void Update()
         {
+            Vector2[] calcUV;
             for(int i = 0; i < baseSplineHeight+1; i++)
             {
-                Vector2[] calcUV = CalculateUV(i);
+                calcUV = CalculateUV(i);
                 vertexArray[i*4] = new Vector3(0f,calcUV[0].y,i); //That's what the first bit of the UV array output was for
                 vertexArray[i*4 + 1] = new Vector3(calcUV[0].x,calcUV[0].y,i);
                 vertexArray[i*4 + 2] = new Vector3(calcUV[0].x,calcUV[0].y,i);
@@ -295,7 +300,6 @@ namespace SplineTest
             }
             splineMesh.vertices = vertexArray; //Reassign arrays to update changes
             splineMesh.uv = uvArray;
-            splineMesh.triangles = triangleArray;
         }
     }
 }
