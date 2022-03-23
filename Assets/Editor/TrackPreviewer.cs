@@ -11,6 +11,7 @@ public class TrackPreviewer : EditorWindow
     public float distance;
     public float xoffs;
     List<GameObject> spawnedSprites = new List<GameObject>(); //Even though a list is slower, it can expand dynamically, and speed is not important here
+    List<GameObject> spawnedStrips = new List<GameObject>();
     int spriteCounter;
 
     [MenuItem("Window/Utilities/Preview Track")]
@@ -44,6 +45,10 @@ public class TrackPreviewer : EditorWindow
         playMaster.paletteMat.EditorPreviewInit();
         playMaster.skyPal.EditorPreviewInit();
         foreach (GameObject s in spawnedSprites)
+        {
+            GameObject.DestroyImmediate(s);
+        }
+        foreach(GameObject s in spawnedStrips)
         {
             GameObject.DestroyImmediate(s);
         }
@@ -271,6 +276,33 @@ public class TrackPreviewer : EditorWindow
                 }
             }
         }
+        for(int i = 0; i < track.tStripList.Length; i++)
+        {
+            if(((distance + playMaster.spriteDrawDistance) >= track.tStripList[i].distance) && (distance < (track.tStripList[i].distance + track.tStripList[i].val.size.y + playMaster.spriteUnloadBehindDistance)))
+            {
+                TexturedStrip strip = track.tStripList[i].val;
+                d = track.tStripList[i].distance;
+                sidefactor = (strip.side == TexturedStrip.SpawnSide.BOTH) ? 2 : 1;
+                TexturedStrip.SpawnSide currentTSpawnSide = (sidefactor == 2) ? TexturedStrip.SpawnSide.RIGHT : strip.side;
+                for (int j = 0; j < sidefactor; j++)
+                {
+                    if (sidefactor == 2) currentTSpawnSide = (TexturedStrip.SpawnSide)((j+1) % 2);
+                    GameObject stripObj = Instantiate<GameObject>(playMaster.stripPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity, playMaster.gameObject.transform);
+                    TexturedStripManager stripManager = stripObj.GetComponent<TexturedStripManager>();
+                    stripManager.enabled = true;
+                    stripManager.spline = playMaster.spline;
+                    stripManager.InitStrip();
+                    stripManager.tex = strip.texture;
+                    stripManager.anchorSide = currentTSpawnSide;
+                    stripManager.size = strip.size;
+                    stripManager.baseDistance = d;
+                    stripManager.xoffsList = strip.xOffsetList;
+                    stripManager.ReassignTexture();
+                    stripManager.PositionStrip(distance, xoffs);
+                    spawnedStrips.Add(stripObj);
+                }
+            }
+        }
     }
 
     private void DeletePreview() //Clean up is immensely important since previewing spawns a lot of new GameObjects in *project* space, so if they *aren't* cleaned up then you would have to manually delete them. Fun.
@@ -283,6 +315,10 @@ public class TrackPreviewer : EditorWindow
         playMaster.background2.transform.position = new Vector3(0f, 0f, 100.01f);
 		playMaster.gameObject.SetActive(false);
         foreach(GameObject s in spawnedSprites)
+        {
+            GameObject.DestroyImmediate(s);
+        }
+        foreach(GameObject s in spawnedStrips)
         {
             GameObject.DestroyImmediate(s);
         }

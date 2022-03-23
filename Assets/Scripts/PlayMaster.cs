@@ -23,6 +23,7 @@ namespace SplineTest
         public Animator playerAnimator;
         public GameObject skyObj;
         public GameObject spritePrefab;
+        public GameObject stripPrefab;
         public GameObject background1;
         public GameObject background2;
         public GameObject playerCollider;
@@ -144,6 +145,9 @@ namespace SplineTest
         MultiSprite[] mSpriteList;
         float[] mSpritePoints;
         int mSpriteLen;
+        TexturedStrip[] mStripList;
+        float[] mStripPoints;
+        int mStripLen;
         BackgroundSpriteDefinition[] mBGList;
         float[] mBGPoints;
         int mBGLen;
@@ -152,6 +156,7 @@ namespace SplineTest
 		int currentPitchStrPoint;
 		int currentColourPoint;
 		int currentSpritePoint;
+        int currentStripPoint;
 		int currentBGPoint;
         int startind;
         int currentind;
@@ -176,6 +181,11 @@ namespace SplineTest
         int staticSpriteNumberLoaded;
         int dynamicSpriteCounter;
         float nextDynamicSpriteSpawnDist;
+        GameObject[] texStripObjects = new GameObject[8];
+        TexturedStripManager[] texStripManagers = new TexturedStripManager[8];
+        int texStripLoadNum;
+        int texStripUnloadNum;
+        int texStripCounter;
         uint stageNum;
         int playUIState;
         float countdownTime;
@@ -204,6 +214,8 @@ namespace SplineTest
             mColourPoints = new float[128];
             mSpriteList = new MultiSprite[1024];
             mSpritePoints = new float[1024];
+            mStripList = new TexturedStrip[128];
+            mStripPoints = new float[128];
             mBGList = new BackgroundSpriteDefinition[128];
             mBGPoints = new float[128];
             mTurnStrLen = currentTrack.tTurnStrList.Length;
@@ -211,6 +223,7 @@ namespace SplineTest
             mPitchStrLen = currentTrack.tPitchStrList.Length;
             mColourLen = currentTrack.tColourList.Length;
             mSpriteLen = currentTrack.tSpriteList.Length;
+            mStripLen = currentTrack.tStripList.Length;
             mBGLen = currentTrack.tBGList.Length;
             for(int i = 0; i < currentTrack.tTurnStrList.Length; i++)
             {
@@ -236,6 +249,11 @@ namespace SplineTest
             {
                 mSpriteList[i] = currentTrack.tSpriteList[i].val;
                 mSpritePoints[i] = currentTrack.tSpriteList[i].distance;
+            }
+            for(int i = 0; i < currentTrack.tStripList.Length; i++)
+            {
+                mStripList[i] = currentTrack.tStripList[i].val;
+                mStripPoints[i] = currentTrack.tStripList[i].distance;
             }
             for(int i = 0; i < currentTrack.tBGList.Length; i++)
             {
@@ -372,6 +390,13 @@ namespace SplineTest
                     GameObject.Destroy(gs);
                 }
             }
+            foreach(GameObject gs in texStripObjects)
+            {
+                if(gs != null)
+                {
+                    GameObject.Destroy(gs);
+                }
+            }
             staticSpriteObjects = new GameObject[1024];
             staticSpriteManagers = new SpriteManager[1024];
             dynamicSpriteObjects = new GameObject[128];
@@ -383,17 +408,23 @@ namespace SplineTest
             dynamicSpriteDistance = new float[128];
             dynamicSpriteXOff = new float[128];
             dynamicSpriteSide = new MultiSprite.SpawnSide[128];
+            texStripObjects = new GameObject[8];
+            texStripManagers = new TexturedStripManager[8];
             staticSpriteLoadNum = 0;
             staticSpriteUnloadNum = 0;
             staticSpriteCounter = 0;
             staticSpriteFirstLoaded = 0;
             staticSpriteNumberLoaded = 0;
             dynamicSpriteCounter = 0;
+            texStripLoadNum = 0;
+            texStripUnloadNum = 0;
+            texStripCounter = 0;
 			currentTurnStrPoint = 0;
 			currentSplitAmtPoint = 0;
 			currentPitchStrPoint = 0;
 			currentColourPoint = 0;
 			currentSpritePoint = 0;
+            currentStripPoint = 0;
 			currentBGPoint = 0;
             nextDynamicSpriteSpawnDist = 1500f;
 			for(int i = 0; i < staticSpriteObjects.Length; i++)
@@ -409,6 +440,14 @@ namespace SplineTest
 					LoadNewStaticSpriteGroup(i);
 					currentSpritePoint++;
                 }
+            }
+            for(int i = 0; i < texStripObjects.Length; i++)
+            {
+                texStripObjects[i] = Instantiate<GameObject>(stripPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity, this.gameObject.transform);
+                texStripManagers[i] = texStripObjects[i].GetComponent<TexturedStripManager>();
+                texStripManagers[i].spline = spline;
+                texStripManagers[i].InitStrip();
+                texStripManagers[i].enabled = false;
             }
             playerSounds.Play(0, true);
             stageStartDistance = 0f;
@@ -661,6 +700,41 @@ namespace SplineTest
         {
             GameObject.Destroy(dynamicSpriteObjects[sprNumber]);
             dynamicSpriteIsLoaded[sprNumber] = false;
+        }
+
+        void LoadTexturedStrip(int stripNum)
+        {
+            TexturedStrip strip = mStripList[stripNum];
+            float d = mStripPoints[stripNum];
+            int sidefactor = (strip.side == TexturedStrip.SpawnSide.BOTH) ? 2 : 1;
+            TexturedStrip.SpawnSide currentSpawnSide = (sidefactor == 2) ? TexturedStrip.SpawnSide.RIGHT : strip.side;
+            for (int i = 0; i < sidefactor; i++)
+            {
+                if (sidefactor == 2) currentSpawnSide = (TexturedStrip.SpawnSide)((i+1) % 2);
+                TexturedStripManager stripManager = texStripManagers[(texStripCounter + i) % texStripManagers.Length];
+                stripManager.enabled = true;
+                stripManager.tex = strip.texture;
+                stripManager.anchorSide = currentSpawnSide;
+                stripManager.size = strip.size;
+                stripManager.baseDistance = d;
+                stripManager.xoffsList = strip.xOffsetList;
+                stripManager.ReassignTexture();
+            }
+            texStripCounter += sidefactor;
+        }
+
+        void UpdateTexturedStrips()
+        {
+            for(int i = 0; i < texStripManagers.Length; i++)
+            {
+                if(!texStripManagers[i].enabled) continue;
+                texStripManagers[i].PositionStrip(distance, xoffs);
+            }
+        }
+
+        void UnloadNextTexturedStrip(int stripNum)
+        {
+            texStripManagers[stripNum % texStripManagers.Length].enabled = false;
         }
 
         public void EnterChar(int charnum)
@@ -1530,6 +1604,23 @@ namespace SplineTest
                 nextDynamicSpriteSpawnDist = distance + spriteDrawDistance;
             }
             float distanceFactor;
+            if(currentStripPoint >= mStripLen)
+			{
+				
+			}
+			else if((distance + spriteDrawDistance) >= mStripPoints[currentStripPoint])
+			{
+				LoadTexturedStrip(currentStripPoint);
+                currentStripPoint++;
+			}
+            for(int i = 0; i < texStripManagers.Length; i++)
+            {
+                if(distance > (texStripManagers[i].baseDistance + texStripManagers[i].size.y + spriteUnloadBehindDistance))
+                {
+                    UnloadNextTexturedStrip(i);
+                }
+            }
+            UpdateTexturedStrips();
             for(int i = 1; i < mBGLen; i++)
             {
                 if(distance >= mBGPoints[i-1] && distance < mBGPoints[i])

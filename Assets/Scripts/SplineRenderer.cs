@@ -145,13 +145,13 @@ namespace SplineTest
             float interpAmt = 0f;
             float x, y, z;
             int stopind = 0;
-            if(relDist <= 0)
+            if(relDist <= 0) //Linearly extrapolate beyond the spline
             {
                 x = ((xoff - xOffset - (ubendList[0] + relDist*((ubendList[1]-ubendList[0])/dyList[1])))*scale) + 160f;
                 y = (relDist + yoff + (vbendList[0] + relDist*((vbendList[1]-vbendList[0])/dyList[1])))*scale;
                 z = baseSplineHeight*(bottomScale - scale)/(bottomScale - topScale);
             }
-            else
+            else //Linearly interpolate within the spline
             {
                 for(int i = baseSplineHeight; i >= 0; i--)
                 {
@@ -172,6 +172,11 @@ namespace SplineTest
                 return new Vector3(0f, 0f, -2000f);
             }
             return new Vector3(x, y, z);
+        }
+
+        public float GetDistanceOffset(int row)
+        {
+            return vcoordList[row];
         }
 
         public float GetScale(float dist) //Used for sprites, gets scale based on distance and x-offset
@@ -203,6 +208,36 @@ namespace SplineTest
                 default:
                     return 0f;
             }
+        }
+
+        public float GetRealXOffTex(float xoff, float yoff, TexturedStrip.SpawnSide s) //Get the x-offset of a vertex of a texture suitable for the spline
+        {
+            float splitComp = 64f;
+            for(int i = 1; i < splitAmtPoints.Length; i++)
+            {
+                if(yoff >= splitAmtPoints[i-1] && yoff < splitAmtPoints[i])
+                {
+                    splitComp = Mathf.Lerp(splitAmtList[i-1], splitAmtList[i], (yoff-splitAmtPoints[i-1])/(splitAmtPoints[i]-splitAmtPoints[i-1])) + 64f;
+                }
+            }
+            switch(s)
+            {
+                case TexturedStrip.SpawnSide.LEFT:
+                    return - xoff - splitComp;
+                case TexturedStrip.SpawnSide.RIGHT:
+                    return xoff + splitComp;
+                default:
+                    return 0f;
+            }
+        }
+
+        public Vector2 GetStripVector(float yoffs, float xoffs, int zpoint)
+        {
+            float scale = GetScale(yoffs);
+            float relDist = yoffs - yOffset;
+            float vecx = ((xoffs - xOffset - ubendList[zpoint])*scale) + 160f;
+            float vecy = ((relDist + vbendList[zpoint])*scale) + 0.01f;
+            return new Vector2(vecx, vecy);
         }
 
         public void EditorPreviewInit() //EDITOR ONLY

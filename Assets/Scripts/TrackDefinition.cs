@@ -45,6 +45,13 @@ namespace SplineTest
     }
 
     [Serializable]
+    public class TexturedStripWithDistance
+    {
+        public TexturedStrip val;
+        public float distance;
+    }
+
+    [Serializable]
     public class BGSpriteDefWithDistance
     {
         public BackgroundSpriteDefinition val;
@@ -65,6 +72,16 @@ namespace SplineTest
         public bool flip;
         public bool flipOnOtherSide;
         public bool canCollide;
+    }
+
+    [Serializable]
+    public class TexturedStrip
+    {
+        public enum SpawnSide { RIGHT, LEFT, BOTH }
+        public Texture2D texture;
+        public SpawnSide side;
+        public Vector2 size;
+        public FloatWithDistance[] xOffsetList;
     }
 
     [Serializable]
@@ -90,6 +107,7 @@ namespace SplineTest
         public FloatWithDistance[] tPitchStrList;
         public ColourListWithDistance[] tColourList;
         public MultiSpriteWithDistance[] tSpriteList;
+        public TexturedStripWithDistance[] tStripList;
         public BGSpriteDefWithDistance[] tBGList;
         public FloatWithDistance[] tTimeList;
     }

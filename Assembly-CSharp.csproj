@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\ControlChangeEntry.cs" />
     <Compile Include="Assets\Scripts\PalettisedMaterialHandler.cs" />
     <Compile Include="Assets\BambooTrackerInterface\BambooTrackerModule.cs" />
+    <Compile Include="Assets\Scripts\StaticSpriteDef.cs" />
     <Compile Include="Assets\Scripts\TitleAnimation.cs" />
     <Compile Include="Assets\Scripts\SmoothingProcessor.cs" />
     <Compile Include="Assets\Scripts\MusicRoom.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="Assets\Scripts\TouchSlider.cs" />
     <Compile Include="Assets\Scripts\TouchControl.cs" />
     <Compile Include="Assets\Scripts\HighScoreScreen.cs" />
-    <Compile Include="Assets\Scripts\StaticSpriteDef.cs" />
+    <Compile Include="Assets\Scripts\TexturedStripManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\Palettised.shader" />
