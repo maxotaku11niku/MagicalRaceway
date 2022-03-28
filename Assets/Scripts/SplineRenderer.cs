@@ -236,7 +236,7 @@ namespace SplineTest
             float scale = GetScale(yoffs);
             float relDist = yoffs - yOffset;
             float vecx = ((xoffs - xOffset - ubendList[zpoint])*scale) + 160f;
-            float vecy = ((relDist + vbendList[zpoint])*scale) + 0.01f;
+            float vecy = ((relDist + vbendList[zpoint])*scale) + 0.05f;
             return new Vector2(vecx, vecy);
         }
 

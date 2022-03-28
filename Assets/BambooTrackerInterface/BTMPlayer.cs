@@ -40,10 +40,6 @@ public class BTMPlayer : MonoBehaviour
     AudioClip audioBuffer;
     AudioSource audioOut;
     float[] backData; //Put the sample data we get from the emulator here before transfer to the buffer
-    int swapNum;
-    float[] backData1;
-    float[] backData2;
-    bool writeToBuffer;
     float swapTime;
     float countTime;
 	public bool hasStoppedSong;
@@ -56,26 +52,15 @@ public class BTMPlayer : MonoBehaviour
     readonly int buffersize = 5546;
     //readonly int buffersize = 2048;
     readonly int samplerate = 55466; //Weird, I know
-    readonly int samplesPerPart = 924;
     readonly int[] samplereq = new int[] { 924, 925, 924, 925, 924,
                                            925, 924, 924, 925, 924,
                                            925, 924, 925, 924, 924,
                                            925, 924, 925, 924, 925,
                                            924, 924, 925, 924, 925,
                                            924, 925, 924, 924, 925 }; //55466/60 is not an integer
-    readonly int[] sampleoffs = new int[] { 0,     924,   1849,  2773,  3698,
-                                            4622,  5547,  6471,  7395,  8320,
-                                            9244,  10169, 11093, 12018, 12942,
-                                            13866, 14791, 15715, 16640, 17564,
-                                            18489, 19413, 20337, 21262, 22186,
-                                            23111, 24035, 24960, 25884, 26808 };
-    bool initDone;
-    bool doSwap;
-
 
     void Awake()
     {
-        initDone = false;
         swapTime = 1f/60f; //Synced with the emulation tick frequency
         isBTMPluginLoaded = true;
 		hasStoppedSong = false;
@@ -91,30 +76,18 @@ public class BTMPlayer : MonoBehaviour
         }
         numSongs = GetNumberOfSongsInCurrentModule();
         audioBuffer = AudioClip.Create("audioBuffer", buffersize, 2, samplerate, false);
-        //audioBuffer = AudioClip.Create("audioBuffer", buffersize, 2, samplerate, true, null, FlagForSwap);
         audioOut = GetComponent<AudioSource>();
         audioOut.clip = audioBuffer;
         audioOut.Play();
-        /*/
-        backData1 = new float[buffersize*2];
-        backData2 = new float[buffersize*2];
-        swapNum = 0;
-        part = 0;
-        writeToBuffer = true;
-        writePos = 0;
-        //*/
-        /**/
         backData = new float[1850];
         countTime = 0.05f;
         part = 0;
         writePos = buffersize/2; //Start writing in the middle
-        //*/
-        initDone = true;
+        InvokeRepeating("CopyToStream", 0.1f, 0.016666666666666666f);
     }
 
     void SampleGet()
     {
-        /**/
         unsafe //oooOOoOoo, uNsAfE cOnTeXt
         {
             short* shortPtr = getStreamData((uint)(samplereq[part] * 2));
@@ -127,117 +100,33 @@ public class BTMPlayer : MonoBehaviour
         writePos += samplereq[part];
         writePos %= buffersize; //Wrapping
         part++;
-        part %= samplereq.Length;
-        //*/
-        /*/
-        float[] backDataA = backData1;
-        float[] backDataB = backData2;
-        int endPoint = 0;
-        int copyOffset = 0;
-        int newEndPoint = 0;
-        bool writeTwoBuffers = false;
-        if(swapNum == 1)
-        {
-            backDataA = backData1;
-            backDataB = backData2;
-        }
-        else if(swapNum == 0)
-        {
-            backDataA = backData2;
-            backDataB = backData1;
-        }
-        endPoint = samplereq[part]*2;
-        if((endPoint + writePos*2) >= buffersize*2)
-        {
-            copyOffset = endPoint - (buffersize-1)*2;
-            endPoint = buffersize*2;
-            newEndPoint = samplereq[part]*2 - copyOffset;
-            writeTwoBuffers = true;
-        }
-        unsafe //oooOOoOoo, uNsAfE cOnTeXt
-        {
-            short* shortPtr = getStreamData((uint)(samplereq[part] * 2));
-            for(int i = 0; i < endPoint; i++)
-            {
-                backDataA[i + writePos*2] = shortPtr[i] * 0.000030517578125f; //2^-15, multiplication is faster than division.
-            }
-            if(writeTwoBuffers)
-            {
-                for(int i = 0; i < newEndPoint; i++)
-                {
-                    backDataB[i] = shortPtr[i + copyOffset] * 0.000030517578125f; //2^-15, multiplication is faster than division.
-                }
-            }
-        }
-        writePos += samplereq[part];
-        part++;
-        part %= samplereq.Length;
-        //*/
-    }
-
-    void FlagForSwap(int val)
-    {
-        doSwap = true;
+        part %= samplereq.Length;      
     }
 
     void CopyToStream()
     {
-        if(!initDone) return;
-        if(swapNum == 0) audioBuffer.SetData(backData1, 0);
-        else if(swapNum == 1) audioBuffer.SetData(backData2, 0);
-        writeToBuffer = true;
-        while(writeToBuffer) //Write all the samples needed for this loop of the buffer, then stop
-        {
-            advanceTick();
-            SampleGet();
-            if(writePos >= buffersize)
-            {
-                writeToBuffer = false;
-                writePos %= buffersize; //Wrapping
-                swapNum = (swapNum == 0)?1:0;
-            }
-        }
-    }
-
-    void FixedUpdate()
-    {
         if(!isBTMPluginLoaded) return;
-        /*/
-        if(doSwap)
+        lowerReadBound = audioOut.timeSamples - toleranceBuffer;
+        if (lowerReadBound < 0) lowerReadBound += buffersize;
+        upperReadBound = (audioOut.timeSamples + toleranceBuffer) % buffersize;
+        if (lowerReadBound > upperReadBound) //If the read position is getting too close to the write position, then we reset the write position to rectify this
         {
-            CopyToStream();
-            doSwap = false;
+            if(!(writePos <= lowerReadBound && writePos >= upperReadBound))
+            {
+                audioOut.timeSamples = 0;
+                writePos = buffersize / 2;
+            }
         }
-        //*/
-        /**/
-        countTime += Time.fixedUnscaledDeltaTime;
-        Mathf.Clamp(countTime, 0f, 0.1f); //Let's not cry over spilled milk
-        if(countTime >= swapTime) //Only update samples when it's time
+        else
         {
-            lowerReadBound = audioOut.timeSamples - toleranceBuffer;
-            if (lowerReadBound < 0) lowerReadBound += buffersize;
-            upperReadBound = (audioOut.timeSamples + toleranceBuffer) % buffersize;
-            if (lowerReadBound > upperReadBound) //If the read position is getting too close to the write position, then we reset the write position to rectify this
+            if(writePos >= lowerReadBound && writePos <= upperReadBound)
             {
-                if(!(writePos <= lowerReadBound && writePos >= upperReadBound))
-                {
-                    audioOut.timeSamples = 0;
-                    writePos = buffersize / 2;
-                }
+                audioOut.timeSamples = 0;
+                writePos = buffersize / 2;
             }
-            else
-            {
-                if(writePos >= lowerReadBound && writePos <= upperReadBound)
-                {
-                    audioOut.timeSamples = 0;
-                    writePos = buffersize / 2;
-                }
-            }
-            advanceTick();
-            SampleGet();
-            countTime -= swapTime;
         }
-        //*/
+        advanceTick();
+        SampleGet();
     }
 
     public void EndOperations()
