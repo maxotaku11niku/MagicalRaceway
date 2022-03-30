@@ -35,6 +35,7 @@ public class BTMPlayer : MonoBehaviour
     private static extern int getTickInStep();
 
     public SplineTest.GameMaster gm;
+    public SplineTest.MusicRoom musRoom;
     public BambooTrackerModule currentModule;
     public int numSongs;
     AudioClip audioBuffer;
@@ -127,6 +128,7 @@ public class BTMPlayer : MonoBehaviour
         }
         advanceTick();
         SampleGet();
+        musRoom.UpdateNotes();
     }
 
     public void EndOperations()
@@ -140,6 +142,7 @@ public class BTMPlayer : MonoBehaviour
         try 
         {
             playSong(songNum);
+            musRoom.UpdateNotes();
         }
         catch(EntryPointNotFoundException e)
         {

@@ -288,11 +288,11 @@ namespace SplineTest
             }
             for(int i = 0; i < baseSplineHeight+1; i++) //Assign initial vertex array and UV array
             {
+                calcUV = CalculateUV(i);
                 vertexArray[i*4] = new Vector3(0f,i,i);
                 vertexArray[i*4 + 1] = new Vector3(((float)baseSplineWidth)/2,i,i);
                 vertexArray[i*4 + 2] = new Vector3(((float)baseSplineWidth)/2,i,i);
                 vertexArray[i*4 + 3] = new Vector3((float)baseSplineWidth,i,i);
-                calcUV = CalculateUV(i);
                 uvArray[i*4] = calcUV[1];
                 uvArray[i*4 + 1] = calcUV[2];
                 uvArray[i*4 + 2] = calcUV[3];
@@ -308,9 +308,9 @@ namespace SplineTest
                 triangleArray[i*12 + 5] = i*4 + 4;
                 triangleArray[i*12 + 6] = i*4 + 3;
                 triangleArray[i*12 + 7] = i*4 + 2;
-                triangleArray[i*12 + 8] = i*4 + 6;
+                triangleArray[i*12 + 8] = i*4 + 7;
                 triangleArray[i*12 + 9] = i*4 + 7;
-                triangleArray[i*12 +10] = i*4 + 3;
+                triangleArray[i*12 +10] = i*4 + 2;
                 triangleArray[i*12 +11] = i*4 + 6;
             }
             splineMesh.vertices = vertexArray; //Reassign arrays to update changes

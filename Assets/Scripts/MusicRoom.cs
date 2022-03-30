@@ -56,6 +56,26 @@ namespace SplineTest
             else musicCommentText.text = "OST not bundled! Be careful not to share this testing version!";
         }
 		
+        public void UpdateNotes()
+        {
+            if(btmPlayer.hasStoppedSong)
+			{
+				btmPlayer.hasStoppedSong = false;
+				for (int i = 0; i < 9; i++)
+				{
+					channelNum = i;
+					pianoChannels[i].SetNote(-2);
+				}
+			}
+			else if(btmPlayer.GetTickInStep() == 0) //Only change notes on step advance
+			{
+				for (int i = 0; i < 9; i++)
+				{
+					channelNum = i;
+					pianoChannels[i].SetNote(btmPlayer.GetCurrentNote(channelNum));
+				}
+			}
+        }
 
         void Update()
         {
@@ -98,6 +118,7 @@ namespace SplineTest
                 if (mm.isOstBundled) musicCommentText.text = musicComments[currentSelectedSongNum];
                 else musicCommentText.text = "OST not bundled! Be careful not to share this testing version!";
             }
+            /*/
 			if(btmPlayer.hasStoppedSong)
 			{
 				btmPlayer.hasStoppedSong = false;
@@ -115,6 +136,7 @@ namespace SplineTest
 					pianoChannels[i].SetNote(btmPlayer.GetCurrentNote(channelNum));
 				}
 			}
+            //*/
         }
     }
 }
