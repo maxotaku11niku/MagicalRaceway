@@ -19,7 +19,7 @@ namespace SplineTest
                 paletteTex.SetPixel(i, 0, initPalette[i]);
             }
             paletteTex.Apply();
-            meshrender.material.SetTexture("_Palette", paletteTex);
+            meshrender.sharedMaterial.SetTexture("_Palette", paletteTex);
         }
 
         public void EditorPreviewInit() //EDITOR ONLY

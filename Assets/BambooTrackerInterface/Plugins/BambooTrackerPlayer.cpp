@@ -172,6 +172,11 @@ extern "C" int getCurrentNote(int channel)
 	return currentNotes[channel];
 }
 
+extern "C" int getRegister(int addr)
+{
+	return chipController->debugGetRegister(addr);
+}
+
 extern "C" char* getSongName(int songNum)
 {
 	std::string titleString = currentModule->getSong(songNum).getTitle();

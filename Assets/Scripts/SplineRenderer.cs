@@ -257,7 +257,7 @@ namespace SplineTest
             invSplineWidth = 1/((float)baseSplineWidth);
             meshRenderer = GetComponent<MeshRenderer>();
             meshFilter = GetComponent<MeshFilter>();
-            Texture texture = meshRenderer.material.mainTexture; //Grab the texture from the mesh renderer
+            Texture texture = meshRenderer.sharedMaterial.mainTexture; //Grab the texture from the mesh renderer
             splineTexWidth = texture.width;
             splineTexHeight = texture.height;
             splineTexInvHeight = 1/((float)splineTexHeight);

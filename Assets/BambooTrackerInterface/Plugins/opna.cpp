@@ -35,6 +35,7 @@ extern "C"
 #include "2608intf.h"
 #include "nuke2608intf.h"
 }
+#include "ymfmintf2608.h"
 
 namespace chip
 {
@@ -65,10 +66,12 @@ OPNA::OPNA(OpnaEmulator emu, int clock, int rate, size_t maxDuration, size_t dra
 	  c86ctlRC_(nullptr),
 	  c86ctlGm_(nullptr)
 {
+	regBack_ = new uint8_t[0x200];
+	for(int i = 0; i < 0x200; i++)
+	{
+		regBack_[i] = 0;
+	}
 	switch (emu) {
-	default:
-		fprintf(stderr, "Unknown emulator choice. Using the default.\n");
-		/* fall through */
 	case OpnaEmulator::Mame:
 		fprintf(stderr, "Using emulator: MAME YM2608\n");
 		intf_ = &mame_intf2608;
@@ -76,6 +79,15 @@ OPNA::OPNA(OpnaEmulator emu, int clock, int rate, size_t maxDuration, size_t dra
 	case OpnaEmulator::Nuked:
 		fprintf(stderr, "Using emulator: Nuked OPN-Mod\n");
 		intf_ = &nuked_intf2608;
+		break;
+	case OpnaEmulator::YMFM:
+		fprintf(stderr, "Using emulator: YMFM\n");
+		intf_ = &ymfm_intf2608;
+		break;
+	default:
+		fprintf(stderr, "Unknown emulator choice. Using the default.\n");
+		fprintf(stderr, "Using emulator: MAME YM2608\n");
+		intf_ = &mame_intf2608;
 		break;
 	}
 
@@ -122,8 +134,13 @@ void OPNA::setRegister(uint32_t offset, uint8_t value)
 {
 	std::lock_guard<std::mutex> lg(mutex_);
 
+	regBack_[offset] = value;
+
 	if (logger_) {
 		//logger_->recordRegisterChange(offset, value);
+	}
+	else if (intf_ == &ymfm_intf2608) {
+		intf_->data_port_a_w(id_, offset, value);
 	}
 	else {
 		if (offset & 0x100) {
@@ -143,6 +160,9 @@ void OPNA::setRegister(uint32_t offset, uint8_t value)
 
 uint8_t OPNA::getRegister(uint32_t offset) const
 {
+	if (intf_ == &ymfm_intf2608) {
+		return intf_->read_port_r(id_, offset);
+	}
 	if (offset & 0x100) {
 		intf_->control_port_b_w(id_, 2, offset & 0xff);
 	}
@@ -151,6 +171,15 @@ uint8_t OPNA::getRegister(uint32_t offset) const
 		intf_->control_port_a_w(id_, 0, offset & 0xff);
 	}
 	return intf_->read_port_r(id_, 1);
+}
+
+uint8_t OPNA::debugGetRegister(int offset) const
+{
+	if(intf_ == &ymfm_intf2608)
+	{
+		return intf_->read_port_r(id_, offset + 0x200);
+	}
+	else return regBack_[offset];
 }
 
 
@@ -181,7 +210,6 @@ size_t OPNA::getDRAMSize() const noexcept
 void OPNA::mix(int16_t* stream, size_t nSamples)
 {
 	std::lock_guard<std::mutex> lg(mutex_);
-
 	sample **bufFM, **bufSSG;
 
 	// Set FM buffer

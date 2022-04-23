@@ -137,6 +137,11 @@ void OPNAController::sendRegister(int address, int value)
 	registerSetBuf_.push_back(std::make_pair(address, value));
 }
 
+uint8_t OPNAController::debugGetRegister(int addr)
+{
+	return opna_->debugGetRegister(addr);
+}
+
 /********** DRAM **********/
 size_t OPNAController::getDRAMSize() const
 {

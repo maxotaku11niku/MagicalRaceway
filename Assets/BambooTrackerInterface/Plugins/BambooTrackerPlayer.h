@@ -19,4 +19,5 @@ extern "C" int getCurrentBPM();
 extern "C" int getCurrentSpeed();
 extern "C" int getTickInStep();
 extern "C" int getCurrentNote(int channel);
+extern "C" int getRegister(int addr);
 extern "C" char* getSongName(int songNum);

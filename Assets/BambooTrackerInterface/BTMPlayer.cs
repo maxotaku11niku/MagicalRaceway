@@ -33,6 +33,8 @@ public class BTMPlayer : MonoBehaviour
     private static extern int getCurrentSpeed();
     [DllImport("__Internal", CharSet = CharSet.Unicode)]
     private static extern int getTickInStep();
+    [DllImport("__Internal", CharSet = CharSet.Unicode)]
+    private static extern int getRegister(int addr);
 
     public SplineTest.GameMaster gm;
     public SplineTest.MusicRoom musRoom;
@@ -60,7 +62,7 @@ public class BTMPlayer : MonoBehaviour
                                            924, 924, 925, 924, 925,
                                            924, 925, 924, 924, 925 }; //55466/60 is not an integer
 
-    void Awake()
+    public void InitBTMPlayer()
     {
         swapTime = 1f/60f; //Synced with the emulation tick frequency
         isBTMPluginLoaded = true;
@@ -71,7 +73,8 @@ public class BTMPlayer : MonoBehaviour
         }
         catch(EntryPointNotFoundException e) //Bad linkage means we don't run the soundchip emulator, so no music :(
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogError(e.Message);
+            Debug.LogError("BTM player plugin not loaded! No music will be heard!");
             isBTMPluginLoaded = false;
             return;
         }
@@ -146,7 +149,8 @@ public class BTMPlayer : MonoBehaviour
         }
         catch(EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
     }
     
@@ -159,7 +163,8 @@ public class BTMPlayer : MonoBehaviour
         }
         catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
     }
 
@@ -172,7 +177,8 @@ public class BTMPlayer : MonoBehaviour
         }
         catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
     }
 
@@ -198,7 +204,8 @@ public class BTMPlayer : MonoBehaviour
         }
         catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
         return tempInt;
     }
@@ -212,7 +219,8 @@ public class BTMPlayer : MonoBehaviour
         }
         catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
         return tempInt;
     }
@@ -226,7 +234,8 @@ public class BTMPlayer : MonoBehaviour
 		}
 		catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
 		return tempInt;
 	}
@@ -240,7 +249,8 @@ public class BTMPlayer : MonoBehaviour
 		}
 		catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
 		return tempInt;
 	}
@@ -254,10 +264,30 @@ public class BTMPlayer : MonoBehaviour
 		}
 		catch (EntryPointNotFoundException e)
         {
-            Debug.Log("BTM player plugin not loaded!");
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
         }
 		return tempInt;
 	}
+
+    /*
+    OPNA does have the ability to allow reads from registers, but not all of them.
+    This utilises a fake backing store.
+    */
+    public int GetRegister(int addr)
+    {
+        int tempInt = 0;
+        try
+        {
+            tempInt = getRegister(addr);
+        }
+        catch (EntryPointNotFoundException e)
+        {
+            Debug.LogWarning(e.Message);
+            Debug.LogWarning("BTM player plugin not loaded!");
+        }
+        return tempInt;
+    }
     
     public string GetSongName(int songNum) //Unfortunately, this one will cause an exception if called without the proper linkage
     {

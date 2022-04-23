@@ -51,6 +51,8 @@ public:
 	// Direct register set
 	void sendRegister(int address, int value);
 
+	uint8_t debugGetRegister(int addr);
+
 	// DRAM
 	size_t getDRAMSize() const;
 

@@ -408,8 +408,8 @@ namespace SplineTest
                 if (mNavi.triggered)
                 {
                     gm.mQuality += (int)(mNavi.ReadValue<Vector2>().x);
-                    if (gm.mQuality < 0) gm.mQuality = 1;
-                    if (gm.mQuality > 1) gm.mQuality = 0;
+                    if (gm.mQuality < 0) gm.mQuality = 2;
+                    if (gm.mQuality > 2) gm.mQuality = 0;
                     switch(gm.mQuality)
                     {
                         case 0:
@@ -417,6 +417,9 @@ namespace SplineTest
                             break;
                         case 1:
                             musicQualityText.text = "High";
+                            break;
+                        case 2:
+                            musicQualityText.text = "YMFM Test";
                             break;
                     }
                 }
@@ -435,8 +438,8 @@ namespace SplineTest
                     {
                         gm.mQuality--;
                     }
-                    if (gm.mQuality < 0) gm.mQuality = 1;
-                    if (gm.mQuality > 1) gm.mQuality = 0;
+                    if (gm.mQuality < 0) gm.mQuality = 2;
+                    if (gm.mQuality > 2) gm.mQuality = 0;
                     switch (gm.mQuality)
                     {
                         case 0:
@@ -444,6 +447,9 @@ namespace SplineTest
                             break;
                         case 1:
                             musicQualityTextMobile.text = "High";
+                            break;
+                        case 2:
+                            musicQualityText.text = "YMFM Test";
                             break;
                     }
                 }
@@ -578,6 +584,10 @@ namespace SplineTest
                 case 1:
                     musicQualityText.text = "High";
                     musicQualityTextMobile.text = "High";
+                    break;
+                case 2:
+                    musicQualityText.text= "YMFM Test";
+                    musicQualityTextMobile.text = "YMFM Test";
                     break;
             }
         }

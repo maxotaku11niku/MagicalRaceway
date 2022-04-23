@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace SplineTest
 {
@@ -51,14 +52,19 @@ namespace SplineTest
         public Animator fadeAnimator;
         float logoDisplayTimeLeft;
         bool hasFinishedDisplayingLogo;
+        bool musicDebugVisible;
         public bool inTransition;
         public delegate void VoidFn();
         public delegate void VoidFnWithOneInt(int num);
 
         public string appBaseDirectory; //Best used with the Android version
+        public GameObject musicDebugObject;
+        Text musicDebugText;
 
         void Awake()
         {
+            musicDebugVisible = false;
+            musicDebugText = musicDebugObject.GetComponent<Text>();
             mm = menuMaster.GetComponent<MenuMaster>();
             pm = playMaster.GetComponent<PlayMaster>();
             inTransition = false;
@@ -122,6 +128,7 @@ namespace SplineTest
             }
             else Screen.SetResolution(Screen.resolutions[chosenResolution].width, Screen.resolutions[chosenResolution].height, dMode, Screen.resolutions[chosenResolution].refreshRate);
 #endif
+            BTMSource.InitBTMPlayer();
             if(skipToPlay)
             {
                 StartGame(0);
@@ -303,6 +310,12 @@ namespace SplineTest
             logoDisplayTimeLeft = 7.0f;
         }
 
+        void ToggleMusicDebug()
+        {
+            musicDebugVisible = !musicDebugVisible;
+            musicDebugObject.SetActive(musicDebugVisible);
+        }
+
         void Update()
         {
             if(!hasFinishedDisplayingLogo)
@@ -314,6 +327,30 @@ namespace SplineTest
                     creatorLogoObject.SetActive(false);
                     ReturnToMainMenu();
                 }
+            }
+            if(Keyboard.current.altKey.isPressed && Keyboard.current.mKey.wasPressedThisFrame)
+            {
+                ToggleMusicDebug();
+            }
+            if(musicDebugVisible)
+            {
+                musicDebugText.text = "";
+                StringBuilder sb = new StringBuilder();
+                for(int i = 0; i < 0x1D0; i++)
+                {
+                    if(i%0x10 == 0)
+                    {
+                        if(i>=0) sb.Append("\n");
+                        sb.AppendFormat("{0:X3}", i);
+                    }
+                    if(i%0x4 == 0)
+                    {
+                        sb.Append(" ");
+                    }
+                    sb.AppendFormat("{0:X2}", BTMSource.GetRegister(i));
+                }
+                sb.Append("\nYM2608 Register Viewer - Press Alt-M");
+                musicDebugText.text = sb.ToString();
             }
         }
     }

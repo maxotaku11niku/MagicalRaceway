@@ -45,8 +45,9 @@ enum class OpnaEmulator
 {
 	Mame,
 	Nuked,
+	YMFM,
 	First = Mame,
-	Last = Nuked,
+	Last = YMFM,
 };
 
 class OPNA final : public Chip
@@ -63,6 +64,7 @@ public:
 	void reset() override;
 	void setRegister(uint32_t offset, uint8_t value) override;
 	uint8_t getRegister(uint32_t offset) const override;
+	uint8_t debugGetRegister(int offset) const;
 	void setVolumeFM(double dB);
 	void setVolumeSSG(double dB);
 	size_t getDRAMSize() const noexcept;
@@ -77,6 +79,8 @@ private:
 
 	intf2608* intf_;
 	size_t dramSize_;
+
+	uint8_t* regBack_; //register logger
 
 	// For SCCI
 	scci::SoundInterfaceManager* scciManager_;

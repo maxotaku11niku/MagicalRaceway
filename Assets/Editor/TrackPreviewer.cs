@@ -31,7 +31,7 @@ public class TrackPreviewer : EditorWindow
         if (GUILayout.Button("Reset")) DeletePreview();
     }
 
-    private void ShowPreview() //Pretty much just copied from PlayMaster
+    void ShowPreview() //Pretty much just copied from PlayMaster
     {
         int startind = 0;
         int currentind = 0;
@@ -173,6 +173,7 @@ public class TrackPreviewer : EditorWindow
         float distanceFactor;
         for (int i = 1; i < track.tBGList.Length; i++)
         {
+            Debug.Log(i);
             if (distance >= track.tBGList[i - 1].distance && distance < track.tBGList[i].distance)
             {
                 distanceFactor = (distance - track.tBGList[i - 1].distance) / (track.tBGList[i].distance - track.tBGList[i - 1].distance);
@@ -181,6 +182,13 @@ public class TrackPreviewer : EditorWindow
                 playMaster.bg2sprrend.sprite = track.tBGList[i - 1].val.bg2Sprite;
                 playMaster.bg1sprrend.color = colourInterp[0];
                 playMaster.bg2sprrend.color = colourInterp[0];
+            }
+            else if (i == track.tBGList.Length - 1 && distance >= track.tBGList[i].distance)
+            {
+                playMaster.bg1sprrend.sprite = track.tBGList[i].val.bg1Sprite;
+                playMaster.bg2sprrend.sprite = track.tBGList[i].val.bg2Sprite;
+                playMaster.bg1sprrend.color = track.tBGList[i].val.spriteColour;
+                playMaster.bg2sprrend.color = track.tBGList[i].val.spriteColour;
             }
         }
         for (int i = 1; i < track.tColourList.Length; i++)
@@ -213,7 +221,7 @@ public class TrackPreviewer : EditorWindow
         playMaster.skyPal.SetPalette(colourInterp);
         MeshRenderer rendererS = playMaster.skyObj.GetComponent<MeshRenderer>();
         MeshFilter filterS = playMaster.skyObj.GetComponent<MeshFilter>();
-        Texture textureS = rendererS.material.mainTexture;
+        Texture textureS = rendererS.sharedMaterial.mainTexture;
         Mesh meshS = new Mesh();
         filterS.mesh = meshS;
         Vector3[] vertexS = new Vector3[] { new Vector3(0.0f, -256.0f, 0.0f), new Vector3(320.0f, -256.0f, 0.0f), new Vector3(320.0f, 512.0f, 0.0f), new Vector3(0.0f, 512.0f, 0.0f) };
