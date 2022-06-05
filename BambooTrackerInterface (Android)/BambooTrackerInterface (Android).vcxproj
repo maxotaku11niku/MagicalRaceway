@@ -33,6 +33,14 @@
       <Configuration>Release</Configuration>
       <Platform>x86</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Any CPU">
+      <Configuration>Debug</Configuration>
+      <Platform>Any CPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Any CPU">
+      <Configuration>Release</Configuration>
+      <Platform>Any CPU</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.c" />
@@ -58,6 +66,7 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\note.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna_controller.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\pattern.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\playback.cpp" />
@@ -70,8 +79,14 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\tick_counter.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\track.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_opn.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.h" />
@@ -108,6 +123,7 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\note.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna_controller.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\pattern.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\playback.h" />
@@ -125,9 +141,16 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\utils.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\version.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymb_codec.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_opn.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{13fbfebf-8b66-4f07-8584-2212a2c11dae}</ProjectGuid>

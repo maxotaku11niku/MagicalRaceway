@@ -126,6 +126,27 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_opn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.h">
@@ -288,6 +309,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_opn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -255,7 +255,6 @@ typedef opn_registers_base<false> opn_registers;
 typedef opn_registers_base<true> opna_registers;
 
 
-
 //*********************************************************
 //  OPN IMPLEMENTATION CLASSES
 //*********************************************************

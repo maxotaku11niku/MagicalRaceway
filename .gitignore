@@ -5,10 +5,12 @@ ARM64/
 Assets/.vs/
 BambooTrackerInterface/ARM/
 BambooTrackerInterface/Debug/
+BambooTrackerInterface/Release/
 BambooTrackerInterface/x64/
 BambooTrackerInterface (Android)/ARM64/
 bin/
 Debug/
+Release/
 Library/
 Logs/
 MemoryCaptures/

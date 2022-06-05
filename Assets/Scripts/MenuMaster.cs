@@ -202,7 +202,11 @@ namespace SplineTest
         void OnDecline()
         {
             if (gm.inTransition) return;
+#if UNITY_STANDALONE
             if (pInput.currentActionMap.FindAction("Decline").phase != InputActionPhase.Performed) return;
+#elif UNITY_EDITOR
+            if (pInput.currentActionMap.FindAction("Decline").phase != InputActionPhase.Performed) return;
+#endif
             sounds.PlayOneShot(1);
             switch (menuState)
             {
@@ -261,7 +265,7 @@ namespace SplineTest
                 if (rightOfSelected != null) eventSystem.SetSelectedGameObject(rightOfSelected.gameObject);
                 sounds.PlayOneShot(2);
             }
-            else if(declineTButton.isDown)
+            if(declineTButton.isDown)
             {
                 OnDecline();
             }
@@ -295,7 +299,7 @@ namespace SplineTest
                 if (rightOfSelected != null) eventSystem.SetSelectedGameObject(rightOfSelected.gameObject);
                 sounds.PlayOneShot(2);
             }
-            else if(declineTButton.isDown)
+            if(declineTButton.isDown)
             {
                 OnDecline();
             }
@@ -449,7 +453,7 @@ namespace SplineTest
                             musicQualityTextMobile.text = "High";
                             break;
                         case 2:
-                            musicQualityText.text = "YMFM Test";
+                            musicQualityTextMobile.text = "YMFM Test";
                             break;
                     }
                 }

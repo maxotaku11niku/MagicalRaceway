@@ -38,6 +38,13 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.c" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_opn.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.cpp" />
+    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.h" />
@@ -94,5 +101,13 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymb_codec.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_opn.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.h" />
+    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.h" />
   </ItemGroup>
 </Project>

@@ -173,7 +173,6 @@ public class TrackPreviewer : EditorWindow
         float distanceFactor;
         for (int i = 1; i < track.tBGList.Length; i++)
         {
-            Debug.Log(i);
             if (distance >= track.tBGList[i - 1].distance && distance < track.tBGList[i].distance)
             {
                 distanceFactor = (distance - track.tBGList[i - 1].distance) / (track.tBGList[i].distance - track.tBGList[i - 1].distance);

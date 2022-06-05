@@ -1552,7 +1552,7 @@ public:
 
 		// actually write the mode register now
 		uint32_t dummy1 = 0, dummy2 = 0;
-		m_regs.write(RegisterType::REG_MODE, data, dummy1, dummy2);
+		//m_regs.write(RegisterType::REG_MODE, data, dummy1, dummy2);
 
 		// reset IRQ status -- when written, all other bits are ignored
 		// QUESTION: should this maybe just reset the IRQ bit and not all the bits?
