@@ -46,6 +46,8 @@ namespace SplineTest
         public GameObject BGMVolSelector;
         public GameObject SFXVolSelector;
         public GameObject musicQualitySelector;
+        public GameObject resetScoresButton;
+        public GameObject resetScoresConfirmation;
         public GameObject controlConfigButton;
         public GameObject confirmButton;
         public GameObject declineButton;
@@ -54,6 +56,8 @@ namespace SplineTest
         public GameObject BGMVolSelectorMobile;
         public GameObject SFXVolSelectorMobile;
         public GameObject musicQualitySelectorMobile;
+        public GameObject resetScoresButtonMobile;
+        public GameObject resetScoresConfirmationMobile;
         public GameObject confirmButtonMobile;
         public GameObject declineButtonMobile;
         public AudioMixer audioMixer;
@@ -131,6 +135,7 @@ namespace SplineTest
         float oldBGMVol;
         float oldSFXVol;
         int oldMusQ;
+        bool awaitingConfirmation;
         readonly Vector2 ScreenDim = new Vector2(0f,240f);
         delegate void VoidFn();
         delegate void VoidFnWithOneInt(int num);
@@ -174,6 +179,7 @@ namespace SplineTest
             BGPos = 0;
             BGSprite.color = new Color32(0xCE, 0x6B, 0xFF, 0xFF);
             menuState = 0;
+            awaitingConfirmation = false;
         }
 
         public void SetUp()
@@ -201,7 +207,7 @@ namespace SplineTest
 
         void OnDecline()
         {
-            if (gm.inTransition) return;
+            if (gm.inTransition || awaitingConfirmation) return;
 #if UNITY_STANDALONE
             if (pInput.currentActionMap.FindAction("Decline").phase != InputActionPhase.Performed) return;
 #elif UNITY_EDITOR
@@ -665,6 +671,62 @@ namespace SplineTest
             configMenuPC.SetActive(true);
             eventSystem.SetSelectedGameObject(controlConfigButton);
             menuState = 5;
+        }
+
+        public void OnResetScores()
+        {
+#if UNITY_STANDALONE
+            resetScoresConfirmation.SetActive(true);
+#elif UNITY_EDITOR
+            resetScoresConfirmation.SetActive(true);
+#elif UNITY_ANDROID
+            resetScoresConfirmationMobile.SetActive(true);
+#elif UNITY_IOS
+            resetScoresConfirmationMobile.SetActive(true);
+#endif
+            StartCoroutine(AwatingScoreResetConfirmation());
+        }
+
+        public IEnumerator AwatingScoreResetConfirmation()
+        {
+            float confirmTimeLeft = 10f;
+            yield return new WaitForSecondsRealtime(0.05f);
+            awaitingConfirmation = true;
+            while (true)
+            {
+                if (pInput.currentActionMap.FindAction("Accept").triggered || acceptTButton.isDown)
+                {
+                    HighScoreGroup.WriteDefaultScoreDataToFile(gm.appBaseDirectory);
+#if UNITY_STANDALONE
+                    resetScoresConfirmation.SetActive(false);
+#elif UNITY_EDITOR
+                    resetScoresConfirmation.SetActive(false);
+#elif UNITY_ANDROID
+                    resetScoresConfirmationMobile.SetActive(false);
+#elif UNITY_IOS
+                    resetScoresConfirmationMobile.SetActive(false);
+#endif
+                    gm.ReloadScores();
+                    awaitingConfirmation = false;
+                    yield break;
+                }
+                else if (confirmTimeLeft < 0f || declineTButton.isDown || dpadUpTButton.isDown || dpadDownTButton.isDown || dpadLeftTButton.isDown || dpadRightTButton.isDown || mNavi.triggered || pInput.currentActionMap.FindAction("Decline").triggered)
+                {
+#if UNITY_STANDALONE
+                    resetScoresConfirmation.SetActive(false);
+#elif UNITY_EDITOR
+                    resetScoresConfirmation.SetActive(false);
+#elif UNITY_ANDROID
+                    resetScoresConfirmationMobile.SetActive(false);
+#elif UNITY_IOS
+                    resetScoresConfirmationMobile.SetActive(false);
+#endif
+                    awaitingConfirmation = false;
+                    yield break;
+                }
+                confirmTimeLeft -= Time.unscaledDeltaTime;
+                yield return null;
+            }
         }
 
         public void OnQuitSelected()

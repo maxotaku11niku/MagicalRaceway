@@ -10,7 +10,7 @@ namespace SplineTest
 {
     public class HighScoreGroup
     {
-        private static readonly HighScoreGroup testDefault = new HighScoreGroup("TEST", new HighScore[] { new HighScore("Maxim Hoxha", 4928854, 2, 13136), //It's me!
+        public static readonly HighScoreGroup testDefault = new HighScoreGroup("TEST", new HighScore[] { new HighScore("Maxim Hoxha", 5261654, 2, 13330), //It's me!
                                                                                                           new HighScore("Raymoo Hackery", 1900000, 2, 19000), //broke shrine maiden
                                                                                                           new HighScore("Marisus Ksamey", 1800000, 2, 18000), //ordinary magician thief
                                                                                                           new HighScore("Succya Izaboi", 1700000, 2, 17000), //dio maid
@@ -30,7 +30,27 @@ namespace SplineTest
                                                                                                           new HighScore("Clownpiss¤¤¤¤¤", 300000, 1, 3000), //america fuck yeah
                                                                                                           new HighScore("¤X-Æ-A-12¤µ¼ß£", 200000, 1, 2000), //wtf elongated muskrat??
                                                                                                           new HighScore("crino", 100000, 1, 1000) }); //dumb shit fairy
-        private static readonly HighScoreGroup easyDefault = new HighScoreGroup("EASY", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
+        public static readonly HighScoreGroup easyDefault = new HighScoreGroup("EASY", new HighScore[] { new HighScore("Maxim Hoxha", 8738138, 5, 32773),
+                                                                                                          new HighScore("Raymoo Hackery", 3800000, 5, 38000),
+                                                                                                          new HighScore("Marisus Ksamey", 3600000, 5, 36000),
+                                                                                                          new HighScore("Succya Izaboi", 3400000, 5, 34000),
+                                                                                                          new HighScore("Sanooee Gotcha", 3200000, 4, 32000),
+                                                                                                          new HighScore("Yummy Gonepack", 3000000, 4, 30000),
+                                                                                                          new HighScore("Raisin Udonge", 2800000, 4, 28000),
+                                                                                                          new HighScore("Yucurri Yakky", 2600000, 4, 26000),
+                                                                                                          new HighScore("Remilia Scrlt", 2400000, 3, 24000),
+                                                                                                          new HighScore("MimaIsNotGone!", 2200000, 3, 22000),
+                                                                                                          new HighScore("KanaccOfMoriya", 2000000, 3, 20000),
+                                                                                                          new HighScore("YuyukoEatALot", 1800000, 3, 18000),
+                                                                                                          new HighScore("    pilf ajieS", 1600000, 2, 16000),
+                                                                                                          new HighScore("Purest Junko", 1400000, 2, 14000),
+                                                                                                          new HighScore("alway rember", 1200000, 2, 12000),
+                                                                                                          new HighScore("Utsuhoe NUCULR", 1000000, 2, 10000),
+                                                                                                          new HighScore("lily white", 800000, 1, 8000),
+                                                                                                          new HighScore("Clownpiss¤¤¤¤¤", 600000, 1, 6000),
+                                                                                                          new HighScore("¤X-Æ-A-12¤µ¼ß£", 400000, 1, 4000),
+                                                                                                          new HighScore("crino", 200000, 1, 2000) });
+        public static readonly HighScoreGroup mediumDefault = new HighScoreGroup("MEDIUM", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
                                                                                                           new HighScore("Raymoo Hackery", 87329134, 20, 137378),
                                                                                                           new HighScore("Marisus Ksamey", 72389495, 18, 121745),
                                                                                                           new HighScore("Succya Izaboi", 64529324, 17, 1),
@@ -50,7 +70,7 @@ namespace SplineTest
                                                                                                           new HighScore("Clownpiss¤¤¤¤¤", 4148782, 3, 19529),
                                                                                                           new HighScore("¤X-Æ-A-12¤µ¼ß£", 2348478, 2, 14592),
                                                                                                           new HighScore("crino", 9, 1, 9100) });
-        private static readonly HighScoreGroup mediumDefault = new HighScoreGroup("MEDIUM", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
+        public static readonly HighScoreGroup hardDefault = new HighScoreGroup("HARD", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
                                                                                                           new HighScore("Raymoo Hackery", 87329134, 20, 137378),
                                                                                                           new HighScore("Marisus Ksamey", 72389495, 18, 121745),
                                                                                                           new HighScore("Succya Izaboi", 64529324, 17, 1),
@@ -70,27 +90,7 @@ namespace SplineTest
                                                                                                           new HighScore("Clownpiss¤¤¤¤¤", 4148782, 3, 19529),
                                                                                                           new HighScore("¤X-Æ-A-12¤µ¼ß£", 2348478, 2, 14592),
                                                                                                           new HighScore("crino", 9, 1, 9100) });
-        private static readonly HighScoreGroup hardDefault = new HighScoreGroup("HARD", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
-                                                                                                          new HighScore("Raymoo Hackery", 87329134, 20, 137378),
-                                                                                                          new HighScore("Marisus Ksamey", 72389495, 18, 121745),
-                                                                                                          new HighScore("Succya Izaboi", 64529324, 17, 1),
-                                                                                                          new HighScore("Sanooee Gotcha", 59389245, 16, 105219),
-                                                                                                          new HighScore("Yummy Gonepack", 55398593, 15, 98589),
-                                                                                                          new HighScore("Raisin Udonge", 48387824, 14, 94542),
-                                                                                                          new HighScore("Yucurri Yakky", 42042042, 13, 85876),
-                                                                                                          new HighScore("Remilia Scrlt", 36839459, 12, 81465),
-                                                                                                          new HighScore("MimaIsNotGone!", 31234532, 11, 73234),
-                                                                                                          new HighScore("KanaccOfMoriya", 24953643, 10, 70303),
-                                                                                                          new HighScore("YuyukoEatALot", 19292929, 9, 62143),
-                                                                                                          new HighScore("    pilf ajieS", 16482345, 8, 52907),
-                                                                                                          new HighScore("Purest Junko", 11111111, 7, 42395),
-                                                                                                          new HighScore("alway rember", 9992384, 6, 36912),
-                                                                                                          new HighScore("Utsuhoe NUCULR", 7583924, 5, 34543),
-                                                                                                          new HighScore("lily white", 5578243, 4, 27227),
-                                                                                                          new HighScore("Clownpiss¤¤¤¤¤", 4148782, 3, 19529),
-                                                                                                          new HighScore("¤X-Æ-A-12¤µ¼ß£", 2348478, 2, 14592),
-                                                                                                          new HighScore("crino", 9, 1, 9100) });
-        private static readonly HighScoreGroup insaneDefault = new HighScoreGroup("INSANE", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
+        public static readonly HighScoreGroup insaneDefault = new HighScoreGroup("INSANE", new HighScore[] { new HighScore("Maxim Hoxha", 694206942, 69, 418229),
                                                                                                           new HighScore("Raymoo Hackery", 87329134, 20, 137378),
                                                                                                           new HighScore("Marisus Ksamey", 72389495, 18, 121745),
                                                                                                           new HighScore("Succya Izaboi", 64529324, 17, 1),
@@ -111,8 +111,8 @@ namespace SplineTest
                                                                                                           new HighScore("¤X-Æ-A-12¤µ¼ß£", 2348478, 2, 14592),
                                                                                                           new HighScore("crino", 9, 1, 9100) });
 
-        private static readonly char[] scorefileID = new char[]{(char)0x4D, (char)0x52, (char)0x53, (char)0x46}; //"MRSF"
-        private static readonly char[] scorefileVersion = new char[]{(char)0x33, (char)0x39}; //"39"
+        private static readonly byte[] scorefileID = new byte[]{0x4D, 0x52, 0x53, 0x46}; //"MRSF"
+        private static readonly byte[] scorefileVersion = new byte[]{0x34, 0x32}; //"42"
 #if UNITY_EDITOR
         public static readonly string scorefileDirectory = "Assets/Scorefiles/";
 #elif UNITY_STANDALONE
@@ -151,6 +151,7 @@ namespace SplineTest
         public static HighScoreGroup ImportScoreDataFromFile(string path)
         {
             char[] charlist;
+            byte[] bytelist;
             string nam;
             uint scor;
             uint stgandt; //Stage number and time mashed together in one 32-bit integer
@@ -158,25 +159,34 @@ namespace SplineTest
             HighScoreGroup currentHSG;
             if(File.Exists(path))
             {
-                BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open), Encoding.GetEncoding(28591));
-                charlist = reader.ReadChars(4);
-                if(new String(charlist) != new String(scorefileID))
+                BinaryReader reader = new BinaryReader(File.Open(path, FileMode.Open), Encoding.GetEncoding(12000));
+                bytelist = reader.ReadBytes(4);
+                for(int i = 0; i < 4; i++)
                 {
-                    Debug.LogWarning(path + " is not a valid score file. All valid score files start with 'MRSF' in the header.");
-                    return null;
+                    if (bytelist[i] != scorefileID[i])
+                    {
+                        Debug.LogWarning(path + " is not a valid score file. All valid score files start with 'MRSF' in the header.");
+                        reader.Close();
+                        return null;
+                    }
                 }
-                charlist = reader.ReadChars(2);
-                if(new String(charlist) != new String(scorefileVersion))
+                bytelist = reader.ReadBytes(2);
+                for (int i = 0; i < 2; i++)
                 {
-                    Debug.LogWarning(path + " is an incompatible scorefile. '39' is the current scorefile version indicator.");
-                    return null;
+                    if (bytelist[i] != scorefileVersion[i])
+                    {
+                        Debug.LogWarning(path + " is an incompatible scorefile. '39' is the current scorefile version indicator.");
+                        reader.Close();
+                        return null;
+                    }
                 }
                 charlist = reader.ReadChars(16);
                 nam = new String(charlist);
-                charlist = reader.ReadChars(1);
-                if(charlist[0] != 0x02)
+                bytelist = reader.ReadBytes(1);
+                if(bytelist[0] != 0x02)
                 {
                     Debug.LogWarning(path + " has an incorrectly terminated header. Terminate the header with the STX control (0x02).");
+                    reader.Close();
                     return null;
                 }
                 currentHSG = new HighScoreGroup(nam, 20);
@@ -203,9 +213,10 @@ namespace SplineTest
         public static void WriteDefaultScoreDataToFile(string appBaseDirectory) //This method is rather long and explicit
         {
             char[] charlist;
+            byte[] bytelist;
             uint compint;
 
-            BinaryWriter writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "test" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(28591));
+            BinaryWriter writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "test" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(12000));
             writer.Write(scorefileID);
             writer.Write(scorefileVersion);
             charlist = new char[16];
@@ -244,7 +255,7 @@ namespace SplineTest
             writer.Write((byte)0x04);
             writer.Close();
 
-            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "easy" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(28591));
+            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "easy" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(12000));
             writer.Write(scorefileID);
             writer.Write(scorefileVersion);
             charlist = new char[16];
@@ -283,7 +294,7 @@ namespace SplineTest
             writer.Write((byte)0x04);
             writer.Close();
 
-            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "medium" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(28591));
+            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "medium" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(12000));
             writer.Write(scorefileID);
             writer.Write(scorefileVersion);
             charlist = new char[16];
@@ -322,7 +333,7 @@ namespace SplineTest
             writer.Write((byte)0x04);
             writer.Close();
 
-            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "hard" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(28591));
+            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "hard" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(12000));
             writer.Write(scorefileID);
             writer.Write(scorefileVersion);
             charlist = new char[16];
@@ -361,7 +372,7 @@ namespace SplineTest
             writer.Write((byte)0x04);
             writer.Close();
 
-            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "insane" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(28591));
+            writer = new BinaryWriter(File.Open(appBaseDirectory + scorefileDirectory + "insane" + scorefileExtension, FileMode.Create), Encoding.GetEncoding(12000));
             writer.Write(scorefileID);
             writer.Write(scorefileVersion);
             charlist = new char[16];
@@ -405,7 +416,7 @@ namespace SplineTest
         {
             char[] charlist;
             uint compint;
-            BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create), Encoding.GetEncoding(28591));
+            BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create), Encoding.GetEncoding(12000));
             writer.Write(scorefileID);
             writer.Write(scorefileVersion);
             charlist = new char[16];
