@@ -30,7 +30,7 @@ namespace SplineTest
                                                                                                           new HighScore("Clownpiss¤¤¤¤¤", 300000, 1, 3000), //america fuck yeah
                                                                                                           new HighScore("¤X-Æ-A-12¤µ¼ß£", 200000, 1, 2000), //wtf elongated muskrat??
                                                                                                           new HighScore("crino", 100000, 1, 1000) }); //dumb shit fairy
-        public static readonly HighScoreGroup easyDefault = new HighScoreGroup("EASY", new HighScore[] { new HighScore("Maxim Hoxha", 8738138, 5, 32773),
+        public static readonly HighScoreGroup easyDefault = new HighScoreGroup("EASY", new HighScore[] { new HighScore("Maxim Hoxha", 9624249, 5, 32007),
                                                                                                           new HighScore("Raymoo Hackery", 3800000, 5, 38000),
                                                                                                           new HighScore("Marisus Ksamey", 3600000, 5, 36000),
                                                                                                           new HighScore("Succya Izaboi", 3400000, 5, 34000),
