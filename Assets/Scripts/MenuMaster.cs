@@ -45,7 +45,8 @@ namespace SplineTest
         public GameObject resolutionSelector;
         public GameObject BGMVolSelector;
         public GameObject SFXVolSelector;
-        public GameObject musicQualitySelector;
+        public GameObject musicToggleSelector;
+        public GameObject accelInvertSelector;
         public GameObject resetScoresButton;
         public GameObject resetScoresConfirmation;
         public GameObject controlConfigButton;
@@ -55,7 +56,8 @@ namespace SplineTest
         public GameObject returnFromControlConfigButton;
         public GameObject BGMVolSelectorMobile;
         public GameObject SFXVolSelectorMobile;
-        public GameObject musicQualitySelectorMobile;
+        public GameObject musicToggleSelectorMobile;
+        public GameObject accelInvertSelectorMobile;
         public GameObject resetScoresButtonMobile;
         public GameObject resetScoresConfirmationMobile;
         public GameObject confirmButtonMobile;
@@ -98,11 +100,13 @@ namespace SplineTest
         Text resolutionText;
         Text BGMVolText;
         Text SFXVolText;
-        Text musicQualityText;
+        Text musicToggleText;
+        Text accelInvertText;
 
         Text BGMVolTextMobile;
         Text SFXVolTextMobile;
-        Text musicQualityTextMobile;
+        Text musicToggleTextMobile;
+        Text accelInvertTextMobile;
         
         Text song1Text;
         Text song2Text;
@@ -134,7 +138,8 @@ namespace SplineTest
         int oldResMul;
         float oldBGMVol;
         float oldSFXVol;
-        int oldMusQ;
+        bool oldMusT;
+        bool oldAccelInvert;
         bool awaitingConfirmation;
         readonly Vector2 ScreenDim = new Vector2(0f,240f);
         delegate void VoidFn();
@@ -160,10 +165,12 @@ namespace SplineTest
             resolutionText = resolutionSelector.GetComponent<Text>();
             BGMVolText = BGMVolSelector.GetComponent<Text>();
             SFXVolText = SFXVolSelector.GetComponent<Text>();
-            musicQualityText = musicQualitySelector.GetComponent<Text>();
+            musicToggleText = musicToggleSelector.GetComponent<Text>();
+            accelInvertText = accelInvertSelector.GetComponent<Text>();
             BGMVolTextMobile = BGMVolSelectorMobile.GetComponent<Text>();
             SFXVolTextMobile = SFXVolSelectorMobile.GetComponent<Text>();
-            musicQualityTextMobile = musicQualitySelectorMobile.GetComponent<Text>();
+            musicToggleTextMobile = musicToggleSelectorMobile.GetComponent<Text>();
+            accelInvertTextMobile = accelInvertSelectorMobile.GetComponent<Text>();
             easyB = easyButton.GetComponent<Button>();
             mediumB = mediumButton.GetComponent<Button>();
             hardB = hardButton.GetComponent<Button>();
@@ -411,30 +418,24 @@ namespace SplineTest
                 audioMixer.SetFloat("SFXVol", (gm.SFXVolume <= 0) ? -80f : Mathf.Log10((gm.SFXVolume) / 100f) * 40f);
                 SFXVolTextMobile.text = ((int)gm.SFXVolume).ToString() + "%";
             }
-            else if(currentSelected == musicQualitySelector)
+            else if(currentSelected == musicToggleSelector)
             {
                 leftSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMax + 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
                 rightSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMin - 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
-                if (mNavi.triggered)
+                if (mNavi.triggered && mNavi.ReadValue<Vector2>().x != 0f)
                 {
-                    gm.mQuality += (int)(mNavi.ReadValue<Vector2>().x);
-                    if (gm.mQuality < 0) gm.mQuality = 2;
-                    if (gm.mQuality > 2) gm.mQuality = 0;
-                    switch(gm.mQuality)
+                    gm.mToggle = !gm.mToggle;
+                    if(gm.mToggle)
                     {
-                        case 0:
-                            musicQualityText.text = "Normal";
-                            break;
-                        case 1:
-                            musicQualityText.text = "High";
-                            break;
-                        case 2:
-                            musicQualityText.text = "YMFM Test";
-                            break;
+                        musicToggleText.text = "On";
+                    }
+                    else
+                    {
+                        musicToggleText.text = "Off";
                     }
                 }
             }
-            else if (currentSelected == musicQualitySelectorMobile)
+            else if (currentSelected == musicToggleSelectorMobile)
             {
                 leftSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMax + 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
                 rightSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMin - 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
@@ -442,25 +443,60 @@ namespace SplineTest
                 {
                     if (dpadRightTButton.isDown)
                     {
-                        gm.mQuality++;
+                        gm.mToggle = !gm.mToggle;
                     }
                     else if (dpadLeftTButton.isDown)
                     {
-                        gm.mQuality--;
+                        gm.mToggle = !gm.mToggle;
                     }
-                    if (gm.mQuality < 0) gm.mQuality = 2;
-                    if (gm.mQuality > 2) gm.mQuality = 0;
-                    switch (gm.mQuality)
+                    if (gm.mToggle)
                     {
-                        case 0:
-                            musicQualityTextMobile.text = "Normal";
-                            break;
-                        case 1:
-                            musicQualityTextMobile.text = "High";
-                            break;
-                        case 2:
-                            musicQualityTextMobile.text = "YMFM Test";
-                            break;
+                        musicToggleTextMobile.text = "On";
+                    }
+                    else
+                    {
+                        musicToggleTextMobile.text = "Off";
+                    }
+                }
+            }
+            else if (currentSelected == accelInvertSelector)
+            {
+                leftSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMax + 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
+                rightSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMin - 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
+                if (mNavi.triggered && mNavi.ReadValue<Vector2>().x != 0f)
+                {
+                    gm.accelInvert = !gm.accelInvert;
+                    if (gm.accelInvert)
+                    {
+                        accelInvertText.text = "On";
+                    }
+                    else
+                    {
+                        accelInvertText.text = "Off";
+                    }
+                }
+            }
+            else if (currentSelected == accelInvertSelectorMobile)
+            {
+                leftSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMax + 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
+                rightSelectorTransform.anchoredPosition = new Vector2((currentSelRect.xMin - 16f) * currentSelTransform.localScale.x, currentSelRect.yMin) + currentSelTransform.anchoredPosition;
+                if (dpadLeftTButton.isDown || dpadRightTButton.isDown)
+                {
+                    if (dpadRightTButton.isDown)
+                    {
+                        gm.accelInvert = !gm.accelInvert;
+                    }
+                    else if (dpadLeftTButton.isDown)
+                    {
+                        gm.accelInvert = !gm.accelInvert;
+                    }
+                    if (gm.accelInvert)
+                    {
+                        accelInvertTextMobile.text = "On";
+                    }
+                    else
+                    {
+                        accelInvertTextMobile.text = "Off";
                     }
                 }
             }
@@ -577,7 +613,8 @@ namespace SplineTest
             oldResMul = gm.resolutionMultiplier;
             oldBGMVol = gm.BGMVolume;
             oldSFXVol = gm.SFXVolume;
-            oldMusQ = gm.mQuality;
+            oldMusT = gm.mToggle;
+            oldAccelInvert = gm.accelInvert;
             displayModeText.text = gm.dMode.ToString();
             if (gm.dMode == FullScreenMode.Windowed) resolutionText.text = (gm.resolutionMultiplier * 320).ToString() + "×" + (gm.resolutionMultiplier * 240).ToString();
             else resolutionText.text = Screen.resolutions[gm.chosenResolution].ToString();
@@ -585,20 +622,25 @@ namespace SplineTest
             SFXVolText.text = ((int)gm.SFXVolume).ToString() + "%";
             BGMVolTextMobile.text = ((int)gm.BGMVolume).ToString() + "%";
             SFXVolTextMobile.text = ((int)gm.SFXVolume).ToString() + "%";
-            switch (gm.mQuality)
+            if(gm.mToggle)
             {
-                case 0:
-                    musicQualityText.text = "Normal";
-                    musicQualityTextMobile.text = "Normal";
-                    break;
-                case 1:
-                    musicQualityText.text = "High";
-                    musicQualityTextMobile.text = "High";
-                    break;
-                case 2:
-                    musicQualityText.text= "YMFM Test";
-                    musicQualityTextMobile.text = "YMFM Test";
-                    break;
+                musicToggleText.text = "On";
+                musicToggleTextMobile.text = "On";
+            }
+            else
+            {
+                musicToggleText.text = "Off";
+                musicToggleTextMobile.text = "Off";
+            }
+            if (gm.accelInvert)
+            {
+                accelInvertText.text = "On";
+                accelInvertTextMobile.text = "On";
+            }
+            else
+            {
+                accelInvertText.text = "Off";
+                accelInvertTextMobile.text = "Off";
             }
         }
 
@@ -649,9 +691,13 @@ namespace SplineTest
             mainMenu.SetActive(true);
             BGSprite.color = new Color32(0xCE, 0x6B, 0xFF, 0xFF);
             menuState = 0;
+            gm.dMode = oldDispMode;
+            gm.chosenResolution = oldRes;
             gm.resolutionMultiplier = oldResMul;
             gm.BGMVolume = oldBGMVol;
             gm.SFXVolume = oldSFXVol;
+            gm.mToggle = oldMusT;
+            gm.accelInvert = oldAccelInvert;
             gm.WriteConfig();
             audioMixer.SetFloat("BGMVol", (gm.BGMVolume <= 0) ? -80f : Mathf.Log10(((float)gm.BGMVolume) / 100f) * 40f);
             audioMixer.SetFloat("SFXVol", (gm.SFXVolume <= 0) ? -80f : Mathf.Log10(((float)gm.SFXVolume) / 100f) * 40f);
@@ -746,10 +792,10 @@ namespace SplineTest
             BGSprite.color = new Color32(0x8C, 0xCE, 0xFF, 0xFF);
             menuState = 2;
             gm.currentTrackNum = diffLevel;
-            song1Text.text = gm.BTMSource.GetSongName(1);
-            song2Text.text = gm.BTMSource.GetSongName(2);
-            song3Text.text = gm.BTMSource.GetSongName(3);
-            song4Text.text = gm.BTMSource.GetSongName(4);
+            if (gm.mToggle) song1Text.text = gm.BTMSource.GetSongName(1);
+            if (gm.mToggle) song2Text.text = gm.BTMSource.GetSongName(2);
+            if (gm.mToggle) song3Text.text = gm.BTMSource.GetSongName(3);
+            if (gm.mToggle) song4Text.text = gm.BTMSource.GetSongName(4);
         }
 
         public void OnRetractFromDifficulty()

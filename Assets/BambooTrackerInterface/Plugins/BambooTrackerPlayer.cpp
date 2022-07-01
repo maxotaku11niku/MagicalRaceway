@@ -1,3 +1,11 @@
+/*
+* Bamboo Tracker Player
+* A library for playing .btm files
+* Maxim Hoxha 2021-2022
+* Most of the code is not mine, copyright notices have been retained
+* There have been many modifications to other files, though.
+*/
+
 #include "BambooTrackerPlayer.h"
 
 //A lot of this code was taken from source files in Bamboo Tracker that were not included
@@ -66,10 +74,10 @@ extern "C" void advanceTick()
 	updateCurrentNotes();
 }
 
-extern "C" void InitialisePlayerModuleData(int emu, const uint8_t *modData, const size_t dataSize)
+extern "C" void InitialisePlayerModuleData(const uint8_t *modData, const size_t dataSize)
 {
 	isSongPlaying = false;
-	chipController = std::make_shared<OPNAController>(static_cast<chip::OpnaEmulator>(emu), 7987200, 55466, 40);
+	chipController = std::make_shared<OPNAController>(7987200, 55466, 40);
 	instManager = std::make_shared<InstrumentsManager>(false);
 	tickCounter = std::make_shared<TickCounter>();
 	currentModule = loadModule(modData, dataSize);
@@ -96,7 +104,7 @@ extern "C" void InitialisePlayerModuleData(int emu, const uint8_t *modData, cons
 
 extern "C" void DestroyEmulator()
 {
-	pbManager.~shared_ptr(); //bit of a kludge
+	pbManager.~shared_ptr();
 	currentModule.~shared_ptr();
 	tickCounter.~shared_ptr();
 	instManager.~shared_ptr();

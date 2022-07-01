@@ -10,7 +10,7 @@ public class BTMPlayer : MonoBehaviour
     [DllImport("__Internal", CharSet = CharSet.Unicode)] //All of these methods are externally linked
     private static extern void advanceTick();
     [DllImport("__Internal", CharSet = CharSet.Unicode)]
-    private static extern void InitialisePlayerModuleData(int emu, [MarshalAs(UnmanagedType.LPArray)] byte[] modData, uint dataSize);
+    private static extern void InitialisePlayerModuleData([MarshalAs(UnmanagedType.LPArray)] byte[] modData, uint dataSize);
     [DllImport("__Internal", CharSet = CharSet.Unicode)]
     private static extern void DestroyEmulator();
     [DllImport("__Internal", CharSet = CharSet.Unicode)]
@@ -50,7 +50,7 @@ public class BTMPlayer : MonoBehaviour
     int writePos;
     int lowerReadBound;
     int upperReadBound;
-    bool isBTMPluginLoaded;
+    bool isBTMPluginLoaded = false;
     readonly int toleranceBuffer = 1024;
     readonly int buffersize = 5546;
     //readonly int buffersize = 2048;
@@ -69,7 +69,7 @@ public class BTMPlayer : MonoBehaviour
 		hasStoppedSong = false;
         try
         {
-            InitialisePlayerModuleData(gm.mQuality, currentModule.data, (uint)currentModule.data.Length);
+            InitialisePlayerModuleData(currentModule.data, (uint)currentModule.data.Length);
         }
         catch(EntryPointNotFoundException e) //Bad linkage means we don't run the soundchip emulator, so no music :(
         {
@@ -136,12 +136,14 @@ public class BTMPlayer : MonoBehaviour
 
     public void EndOperations()
     {
+        if (!isBTMPluginLoaded) return;
         DestroyEmulator();
     }
 
     public void PlaySong(int songNum)
     {
-		hasStoppedSong = true;
+        if (!isBTMPluginLoaded) return;
+        hasStoppedSong = true;
         try 
         {
             playSong(songNum);
@@ -156,7 +158,8 @@ public class BTMPlayer : MonoBehaviour
     
     public void StopSong()
     {
-		hasStoppedSong = true;
+        if (!isBTMPluginLoaded) return;
+        hasStoppedSong = true;
         try
         {
             stopSong();
@@ -170,6 +173,7 @@ public class BTMPlayer : MonoBehaviour
 
     public void SetSongVolume(float volume)
     {
+        if (!isBTMPluginLoaded) return;
         int passInt = Mathf.RoundToInt(volume*100f);
         try
         {
@@ -184,6 +188,7 @@ public class BTMPlayer : MonoBehaviour
 
     public IEnumerator SongFade(float time, float startVol = 1f, float endVol = 0f) //Done at the emulator level to keep it separate from the user-defined BGM level
     {
+        if (!isBTMPluginLoaded) yield break;
         float fadeCounter = 0f;
         while(fadeCounter <= time)
         {
@@ -197,6 +202,7 @@ public class BTMPlayer : MonoBehaviour
     
     public int GetNumberOfSongsInCurrentModule()
     {
+        if (!isBTMPluginLoaded) return 1;
         int tempInt = 1;
         try
         {
@@ -212,6 +218,7 @@ public class BTMPlayer : MonoBehaviour
 
     public int GetCurrentNote(int channel)
     {
+        if (!isBTMPluginLoaded) return -1;
         int tempInt = -1;
         try
         {
@@ -227,7 +234,8 @@ public class BTMPlayer : MonoBehaviour
 	
 	public int GetCurrentBPM()
 	{
-		int tempInt = 32;
+        if (!isBTMPluginLoaded) return 32;
+        int tempInt = 32;
 		try
 		{
 			tempInt = getCurrentBPM();
@@ -242,7 +250,8 @@ public class BTMPlayer : MonoBehaviour
 	
 	public int GetCurrentSpeed()
 	{
-		int tempInt = 6;
+        if (!isBTMPluginLoaded) return 6;
+        int tempInt = 6;
 		try
 		{
 			tempInt = getCurrentSpeed();
@@ -257,6 +266,7 @@ public class BTMPlayer : MonoBehaviour
 	
 	public int GetTickInStep()
 	{
+        if (!isBTMPluginLoaded) return 0;
 		int tempInt = 0;
 		try
 		{
@@ -276,6 +286,7 @@ public class BTMPlayer : MonoBehaviour
     */
     public int GetRegister(int addr)
     {
+        if (!isBTMPluginLoaded) return 0;
         int tempInt = 0;
         try
         {
@@ -291,6 +302,7 @@ public class BTMPlayer : MonoBehaviour
     
     public string GetSongName(int songNum) //Unfortunately, this one will cause an exception if called without the proper linkage
     {
+        if (!isBTMPluginLoaded) return "";
         unsafe
         {
             byte* inputCharList = getSongName(songNum); //Naughty C-style string handling

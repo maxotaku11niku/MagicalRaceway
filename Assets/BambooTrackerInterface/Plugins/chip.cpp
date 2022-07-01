@@ -27,15 +27,6 @@
 #include <utility>
 #include "resampler.h"
 
-extern "C"
-{
-#include "mamedef.h"
-
-UINT8 CHIP_SAMPLING_MODE = 0x00;
-INT32 CHIP_SAMPLE_RATE;
-stream_sample_t* DUMMYBUF[] = { nullptr, nullptr };
-}
-
 namespace chip
 {
 Chip::Chip(int id, int clock, int rate, int autoRate, size_t maxDuration,
@@ -54,7 +45,7 @@ Chip::Chip(int id, int clock, int rate, int autoRate, size_t maxDuration,
 
 	for (int pan = STEREO_LEFT; pan <= STEREO_RIGHT; ++pan) {
 		for (auto& buf : buffer_) {
-			buf[pan] = new stream_sample_t[CHIP_SMPL_BUF_SIZE_];
+			buf[pan] = new sample[CHIP_SMPL_BUF_SIZE_];
 		}
 	}
 }
@@ -88,7 +79,7 @@ void Chip::setRate(int rate)
 
 void Chip::funcSetRate(int rate) noexcept
 {
-	rate_ = CHIP_SAMPLE_RATE = ((rate) ? rate : autoRate_);
+	rate_ = ((rate) ? rate : autoRate_);
 }
 
 int Chip::getClock() const noexcept

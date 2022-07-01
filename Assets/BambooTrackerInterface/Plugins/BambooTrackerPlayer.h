@@ -7,17 +7,20 @@
 #include "btm_io.h"
 #include "precise_timer.h"
 
-extern "C" void advanceTick();
-extern "C" void InitialisePlayerModuleData(int emu, const uint8_t * modData, const size_t dataSize);
-extern "C" void DestroyEmulator();
-extern "C" void playSong(int songNum);
-extern "C" void stopSong();
-extern "C" void setVolume(int volPercent);
-extern "C" int16_t* getStreamData(size_t numSamples);
-extern "C" int getNumSongs();
-extern "C" int getCurrentBPM();
-extern "C" int getCurrentSpeed();
-extern "C" int getTickInStep();
-extern "C" int getCurrentNote(int channel);
-extern "C" int getRegister(int addr);
-extern "C" char* getSongName(int songNum);
+extern "C"
+{
+	void advanceTick();
+	void InitialisePlayerModuleData(const uint8_t* modData, const size_t dataSize);
+	void DestroyEmulator();
+	void playSong(int songNum);
+	void stopSong();
+	void setVolume(int volPercent);
+	int16_t* getStreamData(size_t numSamples);
+	int getNumSongs();
+	int getCurrentBPM();
+	int getCurrentSpeed();
+	int getTickInStep();
+	int getCurrentNote(int channel);
+	int getRegister(int addr);
+	char* getSongName(int songNum);
+}

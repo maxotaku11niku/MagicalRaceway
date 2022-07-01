@@ -73,12 +73,12 @@ const std::unordered_map<FMOperatorType, std::vector<FMEnvelopeParameter>> FM_EN
 };
 }
 
-OPNAController::OPNAController(chip::OpnaEmulator emu, int clock, int rate, int duration)
+OPNAController::OPNAController(int clock, int rate, int duration)
 	: mode_(SongType::Standard),
 	  storePointADPCM_(0)
 {
 	constexpr size_t DRAM_SIZE = 262144;	// 256KiB
-	opna_ = std::unique_ptr<chip::OPNA>(new chip::OPNA(emu, clock, rate, duration, DRAM_SIZE,
+	opna_ = std::unique_ptr<chip::OPNA>(new chip::OPNA(clock, rate, duration, DRAM_SIZE,
 										 std::unique_ptr<chip::LinearResampler>(new chip::LinearResampler()),
 		                                 std::unique_ptr<chip::LinearResampler>(new chip::LinearResampler())));
 
@@ -160,27 +160,6 @@ void OPNAController::updateRegisterStates()
 		}
 		registerSetBuf_.clear();
 	}
-}
-
-/********** Real chip interface **********/
-void OPNAController::useSCCI(scci::SoundInterfaceManager* manager)
-{
-	opna_->useSCCI(manager);
-}
-
-bool OPNAController::isUsedSCCI() const
-{
-	return opna_->isUsedSCCI();
-}
-
-void OPNAController::useC86CTL(C86ctlBase* base)
-{
-	opna_->useC86CTL(base);
-}
-
-bool OPNAController::isUsedC86CTL() const
-{
-	return opna_->isUsedC86CTL();
 }
 
 /********** Stream samples **********/

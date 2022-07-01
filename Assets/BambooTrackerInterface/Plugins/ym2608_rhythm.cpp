@@ -1,5 +1,7 @@
 #include "ym2608_rhythm.h"
 
+//The beat samples in ROM, as crappy as they may be.
+
 const unsigned int YMFM_ADPCM_ROM_addr[2*6] = {
 0x0000, 0x01bf, /* bass drum  */
 0x01c0, 0x043f, /* snare drum */

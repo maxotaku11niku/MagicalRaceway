@@ -26,15 +26,6 @@
 #include "opna.h"
 #include <cstdint>
 #include <algorithm>
-#include "SCCIDefines.h"
-#include "scci.h"
-#include "c86ctl_wrapper.h"
-
-extern "C"
-{
-#include "2608intf.h"
-#include "nuke2608intf.h"
-}
 #include "ymfmintf2608.h"
 
 namespace chip
@@ -53,24 +44,20 @@ inline double clamp(double value, double low, double high)
 
 size_t OPNA::count_ = 0;
 
-OPNA::OPNA(OpnaEmulator emu, int clock, int rate, size_t maxDuration, size_t dramSize,
+OPNA::OPNA(int clock, int rate, size_t maxDuration, size_t dramSize,
 		   std::unique_ptr<AbstractResampler> fmResampler, std::unique_ptr<AbstractResampler> ssgResampler,
 		   std::shared_ptr<AbstractRegisterWriteLogger> logger)
 	: Chip(count_++, clock, rate, 110933, maxDuration,
 		   std::move(fmResampler), std::move(ssgResampler),	// autoRate = 110933: FM internal rate
 		   logger),
-	  dramSize_(dramSize),
-	  scciManager_(nullptr),
-	  scciChip_(nullptr),
-	  c86ctlBase_(nullptr),
-	  c86ctlRC_(nullptr),
-	  c86ctlGm_(nullptr)
+	  dramSize_(dramSize)
 {
 	regBack_ = new uint8_t[0x200];
 	for(int i = 0; i < 0x200; i++)
 	{
 		regBack_[i] = 0;
 	}
+	/*/
 	switch (emu) {
 	case OpnaEmulator::Mame:
 		fprintf(stderr, "Using emulator: MAME YM2608\n");
@@ -90,7 +77,11 @@ OPNA::OPNA(OpnaEmulator emu, int clock, int rate, size_t maxDuration, size_t dra
 		intf_ = &mame_intf2608;
 		break;
 	}
-
+	//*/
+	/**/
+	fprintf(stderr, "Using emulator: YMFM\n"); //Bambootracker does not use this chip emulator; I have been forced to change from the MAME emulator because it is now under GPL, which is not compatible with CC-BY-NC.
+	intf_ = &ymfm_intf2608; //Also, 'Nuked' uses some MAME code and is quite demanding anyway, so I can't use that either.
+	//*/
 	funcSetRate(rate);
 
 	uint8_t EmuCore = 0;
@@ -115,9 +106,6 @@ OPNA::~OPNA()
 	intf_->device_stop(id_);
 
 	--count_;
-
-	useSCCI(nullptr);
-	useC86CTL(nullptr);
 }
 
 void OPNA::reset()
@@ -125,9 +113,6 @@ void OPNA::reset()
 	std::lock_guard<std::mutex> lg(mutex_);
 
 	intf_->device_reset(id_);
-
-	if (scciChip_) scciChip_->init();
-	if (c86ctlRC_) c86ctlRC_->resetChip();
 }
 
 void OPNA::setRegister(uint32_t offset, uint8_t value)
@@ -153,9 +138,6 @@ void OPNA::setRegister(uint32_t offset, uint8_t value)
 			intf_->data_port_a_w(id_, 1, value & 0xff);
 		}
 	}
-
-	if (scciChip_) scciChip_->setRegister(offset, value);
-	if (c86ctlRC_) c86ctlRC_->out(offset, value);
 }
 
 uint8_t OPNA::getRegister(uint32_t offset) const
@@ -193,13 +175,6 @@ void OPNA::setVolumeSSG(double dB)
 {
 	std::lock_guard<std::mutex> lg(mutex_);
 	volumeRatio_[SSG] = std::pow(10.0, (dB - VOL_REDUC_) / 20.0);
-
-	if (c86ctlGm_) {
-		// NOTE: estimate SSG volume roughly
-		uint8_t vol = static_cast<uint8_t>(std::round((dB < -3.0) ? (2.5 * dB + 45.5)
-																  : (7. * dB + 59.)));
-		c86ctlGm_->setSSGVolume(vol);
-	}
 }
 
 size_t OPNA::getDRAMSize() const noexcept
@@ -240,67 +215,5 @@ void OPNA::mix(int16_t* stream, size_t nSamples)
 			*p++ = static_cast<int16_t>(clamp(s * masterVolumeRatio_, -32768.0, 32767.0));
 		}
 	}
-}
-
-void OPNA::useSCCI(scci::SoundInterfaceManager* manager)
-{
-	if (manager) {
-		scciManager_ = manager;
-		scciManager_->initializeInstance();
-		scciManager_->reset();
-		scciChip_ = scciManager_->getSoundChip(scci::SC_TYPE_YM2608, scci::SC_CLOCK_7987200);
-		if (!scciChip_) {
-			scciManager_->releaseInstance();
-			scciManager_ = nullptr;
-		}
-	}
-	else {
-		if (!scciChip_) return;
-		scciManager_->releaseSoundChip(scciChip_);
-		scciChip_ = nullptr;
-
-		scciManager_->releaseInstance();
-		scciManager_ = nullptr;
-	}
-}
-
-bool OPNA::isUsedSCCI() const noexcept
-{
-	return (scciManager_ != nullptr);
-}
-
-void OPNA::useC86CTL(C86ctlBase* base)
-{
-	if (!base || base->isEmpty()) {
-		if (!c86ctlBase_) return;
-		c86ctlRC_->resetChip();
-		c86ctlGm_.reset();
-		c86ctlRC_.reset();
-		c86ctlBase_->deinitialize();
-	}
-	else {
-		c86ctlBase_.reset(base);
-		c86ctlBase_->initialize();
-		int nChip = c86ctlBase_->getNumberOfChip();
-		for (int i = 0; i < nChip; ++i) {
-			C86ctlRealChip* rc = c86ctlBase_->getChipInterface(i);
-			if (rc) {
-				c86ctlRC_.reset(rc);
-				c86ctlRC_->resetChip();
-				if (C86ctlGimic* gm = c86ctlRC_->queryInterface()) {
-					c86ctlGm_.reset(gm);
-					return;
-				}
-				c86ctlRC_.reset();
-			}
-		}
-		base->deinitialize();
-	}
-	c86ctlBase_.reset();
-}
-
-bool OPNA::isUsedC86CTL() const noexcept
-{
-	return (c86ctlBase_ != nullptr);
 }
 }

@@ -35,7 +35,8 @@ namespace SplineTest
             mNavi = mm.pInput.currentActionMap.FindAction("Menu Navigation");
             mConfirm = mm.pInput.currentActionMap.FindAction("Accept");
             songTitleText.text = (currentSelectedSongNum + 1).ToString() + ": " + btmPlayer.GetSongName(currentSelectedSongNum); //Song names are stored in the module files
-            if (mm.isOstBundled) musicCommentText.text = musicComments[currentSelectedSongNum];
+            if (!gm.mToggle) musicCommentText.text = "Music disabled, enable it to see comments!";
+            else if (mm.isOstBundled) musicCommentText.text = musicComments[currentSelectedSongNum];
             else musicCommentText.text = "OST not bundled! Be careful not to share this testing version!"; //Displays only when testing the emulation and piano display. Must be manually set
         }
         
@@ -45,19 +46,22 @@ namespace SplineTest
             currentPlayingSongNum = 0;
             songTitleText.color = new Color32(0x4A, 0xFF, 0x4A, 0xFF);
             songTitleText.text = (currentSelectedSongNum + 1).ToString() + ": " + btmPlayer.GetSongName(currentSelectedSongNum);
-            if (mm.isOstBundled) musicCommentText.text = musicComments[currentSelectedSongNum];
+            if (!gm.mToggle) musicCommentText.text = "Music disabled, enable it to see comments!";
+            else if (mm.isOstBundled) musicCommentText.text = musicComments[currentSelectedSongNum];
             else musicCommentText.text = "OST not bundled! Be careful not to share this testing version!";
         }
         
         void OnDisable()
         {
             btmPlayer.PlaySong(0);
-            if (mm.isOstBundled) musicCommentText.text = musicComments[0];
+            if (!gm.mToggle) musicCommentText.text = "Music disabled, enable it to see comments!";
+            else if (mm.isOstBundled) musicCommentText.text = musicComments[0];
             else musicCommentText.text = "OST not bundled! Be careful not to share this testing version!";
         }
 		
         public void UpdateNotes()
         {
+            if (!gm.mToggle) return;
             if(btmPlayer.hasStoppedSong)
 			{
 				btmPlayer.hasStoppedSong = false;
@@ -79,7 +83,12 @@ namespace SplineTest
 
         void Update()
         {
-            if(mNavi.triggered || dpadLeftTButton.isDown || dpadRightTButton.isDown) //Selecting a song
+            if (!gm.mToggle)
+            {
+                songTitleText.text = "No music!";
+                return;
+            }
+            if (mNavi.triggered || dpadLeftTButton.isDown || dpadRightTButton.isDown) //Selecting a song
             {
 #if UNITY_EDITOR
                 currentSelectedSongNum += (int)(mNavi.ReadValue<Vector2>().x);
@@ -118,25 +127,6 @@ namespace SplineTest
                 if (mm.isOstBundled) musicCommentText.text = musicComments[currentSelectedSongNum];
                 else musicCommentText.text = "OST not bundled! Be careful not to share this testing version!";
             }
-            /*/
-			if(btmPlayer.hasStoppedSong)
-			{
-				btmPlayer.hasStoppedSong = false;
-				for (int i = 0; i < 9; i++)
-				{
-					channelNum = i;
-					pianoChannels[i].SetNote(-2);
-				}
-			}
-			else if(btmPlayer.GetTickInStep() == 0) //Only change notes on step advance
-			{
-				for (int i = 0; i < 9; i++)
-				{
-					channelNum = i;
-					pianoChannels[i].SetNote(btmPlayer.GetCurrentNote(channelNum));
-				}
-			}
-            //*/
         }
     }
 }

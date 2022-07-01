@@ -1329,8 +1329,8 @@ void ym2608::generate(output_data *output, uint32_t numsamples)
 			if (step == 1)
 			{
 				clock_fm_and_adpcm();
-				output->data[0] = (output->data[0] + m_last_fm.data[0]) / 2;
-				output->data[1] = (output->data[1] + m_last_fm.data[1]) / 2;
+				output->data[0] = output->data[0] + m_last_fm.data[0];
+				output->data[1] = output->data[1] + m_last_fm.data[1];
 			}
 		}
 	}

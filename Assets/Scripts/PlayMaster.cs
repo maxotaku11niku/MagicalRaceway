@@ -10,6 +10,17 @@ namespace SplineTest
 {
     public class PlayMaster : MonoBehaviour
     {
+        public enum PlayState
+        {
+            COUNTDOWN,
+            PLAY,
+            PAUSED,
+            TRANSITION_TO_SCORES,
+            WIN,
+            RETURN_TO_MENU,
+            LEADERBOARD
+        }
+
         public GameMaster gm;
         public GameObject playUIRoot;
         public SoundQueuer playerSounds;
@@ -187,7 +198,7 @@ namespace SplineTest
         int texStripUnloadNum;
         int texStripCounter;
         uint stageNum;
-        int playUIState;
+        PlayState playUIState;
         float countdownTime;
         float timeToReturnToMenu;
         float timeLeftToAdd;
@@ -680,7 +691,7 @@ namespace SplineTest
                 if(sprmanage.physPos.z <= 0f && !sprmanage.isBehindPlayer)
                 {
                     sprmanage.isBehindPlayer = true;
-                    if (Mathf.Abs(realXOff - xoffs) <= 24f && !sprmanage.hasBeenGrazed && playUIState == 1)
+                    if (Mathf.Abs(realXOff - xoffs) <= 24f && !sprmanage.hasBeenGrazed && playUIState == PlayState.PLAY)
                     {
                         score += (fspeed - 600f)*Mathf.Exp(-Mathf.Abs(realXOff - xoffs)*0.25f)*(Mathf.Abs(turnxspeed)*Mathf.Abs(turnxspeed)*2000000f + 0.1f)*1500f;
                         sprmanage.hasBeenGrazed = true;
@@ -692,7 +703,7 @@ namespace SplineTest
                 {
                     sprmanage.isBehindPlayer = false;
                 }
-                if(playUIState != 2) dynamicSpriteDistance[i] += 600f*Time.deltaTime;
+                if(playUIState != PlayState.PAUSED) dynamicSpriteDistance[i] += 600f*Time.deltaTime;
             }
         }
 
@@ -768,7 +779,7 @@ namespace SplineTest
                 directInputText.SetActive(true);
                 gridInputText.SetActive(false);
                 saveStatusText.SetActive(false);
-                playUIState = 6;
+                playUIState = PlayState.LEADERBOARD;
                 newHSEntry.SetUpEntry(newHighScoreEntry);
                 currentStringPosition = 0;
                 currentNextDeletionPoint = -1;
@@ -785,7 +796,7 @@ namespace SplineTest
             else
             {
                 failHSTextObject.SetActive(true);
-                playUIState = 5;
+                playUIState = PlayState.RETURN_TO_MENU;
                 timeToReturnToMenu = 7.0f;
             }
         }
@@ -868,7 +879,7 @@ namespace SplineTest
             gm.scoreGroups[gm.currentTrackNum].AddEntry(newHighScoreEntry);
             gm.scoreGroups[gm.currentTrackNum].WriteScoreDataToFile(gm.appBaseDirectory + HighScoreGroup.scorefileDirectory + currentTrack.scoreFileName + HighScoreGroup.scorefileExtension);
             gm.WriteConfig();
-            playUIState = 5;
+            playUIState = PlayState.RETURN_TO_MENU;
             DestroyCharacterEntry();
             switchExplanText.SetActive(false);
             directInputText.SetActive(false);
@@ -880,7 +891,7 @@ namespace SplineTest
 
         public void ReturnFromPaused()
         {
-            playUIState = 1;
+            playUIState = PlayState.PLAY;
             pauseScreen.SetActive(false);
 #if UNITY_ANDROID
             gm.menuTouchControls.SetActive(false);
@@ -917,7 +928,7 @@ namespace SplineTest
             while(true)
             {
                 timeLeftForPhase -= Time.deltaTime;
-                if(playUIState != 3) timeToReturnToMenu -= Time.deltaTime;
+                if(playUIState != PlayState.TRANSITION_TO_SCORES) timeToReturnToMenu -= Time.deltaTime;
                 switch(phase)
                 {
                     case 0:
@@ -1209,7 +1220,7 @@ namespace SplineTest
             }
             switch (playUIState)
             {
-                case 0: //Counting down to start
+                case PlayState.COUNTDOWN: //Counting down to start
                     countdownTime -= Time.deltaTime;
                     if (countdownTime <= 1f)
                     {
@@ -1219,14 +1230,32 @@ namespace SplineTest
                     if (countdownTime <= 0f)
                     {
                         startText.SetActive(false);
-                        playUIState = 1;
+                        playUIState = PlayState.PLAY;
                     }
                     countdownText.text = ((int)countdownTime).ToString();
                     break;
-                case 1: //During play
+                case PlayState.PLAY: //During play
                     if(runTimer) time -= Time.deltaTime;
                     if (((time >= 0f) || !runTimer))
                     {
+                        if(gm.accelInvert) //Acceleration invert makes it so that the acceleration button *releases* the accelerator. This is a feature designed to avoid fatigue from holding down the accelerator button for too long, since it would otherwise be held almost constantly.
+                        {
+#if UNITY_EDITOR
+                        brakeAmount = pInput.currentActionMap.FindAction("Brake").ReadValue<float>();
+                        accelAmount = (brakeAmount > 0.1f) ? 0f : 1f - pInput.currentActionMap.FindAction("Accelerate").ReadValue<float>();
+#elif UNITY_STANDALONE
+                        brakeAmount = pInput.currentActionMap.FindAction("Brake").ReadValue<float>();
+                        accelAmount = (brakeAmount > 0.1f) ? 0f : 1f - pInput.currentActionMap.FindAction("Accelerate").ReadValue<float>();
+#elif UNITY_ANDROID
+                        accelAmount = brakeTButton.isTouching ? 0f : (accelTButton.isTouching ? 0f : 1f);
+                        brakeAmount = brakeTButton.isTouching ? 0f : 1f;
+#elif UNITY_IOS
+                        accelAmount = brakeTButton.isTouching ? 0f : (accelTButton.isTouching ? 0f : 1f);
+                        brakeAmount = brakeTButton.isTouching ? 0f : 1f;
+#endif
+                        }
+                        else
+                        {
 #if UNITY_EDITOR
                         accelAmount = pInput.currentActionMap.FindAction("Accelerate").ReadValue<float>();
                         brakeAmount = pInput.currentActionMap.FindAction("Brake").ReadValue<float>();
@@ -1240,6 +1269,7 @@ namespace SplineTest
                         accelAmount = accelTButton.isTouching ? 1f : 0f;
                         brakeAmount = brakeTButton.isTouching ? 1f : 0f;
 #endif
+                        }
                     }
                     else if (((time < 0f) && runTimer))
                     {
@@ -1270,7 +1300,7 @@ namespace SplineTest
                     bg2TravelDist %= 512f;
                     if (pInput.currentActionMap.FindAction("Pause").triggered || pauseTButton.isDown)
                     {
-                        playUIState = 2;
+                        playUIState = PlayState.PAUSED;
                         pauseScreen.SetActive(true);
 #if UNITY_ANDROID
                         gm.playTouchControls.SetActive(false);
@@ -1285,10 +1315,10 @@ namespace SplineTest
                     playerAnimator.SetFloat("speed", fspeed*0.002f);
                     playerAnimator.SetFloat("turnStrength", xspeed/turnPower);
                     break;
-                case 2: //Paused
+                case PlayState.PAUSED: //Paused
                     if(pInput.currentActionMap.FindAction("Decline").triggered || declineTButton.isDown)
                     {
-                        playUIState = 1;
+                        playUIState = PlayState.PLAY;
                         pauseScreen.SetActive(false);
 #if UNITY_ANDROID
                         gm.menuTouchControls.SetActive(false);
@@ -1327,7 +1357,7 @@ namespace SplineTest
                     }
 #endif
                     break;
-                case 3: //Transitioning to the score entry screen
+                case PlayState.TRANSITION_TO_SCORES: //Transitioning to the score entry screen
                     timeToReturnToMenu -= Time.deltaTime;
                     if (timeToReturnToMenu <= 0.0f)
                     {
@@ -1336,12 +1366,12 @@ namespace SplineTest
                         DidGetOnLeaderBoard();
                     }
                     break;
-                case 4: //Win
+                case PlayState.WIN: //Win
                     if (timeLeftToAdd <= 0.0f)
                     {
                         score += timeLeftToAdd * winScoreBonusPerSecondLeft;
                         timeLeftText.text = "0";
-                        playUIState = 3;
+                        playUIState = PlayState.TRANSITION_TO_SCORES;
                     }
                     else
                     {
@@ -1350,7 +1380,7 @@ namespace SplineTest
                         timeLeftText.text = ((int)timeLeftToAdd).ToString();
                     }
                     break;
-                case 5: //Returning to menu
+                case PlayState.RETURN_TO_MENU: //Returning to menu
                     timeToReturnToMenu -= Time.deltaTime;
                     if (timeToReturnToMenu <= 0.0f && !hasTriggeredReturnToMenu)
                     {
@@ -1359,7 +1389,7 @@ namespace SplineTest
                         hasTriggeredReturnToMenu = true;
                     }
                     break;
-                case 6: //Did get on leaderboard
+                case PlayState.LEADERBOARD: //Did get on leaderboard
                     if (ctrlSwitchDelayTimer >= 0f) ctrlSwitchDelayTimer -= Time.deltaTime;
                     if(Keyboard.current.ctrlKey.isPressed && ctrlSwitchDelayTimer <= 0f)
                     {
@@ -1401,7 +1431,7 @@ namespace SplineTest
 #endif
                     break;
             }
-            if(time < 0f && runTimer && fspeed == 0.0f && playUIState == 1)
+            if(time < 0f && runTimer && fspeed == 0.0f && playUIState == PlayState.PLAY)
             {
                 gameOverText.SetActive(true);
 #if UNITY_ANDROID
@@ -1411,9 +1441,9 @@ namespace SplineTest
 #endif
                 gm.BTMSource.PlaySong(5);
                 timeToReturnToMenu = 9f;
-                playUIState = 3;
+                playUIState = PlayState.TRANSITION_TO_SCORES;
             }
-            else if(distance >= currentTrack.endDistance && playUIState == 1)
+            else if(distance >= currentTrack.endDistance && playUIState == PlayState.PLAY)
             {
                 winText.SetActive(true);
 #if UNITY_ANDROID
@@ -1425,7 +1455,7 @@ namespace SplineTest
                 timeLeftToAdd = time;
                 bonusMultiplierText.text = "×" + ((int)winScoreBonusPerSecondLeft).ToString() + "0";
                 StartCoroutine(WinAnimation());
-                playUIState = 4;
+                playUIState = PlayState.WIN;
             }
             playerSounds.SetPitch(fspeed*0.0035f);
             spline.yOffset = distance;
@@ -1595,7 +1625,7 @@ namespace SplineTest
                 }
             }
             UpdateDynamicSprites();
-            if(fspeed > 600f && playUIState != 2)
+            if(fspeed > 600f && playUIState != PlayState.PAUSED)
             {
                 nextDynamicSpriteSpawnDist += 600f*Time.deltaTime;
             }

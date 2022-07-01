@@ -40,7 +40,7 @@
 class OPNAController
 {
 public:
-	OPNAController(chip::OpnaEmulator emu, int clock, int rate, int duration);
+	OPNAController(int clock, int rate, int duration);
 
 	// Reset and initialize
 	void reset();
@@ -58,12 +58,6 @@ public:
 
 	// Update register states after tick process
 	void updateRegisterStates();
-
-	// Real chip interface
-	void useSCCI(scci::SoundInterfaceManager* manager);
-	bool isUsedSCCI() const;
-	void useC86CTL(C86ctlBase* base);
-	bool isUsedC86CTL() const;
 
 	// Stream samples
 	void getStreamSamples(int16_t* container, size_t nSamples);

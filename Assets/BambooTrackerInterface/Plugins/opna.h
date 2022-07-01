@@ -35,27 +35,14 @@ class SoundInterfaceManager;
 class SoundChip;
 }
 
-class C86ctlBase;
-class C86ctlRealChip;
-class C86ctlGimic;
-
 namespace chip
 {
-enum class OpnaEmulator
-{
-	Mame,
-	Nuked,
-	YMFM,
-	First = Mame,
-	Last = YMFM,
-};
-
 class OPNA final : public Chip
 {
 public:
 	// [rate]
 	// 0 = rate is 55466 (FM synthesis rate when clock is 3993600 * 2)
-	OPNA(OpnaEmulator emu, int clock, int rate, size_t maxDuration, size_t dramSize,
+	OPNA(int clock, int rate, size_t maxDuration, size_t dramSize,
 		 std::unique_ptr<AbstractResampler> fmResampler = std::unique_ptr<LinearResampler>(new LinearResampler()),
 		 std::unique_ptr<AbstractResampler> ssgResampler = std::unique_ptr<LinearResampler>(new LinearResampler()),
 		 std::shared_ptr<AbstractRegisterWriteLogger> logger = nullptr);
@@ -69,10 +56,6 @@ public:
 	void setVolumeSSG(double dB);
 	size_t getDRAMSize() const noexcept;
 	void mix(int16_t* stream, size_t nSamples) override;
-	void useSCCI(scci::SoundInterfaceManager* manager);
-	bool isUsedSCCI() const noexcept;
-	void useC86CTL(C86ctlBase* base);
-	bool isUsedC86CTL() const noexcept;
 
 private:
 	static size_t count_;
@@ -81,14 +64,5 @@ private:
 	size_t dramSize_;
 
 	uint8_t* regBack_; //register logger
-
-	// For SCCI
-	scci::SoundInterfaceManager* scciManager_;
-	scci::SoundChip* scciChip_;
-
-	// For C86CTL
-	std::unique_ptr<C86ctlBase> c86ctlBase_;
-	std::unique_ptr<C86ctlRealChip> c86ctlRC_;
-	std::unique_ptr<C86ctlGimic> c86ctlGm_;
 };
 }

@@ -12,7 +12,7 @@ namespace SplineTest
     public class GameMaster : MonoBehaviour
     {
         private static readonly char[] configID = new char[]{(char)0x4D, (char)0x52, (char)0x43, (char)0x46}; //"MRCF"
-        private static readonly char[] configVersion = new char[]{(char)0x33, (char)0x39}; //"39"
+        private static readonly char[] configVersion = new char[]{(char)0x34, (char)0x32}; //"42"
 #if UNITY_EDITOR
         private static readonly string configPath = "Assets/Scorefiles/init.cfg";
 #elif UNITY_STANDALONE
@@ -43,7 +43,8 @@ namespace SplineTest
         public int MaxResolutionMultiplier { get{ return maxRes; } }
         public float BGMVolume;
         public float SFXVolume;
-        public int mQuality; //Which OPNA emulation to use
+        public bool mToggle;
+        public bool accelInvert;
         public PlayerInput playerInput;
         public InputActionAsset defaultActions;
         public InputActionAsset currentActions;
@@ -183,7 +184,7 @@ namespace SplineTest
             }
             else Screen.SetResolution(Screen.resolutions[chosenResolution].width, Screen.resolutions[chosenResolution].height, dMode, Screen.resolutions[chosenResolution].refreshRate);
 #endif
-            BTMSource.InitBTMPlayer();
+            if(mToggle) BTMSource.InitBTMPlayer();
             if(skipToPlay)
             {
                 StartGame(0);
@@ -271,18 +272,22 @@ namespace SplineTest
                 if(new String(charlist) != new String(configID)) //Check if the file is a config file
                 {
                     Debug.LogWarning("init.cfg is not valid. init.cfg must start with 'MRCF' in the header.");
+                    reader.Close();
                     return;
                 }
                 charlist = reader.ReadChars(2);
                 if(new String(charlist) != new String(configVersion)) //Check if it is the right version
                 {
-                    Debug.LogWarning("init.cfg is incompatible. '39' is the current config file version indicator.");
+                    Debug.LogWarning("init.cfg is incompatible. '42' is the current config file version indicator. Writing default config file.");
+                    reader.Close();
+                    WriteDefaultConfig();
                     return;
                 }
                 charlist = reader.ReadChars(1);
                 if(charlist[0] != 0x02) //Just me being a bit pedantic
                 {
                     Debug.LogWarning("init.cfg has an incorrectly terminated header. Terminate the header with the STX control (0x02).");
+                    reader.Close();
                     return;
                 }
                 dMode = (FullScreenMode)reader.ReadByte();
@@ -290,7 +295,8 @@ namespace SplineTest
                 resolutionMultiplier = reader.ReadByte();
                 BGMVolume = reader.ReadByte();
                 SFXVolume = reader.ReadByte();
-                mQuality = reader.ReadByte();
+                mToggle = (reader.ReadByte() == 0) ? false : true;
+                accelInvert = (reader.ReadByte() == 0) ? false : true;
                 currentActions = ScriptableObject.CreateInstance<InputActionAsset>();
                 currentActions.LoadFromJson(reader.ReadString());
                 Debug.Log("init.cfg was successfully loaded!");
@@ -320,7 +326,8 @@ namespace SplineTest
             writer.Write((byte)resolutionMultiplier);
             writer.Write((byte)BGMVolume);
             writer.Write((byte)SFXVolume);
-            writer.Write((byte)mQuality);
+            writer.Write((byte)(mToggle ? 1 : 0));
+            writer.Write((byte)(accelInvert ? 1 : 0));
             writer.Write(currentActions.ToJson());
             writer.Write((byte)0x04);
             writer.Close();
@@ -336,15 +343,17 @@ namespace SplineTest
             writer.Write(configID);
             writer.Write(configVersion);
             writer.Write((byte)0x02);
-            writer.Write((byte)0x03);
-            writer.Write((byte)0x00);
-            writer.Write((byte)0x02);
-            writer.Write((byte)0x64);
-            writer.Write((byte)0x64);
-            writer.Write((byte)0x00);
+            writer.Write((byte)0x03); //Display Mode = Windowed
+            writer.Write((byte)0x00); //Lowest possible resolution
+            writer.Write((byte)0x02); //Windowed Resolution = 640 x 480
+            writer.Write((byte)0x64); //BGM Volume = 100%
+            writer.Write((byte)0x64); //SFX Volume = 100%
+            writer.Write((byte)0x01); //Music on
+            writer.Write((byte)0x00); //Accelerator button -> accelerates
             writer.Write(defaultActions.ToJson());
             writer.Write((byte)0x04);
             writer.Close();
+            ReadConfig();
         }
 
         public void StartGame(int songNum)
