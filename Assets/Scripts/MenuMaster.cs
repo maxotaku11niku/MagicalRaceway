@@ -253,11 +253,22 @@ namespace SplineTest
             BGTransform.position = new Vector3(-BGPos - 64f, -BGPos - 64f, 0);
             currentSelected = eventSystem.currentSelectedGameObject;
 #if UNITY_ANDROID
-            currentSelectedButton = currentSelected.GetComponent<Button>();
-            upOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnUp();
-            downOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnDown();
-            leftOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnLeft();
-            rightOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnRight();
+            if(currentSelected != null)
+            {
+                currentSelectedButton = currentSelected.GetComponent<Button>();
+                upOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnUp();
+                downOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnDown();
+                leftOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnLeft();
+                rightOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnRight();
+            }
+            else
+            {
+                currentSelectedButton = null;
+                upOfSelected = null;
+                downOfSelected = null;
+                leftOfSelected = null;
+                rightOfSelected = null;
+            }
             if (dpadUpTButton.isDown)
             {
                 if (upOfSelected != null) eventSystem.SetSelectedGameObject(upOfSelected.gameObject);
@@ -287,11 +298,22 @@ namespace SplineTest
                 if(currentSelectedButton != null) currentSelectedButton.OnSubmit(null);
             }
 #elif UNITY_IOS
-            currentSelectedButton = currentSelected.GetComponent<Button>();
-            upOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnUp();
-            downOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnDown();
-            leftOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnLeft();
-            rightOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnRight();
+            if(currentSelected != null)
+            {
+                currentSelectedButton = currentSelected.GetComponent<Button>();
+                upOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnUp();
+                downOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnDown();
+                leftOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnLeft();
+                rightOfSelected = currentSelected.GetComponent<Selectable>().FindSelectableOnRight();
+            }
+            else
+            {
+                currentSelectedButton = null;
+                upOfSelected = null;
+                downOfSelected = null;
+                leftOfSelected = null;
+                rightOfSelected = null;
+            }
             if (dpadUpTButton.isDown)
             {
                 if (upOfSelected != null) eventSystem.SetSelectedGameObject(upOfSelected.gameObject);

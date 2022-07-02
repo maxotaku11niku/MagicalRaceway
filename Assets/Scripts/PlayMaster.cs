@@ -1248,10 +1248,10 @@ namespace SplineTest
                         accelAmount = (brakeAmount > 0.1f) ? 0f : 1f - pInput.currentActionMap.FindAction("Accelerate").ReadValue<float>();
 #elif UNITY_ANDROID
                         accelAmount = brakeTButton.isTouching ? 0f : (accelTButton.isTouching ? 0f : 1f);
-                        brakeAmount = brakeTButton.isTouching ? 0f : 1f;
+                        brakeAmount = brakeTButton.isTouching ? 1f : 0f;
 #elif UNITY_IOS
                         accelAmount = brakeTButton.isTouching ? 0f : (accelTButton.isTouching ? 0f : 1f);
-                        brakeAmount = brakeTButton.isTouching ? 0f : 1f;
+                        brakeAmount = brakeTButton.isTouching ? 1f : 0f;
 #endif
                         }
                         else
