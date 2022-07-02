@@ -35,19 +35,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\abstract_instrument_property.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\BambooTrackerPlayer.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\binary_container.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\btm_io.cpp" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl_wrapper.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\chip.cpp" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\configuration.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\effect.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\effect_iterator.cpp" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\emu2149.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\envelope_fm.cpp" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\fm.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\instrument.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\instruments_manager.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\io_utils.cpp" />
@@ -56,7 +51,6 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\module.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\module_io.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\note.cpp" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna_controller.cpp" />
@@ -72,8 +66,6 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\track.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.cpp" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.c" />
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.c" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.cpp" />
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_fm.cpp" />
@@ -81,27 +73,19 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_ssg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\abstract_instrument_property.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\BambooTrackerPlayer.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\bamboo_tracker.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\bamboo_tracker_defs.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\binary_container.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\btm_io.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl_wrapper.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\chip.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\chip_def.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\configuration.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\echo_buffer.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\effect.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\effect_iterator.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\emu2149.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\emutypes.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\enum_hash.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\envelope_fm.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\file_io_error.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\fm.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instrument.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instruments_manager.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instrument_property_defs.h" />
@@ -109,11 +93,9 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\io_utils.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\jamming.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\lfo_fm.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\mamedef.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\module.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\module_io.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\note.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna_controller.h" />
@@ -122,8 +104,6 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\precise_timer.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\resampler.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sample_adpcm.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\scci.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\SCCIDefines.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sequence_iterator_interface.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sequence_property.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\song.h" />
@@ -134,9 +114,6 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\version.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym2608_rhythm.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymb_codec.h" />
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfmintf2608.h" />
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymfm_adpcm.h" />

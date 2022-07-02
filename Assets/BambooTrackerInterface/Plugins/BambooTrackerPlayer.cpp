@@ -67,14 +67,22 @@ inline void resetCurrentNotes()
 	}
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) void __stdcall advanceTick()
+#else
 extern "C" void advanceTick()
+#endif
 {
 	if (!isSongPlaying) return;
 	ticksToNextStep = pbManager->streamCountUp();
 	updateCurrentNotes();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) void __stdcall InitialisePlayerModuleData(const uint8_t *modData, const size_t dataSize)
+#else
 extern "C" void InitialisePlayerModuleData(const uint8_t *modData, const size_t dataSize)
+#endif
 {
 	isSongPlaying = false;
 	chipController = std::make_shared<OPNAController>(7987200, 55466, 40);
@@ -102,7 +110,11 @@ extern "C" void InitialisePlayerModuleData(const uint8_t *modData, const size_t 
 	resetCurrentNotes();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) void __stdcall DestroyEmulator()
+#else
 extern "C" void DestroyEmulator()
+#endif
 {
 	pbManager.~shared_ptr();
 	currentModule.~shared_ptr();
@@ -111,7 +123,11 @@ extern "C" void DestroyEmulator()
 	chipController.~shared_ptr();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) void __stdcall playSong(int songNum)
+#else
 extern "C" void playSong(int songNum)
+#endif
 {
 	resetCurrentNotes();
 	//tickTimer->stop();
@@ -134,58 +150,98 @@ extern "C" void playSong(int songNum)
 	//tickTimer->start();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) void __stdcall stopSong()
+#else
 extern "C" void stopSong()
+#endif
 {
 	pbManager->stopPlaySong();
 	isSongPlaying = false;
 	//tickTimer->stop();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) void __stdcall setVolume(int volPercent)
+#else
 extern "C" void setVolume(int volPercent)
+#endif
 {
 	chipController->setMasterVolume(volPercent);
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int16_t* __stdcall getStreamData(size_t numSamples)
+#else
 extern "C" int16_t* getStreamData(size_t numSamples)
+#endif
 {
 	int16_t* container = containerList;
 	chipController->getStreamSamples(container, numSamples/2); //Stereo, although OPNA is quite bad at stereo
 	return container;
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int __stdcall getNumSongs()
+#else
 extern "C" int getNumSongs()
+#endif
 {
 	return currentModule->getSongCount();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int __stdcall getCurrentBPM()
+#else
 extern "C" int getCurrentBPM()
+#endif
 {
 	return tickCounter->getTempo();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int __stdcall getCurrentSpeed()
+#else
 extern "C" int getCurrentSpeed()
+#endif
 {
 	return tickCounter->getSpeed();
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int __stdcall getTickInStep()
+#else
 extern "C" int getTickInStep()
+#endif
 {
 	return ticksToNextStep;
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int __stdcall getCurrentNote(int channel)
+#else
 extern "C" int getCurrentNote(int channel)
+#endif
 {
 	if (channel >= 18) channel = 17;
 	else if (channel < 0) channel = 0;
 	return currentNotes[channel];
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) int __stdcall getRegister(int addr)
+#else
 extern "C" int getRegister(int addr)
+#endif
 {
 	return chipController->debugGetRegister(addr);
 }
 
+#ifdef _MSC_VER
+extern "C" __declspec(dllexport) char* __stdcall getSongName(int songNum)
+#else
 extern "C" char* getSongName(int songNum)
+#endif
 {
 	std::string titleString = currentModule->getSong(songNum).getTitle();
 	char* charlist = charList;

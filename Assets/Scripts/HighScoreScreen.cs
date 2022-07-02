@@ -10,7 +10,7 @@ namespace SplineTest
 {
     public class HighScoreGroup
     {
-        public static readonly HighScoreGroup testDefault = new HighScoreGroup("TEST", new HighScore[] { new HighScore("Maxim Hoxha", 5261654, 2, 13330), //It's me!
+        public static readonly HighScoreGroup testDefault = new HighScoreGroup("TEST", new HighScore[] { new HighScore("Maxim Hoxha", 6035404, 2, 13143), //It's me!
                                                                                                           new HighScore("Raymoo Hackery", 1900000, 2, 19000), //broke shrine maiden
                                                                                                           new HighScore("Marisus Ksamey", 1800000, 2, 18000), //ordinary magician thief
                                                                                                           new HighScore("Succya Izaboi", 1700000, 2, 17000), //dio maid

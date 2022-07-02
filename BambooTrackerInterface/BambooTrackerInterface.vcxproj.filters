@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\abstract_instrument_property.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,13 +27,7 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\btm_io.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl_wrapper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\chip.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\configuration.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\effect.cpp">
@@ -45,13 +36,7 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\effect_iterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\emu2149.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\envelope_fm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\fm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\instrument.cpp">
@@ -76,9 +61,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\note.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opna.cpp">
@@ -120,12 +102,6 @@
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -149,13 +125,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\2608intf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\abstract_instrument_property.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\bamboo_tracker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\bamboo_tracker_defs.h">
@@ -170,19 +140,10 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\btm_io.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\c86ctl_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\chip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\chip_def.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\echo_buffer.h">
@@ -194,12 +155,6 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\effect_iterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\emu2149.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\emutypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\enum_hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -207,9 +162,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\file_io_error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\fm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\instrument.h">
@@ -233,9 +185,6 @@
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\lfo_fm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\mamedef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\module.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -243,9 +192,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\note.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\nuke2608intf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opna.h">
@@ -267,12 +213,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sample_adpcm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\scci.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\SCCIDefines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\sequence_iterator_interface.h">
@@ -300,15 +240,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\wav_container.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ym3438.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymb_codec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\ymdeltat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\BambooTrackerInterface\Plugins\opnaymfm.h">

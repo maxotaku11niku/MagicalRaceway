@@ -545,8 +545,8 @@ public:
 		m_regs.cache_operator_data(m_choffs, m_opoffs, m_cache);
 
 		// clock the key state
-		clock_keystate(uint32_t(m_keyon_live != 0));
-		m_keyon_live &= ~(1 << KEYON_CSM);
+		//clock_keystate(uint32_t(m_keyon_live != 0));
+		//m_keyon_live &= ~(1 << KEYON_CSM);
 
 		// we're active until we're quiet after the release
 		return (m_env_state != (RegisterType::EG_HAS_REVERB ? EG_REVERB : EG_RELEASE) || m_env_attenuation < EG_QUIET);
@@ -620,7 +620,7 @@ public:
 	void keyonoff(uint32_t on, keyon_type type)
 	{
 		m_keyon_live = (m_keyon_live & ~(1 << int(type))) | (bitfield(on, 0) << int(type));
-		clock_keystate(uint32_t(m_keyon_live != 0));
+		clock_keystate(uint32_t((m_keyon_live != 0)));
 	}
 
 	// return a reference to our registers
@@ -661,7 +661,7 @@ private:
 	void start_release()
 	{
 		// don't change anything if already in release state
-		if (m_env_state >= EG_RELEASE)
+		if (m_env_state == EG_RELEASE)
 			return;
 		m_env_state = EG_RELEASE;
 
@@ -680,7 +680,7 @@ private:
 		assert(keystate == 0 || keystate == 1);
 
 		// has the key changed?
-		if ((keystate ^ m_key_state) != 0)
+		if (keystate != m_key_state)
 		{
 			m_key_state = keystate;
 
@@ -688,10 +688,12 @@ private:
 			if (keystate != 0)
 			{
 				// OPLL has a DP ("depress"?) state to bring the volume
-				// down before starting the attack
+				// down before starting the attack... but we're only working with OPNA anyway...
+				/* ...so just comment it out.
 				if (RegisterType::EG_HAS_DEPRESS && m_env_attenuation < 0x200)
 					m_env_state = EG_DEPRESS;
 				else
+				*/
 					start_attack();
 			}
 
@@ -790,6 +792,8 @@ private:
 			// at least so assuming it is true for everyone
 			if (rate < 62)
 				m_env_attenuation += (~m_env_attenuation * increment) >> 4;
+			else //consistent with start_attack()
+				m_env_attenuation = 0;
 		}
 
 		// all other cases are similar
@@ -1260,11 +1264,11 @@ public:
 
 		// create the channels
 		for (uint32_t chnum = 0; chnum < CHANNELS; chnum++)
-			m_channel[chnum] = std::make_unique<fm_channel<RegisterType>>(*this, RegisterType::channel_offset(chnum));
+			m_channel[chnum] = std::unique_ptr<fm_channel<RegisterType>>(new fm_channel<RegisterType>(*this, RegisterType::channel_offset(chnum)));
 
 		// create the operators
 		for (uint32_t opnum = 0; opnum < OPERATORS; opnum++)
-			m_operator[opnum] = std::make_unique<fm_operator<RegisterType>>(*this, RegisterType::operator_offset(opnum));
+			m_operator[opnum] = std::unique_ptr<fm_operator<RegisterType>>(new fm_operator<RegisterType>(*this, RegisterType::operator_offset(opnum)));
 
 		// do the initial operator assignment
 		assign_operators();

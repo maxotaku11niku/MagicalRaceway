@@ -31,6 +31,7 @@
 
 
 #include <algorithm>
+#include <cstring>
 #include "opnaymfm.h"
 
 #define LOG_WRITES (0)

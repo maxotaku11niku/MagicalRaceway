@@ -557,6 +557,7 @@ protected:
 	// internal helpers
 	void update_prescale(uint8_t prescale);
 	void clock_fm_and_adpcm();
+	uint8_t gpdbRead(int offset);
 
 	// internal state
 	opn_fidelity m_fidelity;              // configured fidelity

@@ -57,31 +57,10 @@ OPNA::OPNA(int clock, int rate, size_t maxDuration, size_t dramSize,
 	{
 		regBack_[i] = 0;
 	}
-	/*/
-	switch (emu) {
-	case OpnaEmulator::Mame:
-		fprintf(stderr, "Using emulator: MAME YM2608\n");
-		intf_ = &mame_intf2608;
-		break;
-	case OpnaEmulator::Nuked:
-		fprintf(stderr, "Using emulator: Nuked OPN-Mod\n");
-		intf_ = &nuked_intf2608;
-		break;
-	case OpnaEmulator::YMFM:
-		fprintf(stderr, "Using emulator: YMFM\n");
-		intf_ = &ymfm_intf2608;
-		break;
-	default:
-		fprintf(stderr, "Unknown emulator choice. Using the default.\n");
-		fprintf(stderr, "Using emulator: MAME YM2608\n");
-		intf_ = &mame_intf2608;
-		break;
-	}
-	//*/
-	/**/
+
 	fprintf(stderr, "Using emulator: YMFM\n"); //Bambootracker does not use this chip emulator; I have been forced to change from the MAME emulator because it is now under GPL, which is not compatible with CC-BY-NC.
 	intf_ = &ymfm_intf2608; //Also, 'Nuked' uses some MAME code and is quite demanding anyway, so I can't use that either.
-	//*/
+	
 	funcSetRate(rate);
 
 	uint8_t EmuCore = 0;
@@ -121,11 +100,14 @@ void OPNA::setRegister(uint32_t offset, uint8_t value)
 
 	regBack_[offset] = value;
 
+	intf_->data_port_a_w(id_, offset, value);
+	
 	if (logger_) {
 		//logger_->recordRegisterChange(offset, value);
 	}
+	/*/
 	else if (intf_ == &ymfm_intf2608) {
-		intf_->data_port_a_w(id_, offset, value);
+		
 	}
 	else {
 		if (offset & 0x100) {
@@ -138,10 +120,13 @@ void OPNA::setRegister(uint32_t offset, uint8_t value)
 			intf_->data_port_a_w(id_, 1, value & 0xff);
 		}
 	}
+	//*/
 }
 
 uint8_t OPNA::getRegister(uint32_t offset) const
 {
+	return intf_->read_port_r(id_, offset);
+	/*/
 	if (intf_ == &ymfm_intf2608) {
 		return intf_->read_port_r(id_, offset);
 	}
@@ -153,15 +138,12 @@ uint8_t OPNA::getRegister(uint32_t offset) const
 		intf_->control_port_a_w(id_, 0, offset & 0xff);
 	}
 	return intf_->read_port_r(id_, 1);
+	//*/
 }
 
 uint8_t OPNA::debugGetRegister(int offset) const
 {
-	if(intf_ == &ymfm_intf2608)
-	{
-		return intf_->read_port_r(id_, offset + 0x200);
-	}
-	else return regBack_[offset];
+	return intf_->read_port_r(id_, offset + 0x200);
 }
 
 

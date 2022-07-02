@@ -1154,10 +1154,19 @@ uint8_t ym2608::readDebug(int offset)
 	{
 		return regpcm.read(offset & 0x0F);
 	}
+	else if (offset >= 0xD0 && offset < 0x100) //General purpose temporary debugging information
+	{
+		return gpdbRead(offset - 0xD0);
+	}
 	else //Assume FM for the other registers
 	{
 		return regfm.read(offset);
 	}
+}
+
+uint8_t ym2608::gpdbRead(int offset) //General purpose debug info getter, content intentionally not permanent
+{
+	return 0;
 }
 
 //-------------------------------------------------
@@ -1329,8 +1338,8 @@ void ym2608::generate(output_data *output, uint32_t numsamples)
 			if (step == 1)
 			{
 				clock_fm_and_adpcm();
-				output->data[0] = output->data[0] + m_last_fm.data[0];
-				output->data[1] = output->data[1] + m_last_fm.data[1];
+				output->data[0] = (output->data[0] + m_last_fm.data[0]) * 2;
+				output->data[1] = (output->data[1] + m_last_fm.data[1]) * 2;
 			}
 		}
 	}
