@@ -17,6 +17,7 @@ MemoryCaptures/
 obj/
 Temp/
 x64/
+UserSettings/
 *.meta
 *.bak
 Assets/Sounds/BGM/EoSD.btm
