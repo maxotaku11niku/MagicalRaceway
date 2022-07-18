@@ -11,6 +11,7 @@ namespace SplineTest
 
         public void Play(int clipNum, bool loop = true)
         {
+            if (source.clip == clips[clipNum] && source.isPlaying) return;
             source.clip = clips[clipNum];
             source.loop = loop;
             source.Play();

@@ -19,7 +19,8 @@ namespace SplineTest
                 }
                 if(sprman.spriteType == SpriteManager.SpriteType.DYNAMIC)
                 {
-                    master.DynamicSpriteCollision();
+                    float angle = Mathf.Atan2(master.xoffs - sprman.physPos.x, sprman.physPos.z);
+                    master.DynamicSpriteCollision(angle);
                 }
             }
         }

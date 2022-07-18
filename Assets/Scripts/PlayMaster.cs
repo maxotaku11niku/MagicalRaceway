@@ -104,7 +104,7 @@ namespace SplineTest
         public uint displayScore;
         float score;
         float edgeGrazeMultiplier;
-        float xoffs;
+        public float xoffs;
         float fspeed;
         float xspeed;
         float accelAmount;
@@ -120,6 +120,7 @@ namespace SplineTest
         public float turnPower;
         public float dragFactor;
         public float offRoadDragFactor;
+        public float dynamicCollisionStrength;
         float currentDragFactor;
         float currentSplit;
         float currentPitch;
@@ -129,6 +130,8 @@ namespace SplineTest
         float winScoreBonusPerSecondLeft;
         float stageStartDistance;
         float stageEndDistance;
+        bool isSpinning;
+        bool hasCrashed;
 
         public GameObject devPanelObject;
         public Text dDistNum;
@@ -292,6 +295,8 @@ namespace SplineTest
         {
             LoadFromCurrentTrackDef();
             playUIState = 0;
+            isSpinning = false;
+            hasCrashed = false;
             distance = 0f;
             xoffs = 0f;
             fspeed = 0f;
@@ -491,6 +496,7 @@ namespace SplineTest
             scoreEntryObject.SetActive(false);
             scoreEntryTop.SetActive(false);
             playUIRoot.SetActive(false);
+            playerSounds.Stop();
             gm.BTMSource.StopSong();
             gm.BTMSource.SetSongVolume(1.0f);
 			for(int i = 0; i < staticSpriteObjects.Length; i++)
@@ -504,6 +510,7 @@ namespace SplineTest
         public void StaticSpriteCollision()
         {
             playerQuickSounds.PlayOneShot(0);
+            hasCrashed = true;
             fspeed = 0f;
             xspeed = 0f;
             distance -= 2f;
@@ -511,12 +518,36 @@ namespace SplineTest
             bg2TravelDist += turnxspeed*2f*bg2TravelFactor;
             bg1TravelDist %= 512f;
             bg2TravelDist %= 512f;
+            StartCoroutine(PlayerCrash());
         }
 
-        public void DynamicSpriteCollision()
+        IEnumerator PlayerCrash()
+        {
+            hasCrashed = false;
+            yield break;
+        }
+
+        public void DynamicSpriteCollision(float angle)
         {
             playerQuickSounds.PlayOneShot(0);
-            fspeed = 540f;
+            playerSounds.Play(1, true);
+            isSpinning = true;
+            accelAmount = 0f;
+            playerAnimator.SetTrigger("spin");
+            StartCoroutine(SpinOut(angle, fspeed - 600f));
+        }
+
+        IEnumerator SpinOut(float angle, float speedDelta)
+        {
+            fspeed = 595f - speedDelta * dynamicCollisionStrength * Mathf.Cos(angle);
+            xspeed = speedDelta * dynamicCollisionStrength * Mathf.Sin(angle);
+            yield return new WaitForSeconds(0.05f);
+            while(playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Spin"))
+            {
+                yield return null;
+            }
+            isSpinning = false;
+            yield break;
         }
 
         void LoadNewStaticSpriteGroup(int sprNumber)
@@ -965,7 +996,8 @@ namespace SplineTest
                 bg2TravelDist -= turnxspeed * fspeed * bg2TravelFactor * Time.deltaTime;
                 bg1TravelDist %= 512f;
                 bg2TravelDist %= 512f;
-                playerAnimator.SetFloat("speed", fspeed*0.002f);
+                playerAnimator.SetFloat("unscSpeed", fspeed * 0.002f);
+                playerAnimator.SetFloat("speed", fspeed * 0.002f);
                 playerAnimator.SetFloat("turnStrength", 0f);
                 yield return null;
             }
@@ -1236,7 +1268,7 @@ namespace SplineTest
                     break;
                 case PlayState.PLAY: //During play
                     if(runTimer) time -= Time.deltaTime;
-                    if (((time >= 0f) || !runTimer))
+                    if (((time >= 0f) || !runTimer) && !(isSpinning || hasCrashed))
                     {
                         if(gm.accelInvert) //Acceleration invert makes it so that the acceleration button *releases* the accelerator. This is a feature designed to avoid fatigue from holding down the accelerator button for too long, since it would otherwise be held almost constantly.
                         {
@@ -1278,15 +1310,18 @@ namespace SplineTest
                     }
                     fspeed += (accelAmount * accelPower - brakeAmount * brakePower) * Time.deltaTime;
                     if (fspeed <= 0.0f) fspeed = 0.0f;
+                    if (!(isSpinning || hasCrashed))
+                    {
 #if UNITY_EDITOR
-                    xspeed = pInput.currentActionMap.FindAction("Steer").ReadValue<float>() * turnPower;
+                        xspeed = pInput.currentActionMap.FindAction("Steer").ReadValue<float>() * turnPower;
 #elif UNITY_STANDALONE
-                    xspeed = pInput.currentActionMap.FindAction("Steer").ReadValue<float>() * turnPower;
+                        xspeed = pInput.currentActionMap.FindAction("Steer").ReadValue<float>() * turnPower;
 #elif UNITY_ANDROID
-                    xspeed = steerTSlider.value * turnPower;
+                        xspeed = steerTSlider.value * turnPower;
 #elif UNITY_IOS
-                    xspeed = steerTSlider.value * turnPower;
+                        xspeed = steerTSlider.value * turnPower;
 #endif
+                    }
                     centrifugalForce = -centrifugalFactor * fspeed * fspeed * turnxspeed;
                     centrifugalBalance = xspeed * Time.deltaTime + centrifugalForce * Time.deltaTime;
                     xoffs += centrifugalBalance;
@@ -1301,7 +1336,9 @@ namespace SplineTest
                     if (pInput.currentActionMap.FindAction("Pause").triggered || pauseTButton.isDown)
                     {
                         playUIState = PlayState.PAUSED;
+                        playerAnimator.SetFloat("unscSpeed", 0f);
                         pauseScreen.SetActive(true);
+                        playerSounds.Pause();
 #if UNITY_ANDROID
                         gm.playTouchControls.SetActive(false);
                         gm.menuTouchControls.SetActive(true);
@@ -1311,8 +1348,31 @@ namespace SplineTest
 #endif
                         gm.menuMaster.GetComponent<MenuMaster>().eventSystem.SetSelectedGameObject(backToGameButton);
                         pInput.SwitchCurrentActionMap("Menu");
+                        break;
                     }
-                    playerAnimator.SetFloat("speed", fspeed*0.002f);
+                    else if(!(isSpinning || hasCrashed))
+                    {
+                        playerAnimator.SetFloat("unscSpeed", fspeed * 0.002f);
+                    }
+                    else
+                    {
+                        playerAnimator.SetFloat("unscSpeed", 1f);
+                    }
+                    if(centrifugalBalance < 0f && Mathf.Abs(xspeed/turnPower) > 0.99f && !(isSpinning || hasCrashed))
+                    {
+                        playerSounds.Play(1, true);
+                        playerAnimator.SetBool("skid", true);
+                    }
+                    else if(!(isSpinning || hasCrashed))
+                    {
+                        playerSounds.Play(0, true);
+                        playerAnimator.SetBool("skid", false);
+                    }
+                    else
+                    {
+                        playerAnimator.SetBool("skid", false);
+                    }
+                    playerAnimator.SetFloat("speed", fspeed * 0.002f);
                     playerAnimator.SetFloat("turnStrength", xspeed/turnPower);
                     break;
                 case PlayState.PAUSED: //Paused
@@ -1320,6 +1380,7 @@ namespace SplineTest
                     {
                         playUIState = PlayState.PLAY;
                         pauseScreen.SetActive(false);
+                        playerSounds.Unpause();
 #if UNITY_ANDROID
                         gm.menuTouchControls.SetActive(false);
                         gm.playTouchControls.SetActive(true);
