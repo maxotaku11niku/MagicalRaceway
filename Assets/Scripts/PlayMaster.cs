@@ -8,6 +8,12 @@ using UnityEngine.InputSystem;
 
 namespace SplineTest
 {
+    [Serializable]
+    public class SpriteGroup //now i have an array in an array!!!!
+    {
+        public Sprite[] spriteList;
+    }
+
     public class PlayMaster : MonoBehaviour
     {
         public enum PlayState
@@ -23,6 +29,7 @@ namespace SplineTest
 
         public GameMaster gm;
         public GameObject playUIRoot;
+        public GameObject playerSprite;
         public SoundQueuer playerSounds;
         public SoundQueuer playerQuickSounds;
         TouchScreenKeyboard tsKeyboard;
@@ -62,6 +69,8 @@ namespace SplineTest
         public Sprite[] specialChars;
         public HighScoreEntry newHSEntry;
         public Sprite[] dynamicSprites;
+        public SpriteGroup[] dynamicSpriteLists;
+        public Sprite[] broomSprites;
         public SpriteRenderer bg1sprrend;
         public SpriteRenderer bg2sprrend;
         public Text speedText;
@@ -509,37 +518,124 @@ namespace SplineTest
 
         public void StaticSpriteCollision()
         {
+            if (isSpinning || hasCrashed) return;
             playerQuickSounds.PlayOneShot(0);
-            hasCrashed = true;
-            fspeed = 0f;
-            xspeed = 0f;
-            distance -= 2f;
-            bg1TravelDist += turnxspeed*2f*bg1TravelFactor;
-            bg2TravelDist += turnxspeed*2f*bg2TravelFactor;
-            bg1TravelDist %= 512f;
-            bg2TravelDist %= 512f;
-            StartCoroutine(PlayerCrash());
+            if(fspeed < 60f)
+            {
+                fspeed = 0f;
+                xspeed = 0f;
+                distance -= 2f;
+                bg1TravelDist += turnxspeed * 2f * bg1TravelFactor;
+                bg2TravelDist += turnxspeed * 2f * bg2TravelFactor;
+                bg1TravelDist %= 512f;
+                bg2TravelDist %= 512f;
+            }
+            else if(fspeed < 600f)
+            {
+                playerSounds.Play(1, true);
+                isSpinning = true;
+                accelAmount = 0f;
+                playerAnimator.SetTrigger("spin");
+                float angle = xoffs >= 0 ? (xoffs >= currentSplit ? -Mathf.PI * 0.25f : Mathf.PI * 0.25f) : (xoffs <= -currentSplit ? Mathf.PI * 0.25f : -Mathf.PI * 0.25f);
+                StartCoroutine(SpinOut(angle, fspeed, fspeed));
+            }
+            else
+            {
+                hasCrashed = true;
+                playerSounds.Stop();
+                accelAmount = 0f;
+                playerAnimator.SetTrigger("crash");
+                StartCoroutine(PlayerCrash());
+            }
+
         }
 
         IEnumerator PlayerCrash()
         {
+            float height = 8f;
+            float vspeed = 150f;
+            float returnpoint = xoffs >= 0f ? currentSplit : -currentSplit;
+            float transtime = 0f;
+            xspeed = 0f;
+            playerAnimator.SetFloat("heightOffGround", height);
+            playerAnimator.SetFloat("vertSpeed", vspeed);
+            SpriteManager sprmanage;
+            GameObject sprobj;
+            MultiSprite.SpawnSide anchorSide = (xoffs >= 0f) ? MultiSprite.SpawnSide.RIGHT : MultiSprite.SpawnSide.LEFT;
+            float realDist = distance;
+            float realXOff = xoffs;
+            float realScale = spline.GetScale(realDist) / 4f;
+            dynamicSpriteDistance[dynamicSpriteCounter % dynamicSpriteObjects.Length] = realDist;
+            dynamicSpriteXOff[dynamicSpriteCounter % dynamicSpriteObjects.Length] = (xoffs * (anchorSide == MultiSprite.SpawnSide.RIGHT ? 1f : -1f)) - (currentSplit + 64f) ;
+            dynamicSpriteSide[dynamicSpriteCounter % dynamicSpriteObjects.Length] = anchorSide;
+            sprobj = Instantiate<GameObject>(spritePrefab, new Vector3(0f, 0f, 0f), Quaternion.identity, this.gameObject.transform);
+            sprmanage = sprobj.GetComponent<SpriteManager>();
+            sprmanage.spriteAnimator.enabled = true;
+            sprmanage.physPos = new Vector3(realXOff, 8f, realDist - distance);
+            sprmanage.speed = fspeed;
+            //sprmanage.spriteRenderer.sprite = dynamicSprites[UnityEngine.Random.Range((int)0, dynamicSprites.Length)];
+            sprmanage.spriteList = broomSprites;
+            sprmanage.screenPos = spline.GetScreenPos(realDist, realXOff, 0f) + new Vector3(0f, 8f, 0f) * realScale;
+            sprmanage.spriteScale = Vector3.one * realScale;
+            sprmanage.collisionBox.size = new Vector3(8f, 16f, 8f);
+            sprmanage.spriteType = SpriteManager.SpriteType.DYNAMIC;
+            sprmanage.canCollide = true;
+            sprmanage.isBehindPlayer = false;
+            sprmanage.hasBeenGrazed = true;
+            dynamicSpriteObjects[dynamicSpriteCounter % dynamicSpriteObjects.Length] = sprobj;
+            dynamicSpriteIsLoaded[dynamicSpriteCounter % dynamicSpriteObjects.Length] = true;
+            dynamicSpriteCounter++;
+            yield return new WaitForSeconds(0.05f);
+            while (playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("ThrownOff"))
+            {
+                if(playUIState == PlayState.PLAY)
+                {
+                    height += vspeed * Time.deltaTime;
+                    vspeed -= 200f * Time.deltaTime;
+                }
+                playerSprite.transform.position = new Vector3(playerSprite.transform.position.x, height, playerSprite.transform.position.z);
+                playerAnimator.SetFloat("heightOffGround", height);
+                playerAnimator.SetFloat("vertSpeed", vspeed);
+                yield return null;
+            }
+            brakeAmount = 1f;
+            while(playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Rolling"))
+            {
+                playerQuickSounds.PlayOneShot(0);
+                yield return new WaitForSeconds(0.2f);
+            }
+            while(playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("CrashStop"))
+            {
+                yield return null;
+            }
+            float comefrompoint = xoffs;
+            while (transtime < 1f)
+            {
+                xoffs = Mathf.Lerp(comefrompoint, returnpoint, transtime);
+                transtime += Time.deltaTime;
+                yield return null;
+            }
+            xoffs = returnpoint;
+            playerSprite.transform.position = new Vector3(playerSprite.transform.position.x, 8f, playerSprite.transform.position.z);
+            playerAnimator.SetTrigger("returned");
             hasCrashed = false;
             yield break;
         }
 
         public void DynamicSpriteCollision(float angle)
         {
+            if (hasCrashed) return;
             playerQuickSounds.PlayOneShot(0);
             playerSounds.Play(1, true);
             isSpinning = true;
             accelAmount = 0f;
             playerAnimator.SetTrigger("spin");
-            StartCoroutine(SpinOut(angle, fspeed - 600f));
+            StartCoroutine(SpinOut(angle, 595f, fspeed - 600f));
         }
 
-        IEnumerator SpinOut(float angle, float speedDelta)
+        IEnumerator SpinOut(float angle, float outspeed, float speedDelta)
         {
-            fspeed = 595f - speedDelta * dynamicCollisionStrength * Mathf.Cos(angle);
+            fspeed = outspeed - speedDelta * dynamicCollisionStrength * Mathf.Cos(angle);
             xspeed = speedDelta * dynamicCollisionStrength * Mathf.Sin(angle);
             yield return new WaitForSeconds(0.05f);
             while(playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Spin"))
@@ -570,6 +666,8 @@ namespace SplineTest
 				sprobj = staticSpriteObjects[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage = staticSpriteManagers[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage.enabled = true;
+                sprmanage.spriteAnimator.SetTrigger("isStatic");
+                sprmanage.spriteAnimator.enabled = false;
                 collisionBounds = thisSpr.spriteDef.GetRealCollisionBounds(thisSpr.baseScale);
                 sprmanage.physPos = new Vector3(realXOff, collisionBounds.y / 2f, realDist - distance);
                 sprmanage.spriteRenderer.sprite = thisSpr.spriteDef.sprite;
@@ -614,6 +712,8 @@ namespace SplineTest
 				sprobj = staticSpriteObjects[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage = staticSpriteManagers[(staticSpriteCounter + i) % staticSpriteObjects.Length];
 				sprmanage.enabled = true;
+                sprmanage.spriteAnimator.SetTrigger("isStatic");
+                sprmanage.spriteAnimator.enabled = false;
                 collisionBounds = thisSpr.spriteDef.GetRealCollisionBounds(thisSpr.baseScale);
                 sprmanage.physPos = new Vector3(realXOff, collisionBounds.y / 2f, realDist - distance);
                 sprmanage.spriteRenderer.sprite = thisSpr.spriteDef.sprite;
@@ -683,8 +783,11 @@ namespace SplineTest
             dynamicSpriteSide[dynamicSpriteCounter%dynamicSpriteObjects.Length] = anchorSide;
             sprobj = Instantiate<GameObject>(spritePrefab, new Vector3(0f,0f,0f), Quaternion.identity, this.gameObject.transform);
             sprmanage = sprobj.GetComponent<SpriteManager>();
+            sprmanage.spriteAnimator.enabled = true;
             sprmanage.physPos = new Vector3(realXOff, 8f, realDist - distance);
-            sprmanage.spriteRenderer.sprite = dynamicSprites[UnityEngine.Random.Range((int)0, dynamicSprites.Length)];
+            sprmanage.speed = 600f;
+            //sprmanage.spriteRenderer.sprite = dynamicSprites[UnityEngine.Random.Range((int)0, dynamicSprites.Length)];
+            sprmanage.spriteList = dynamicSpriteLists[UnityEngine.Random.Range((int)0, dynamicSpriteLists.Length)].spriteList;
             sprmanage.screenPos = spline.GetScreenPos(realDist, realXOff, 0f) + new Vector3(0f, 8f, 0f)*realScale;
             sprmanage.spriteScale = Vector3.one*realScale;
             sprmanage.collisionBox.size = new Vector3(8f, 16f, 8f);
@@ -717,6 +820,7 @@ namespace SplineTest
                 sprobj = dynamicSpriteObjects[i%dynamicSpriteObjects.Length];
                 sprmanage = sprobj.GetComponent<SpriteManager>();
                 sprmanage.physPos = new Vector3(realXOff, 8f, realDist - distance);
+                sprmanage.relativeAngle = 0f;
                 sprmanage.screenPos = spline.GetScreenPos(realDist, realXOff, 0f) + new Vector3(0f, 8f, 0f)*realScale;
                 sprmanage.spriteScale = Vector3.one*realScale;
                 if(sprmanage.physPos.z <= 0f && !sprmanage.isBehindPlayer)
@@ -734,7 +838,7 @@ namespace SplineTest
                 {
                     sprmanage.isBehindPlayer = false;
                 }
-                if(playUIState != PlayState.PAUSED) dynamicSpriteDistance[i] += 600f*Time.deltaTime;
+                if(playUIState != PlayState.PAUSED) dynamicSpriteDistance[i] += sprmanage.speed*Time.deltaTime;
             }
         }
 

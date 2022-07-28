@@ -42,6 +42,7 @@ namespace SplineTest
         public GameObject spriteObject;
         public GameObject colliderObject;
         public SpriteRenderer spriteRenderer;
+        public Animator spriteAnimator;
         public BoxCollider collisionBox;
         public Vector3 screenPos; //Corresponds to the actual position according to Unity
         public Vector3 spriteScale;
@@ -50,11 +51,15 @@ namespace SplineTest
         public float xOffset;
         public float yOffset;
         public float baseScale;
+        public float speed;
         public MultiSprite.SpawnSide anchorSide;
         public bool canCollide;
         public bool isBehindPlayer;
         public bool hasBeenGrazed; //no farming graze!!
         public SpriteType spriteType;
+        public Sprite[] spriteList;
+        public float relativeAngle;
+        public int whichSprite;
 
         void Awake()
         {
@@ -85,6 +90,11 @@ namespace SplineTest
             spriteObject.transform.position = screenPos;
             spriteObject.transform.localScale = spriteScale;
             colliderObject.transform.position = physPos;
+            if(spriteType == SpriteType.DYNAMIC)
+            {
+                spriteAnimator.SetFloat("angle", relativeAngle);
+                spriteRenderer.sprite = spriteList[whichSprite];
+            }
         }
     }
 }
