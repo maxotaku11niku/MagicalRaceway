@@ -599,10 +599,11 @@ namespace SplineTest
                 yield return null;
             }
             brakeAmount = 1f;
+			playerSprite.transform.position = new Vector3(playerSprite.transform.position.x, 0f, playerSprite.transform.position.z);
             while(playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("Rolling"))
             {
-                playerQuickSounds.PlayOneShot(0);
-                yield return new WaitForSeconds(0.2f);
+                playerQuickSounds.PlayOneShot(3);
+                yield return new WaitForSeconds(0.3f);
             }
             while(playerAnimator.GetCurrentAnimatorStateInfo(0).IsName("CrashStop"))
             {
@@ -859,6 +860,7 @@ namespace SplineTest
                 if (sidefactor == 2) currentSpawnSide = (TexturedStrip.SpawnSide)((i+1) % 2);
                 TexturedStripManager stripManager = texStripManagers[(texStripCounter + i) % texStripManagers.Length];
                 stripManager.enabled = true;
+				stripManager.meshRenderer.enabled = true;
                 stripManager.tex = strip.texture;
                 stripManager.anchorSide = currentSpawnSide;
                 stripManager.size = strip.size;
@@ -880,6 +882,7 @@ namespace SplineTest
 
         void UnloadNextTexturedStrip(int stripNum)
         {
+			texStripManagers[stripNum % texStripManagers.Length].meshRenderer.enabled = false;
             texStripManagers[stripNum % texStripManagers.Length].enabled = false;
         }
 
@@ -1143,6 +1146,11 @@ namespace SplineTest
                 currentBGPoint++;
                 if(currentBGPoint >= mBGLen){currentBGPoint = mBGLen - 1; break;}
             }
+			while(distance >= currentTrack.tStripList[currentStripPoint].distance)
+			{
+				currentStripPoint++;
+				if(currentStripPoint >= mStripLen){currentStripPoint = mStripLen - 1; break;}
+			}
             
             currentind = currentTurnStrPoint;
             startind = currentind - roadParamsKeepBehind;
@@ -1262,6 +1270,19 @@ namespace SplineTest
                 }
             }
             nextDynamicSpriteSpawnDist = distance + 1000f;
+			
+			for(int i = 0; i < texStripManagers.Length; i++)
+            {
+                if(distance > (texStripManagers[i].baseDistance + texStripManagers[i].size.y + spriteUnloadBehindDistance))
+                {
+                    UnloadNextTexturedStrip(i);
+                }
+            }
+			if((distance + spriteDrawDistance) >= mStripPoints[currentStripPoint])
+			{
+				LoadTexturedStrip(currentStripPoint);
+                currentStripPoint++;
+			}
         }
 
         void Update()
