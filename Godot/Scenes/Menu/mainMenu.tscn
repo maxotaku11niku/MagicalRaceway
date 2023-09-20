@@ -1,0 +1,221 @@
+[gd_scene load_steps=5 format=3 uid="uid://2fva7yly72hi"]
+
+[ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_d65rp"]
+[ext_resource type="Script" path="res://Scripts/MenuScreen.gd" id="1_mlact"]
+[ext_resource type="Script" path="res://Scripts/TitleAnimation.gd" id="2_3bmv0"]
+[ext_resource type="Texture2D" uid="uid://dgxlju8hggq6t" path="res://Images/UIElements/TitleLetters.png" id="3_8bnjq"]
+
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("initButton")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+theme = ExtResource("1_d65rp")
+script = ExtResource("1_mlact")
+initButton = NodePath("StartButton")
+
+[node name="Title" type="Control" parent="." node_paths=PackedStringArray("letters")]
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 60.0
+offset_right = 72.0
+offset_bottom = 100.0
+script = ExtResource("2_3bmv0")
+letters = [NodePath("Heart"), NodePath("M"), NodePath("a"), NodePath("g"), NodePath("i"), NodePath("c"), NodePath("a2"), NodePath("l"), NodePath("Star"), NodePath("R"), NodePath("a3"), NodePath("c2"), NodePath("e"), NodePath("w"), NodePath("a4"), NodePath("y"), NodePath("Heart2")]
+wavelength = 256.0
+period = 1.5
+amplitude = 12.0
+colourWavelength = 16.0
+colourPeriod = 2.0
+
+[node name="Heart" type="Sprite2D" parent="Title"]
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(48, 48, 16, 24)
+
+[node name="M" type="Sprite2D" parent="Title"]
+position = Vector2(16, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 24)
+
+[node name="a" type="Sprite2D" parent="Title"]
+position = Vector2(32, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 24)
+
+[node name="g" type="Sprite2D" parent="Title"]
+position = Vector2(48, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(32, 0, 16, 24)
+
+[node name="i" type="Sprite2D" parent="Title"]
+position = Vector2(64, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(48, 0, 16, 24)
+
+[node name="c" type="Sprite2D" parent="Title"]
+position = Vector2(80, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(0, 24, 16, 24)
+
+[node name="a2" type="Sprite2D" parent="Title"]
+position = Vector2(96, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 24)
+
+[node name="l" type="Sprite2D" parent="Title"]
+position = Vector2(112, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(16, 24, 16, 24)
+
+[node name="Star" type="Sprite2D" parent="Title"]
+position = Vector2(128, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(32, 24, 16, 24)
+
+[node name="R" type="Sprite2D" parent="Title"]
+position = Vector2(144, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(48, 24, 16, 24)
+
+[node name="a3" type="Sprite2D" parent="Title"]
+position = Vector2(160, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 24)
+
+[node name="c2" type="Sprite2D" parent="Title"]
+position = Vector2(176, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(0, 24, 16, 24)
+
+[node name="e" type="Sprite2D" parent="Title"]
+position = Vector2(192, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(0, 48, 16, 24)
+
+[node name="w" type="Sprite2D" parent="Title"]
+position = Vector2(208, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(16, 48, 16, 24)
+
+[node name="a4" type="Sprite2D" parent="Title"]
+position = Vector2(224, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(16, 0, 16, 24)
+
+[node name="y" type="Sprite2D" parent="Title"]
+position = Vector2(240, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(32, 48, 16, 24)
+
+[node name="Heart2" type="Sprite2D" parent="Title"]
+position = Vector2(256, 0)
+texture = ExtResource("3_8bnjq")
+region_enabled = true
+region_rect = Rect2(48, 48, 16, 24)
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 120.0
+offset_right = 160.0
+offset_bottom = 128.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../QuitButton")
+focus_neighbor_bottom = NodePath("../ScoresButton")
+focus_next = NodePath("../ScoresButton")
+focus_previous = NodePath("../QuitButton")
+text = "Start"
+
+[node name="ScoresButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 144.0
+offset_right = 160.0
+offset_bottom = 152.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../StartButton")
+focus_neighbor_bottom = NodePath("../MusicButton")
+focus_next = NodePath("../MusicButton")
+focus_previous = NodePath("../StartButton")
+text = "High Scores"
+
+[node name="MusicButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 168.0
+offset_right = 160.0
+offset_bottom = 176.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../ScoresButton")
+focus_neighbor_bottom = NodePath("../ConfigButton")
+focus_next = NodePath("../ConfigButton")
+focus_previous = NodePath("../ScoresButton")
+text = "Music Room"
+
+[node name="ConfigButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 192.0
+offset_right = 160.0
+offset_bottom = 200.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../MusicButton")
+focus_neighbor_bottom = NodePath("../QuitButton")
+focus_next = NodePath("../QuitButton")
+focus_previous = NodePath("../MusicButton")
+text = "Config"
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 216.0
+offset_right = 160.0
+offset_bottom = 224.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../ConfigButton")
+focus_neighbor_bottom = NodePath("../StartButton")
+focus_next = NodePath("../StartButton")
+focus_previous = NodePath("../ConfigButton")
+text = "Quit
+"
+
+[node name="AttributionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+offset_right = 200.0
+grow_vertical = 0
+text = "CC-BY-NC 2023 Maxim Hoxha"
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "v 0.6"
+horizontal_alignment = 2
+
+[connection signal="button_down" from="StartButton" to="." method="_onButtonSelected" binds= [0]]
+[connection signal="button_down" from="ScoresButton" to="." method="_onButtonSelected" binds= [1]]
+[connection signal="button_down" from="MusicButton" to="." method="_onButtonSelected" binds= [2]]
+[connection signal="button_down" from="ConfigButton" to="." method="_onButtonSelected" binds= [3]]
+[connection signal="button_down" from="QuitButton" to="." method="_onButtonSelected" binds= [4]]

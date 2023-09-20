@@ -1,0 +1,86 @@
+[gd_scene load_steps=3 format=3 uid="uid://dk703uq2ybk46"]
+
+[ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_tvowl"]
+[ext_resource type="Script" path="res://Scripts/MenuScreen.gd" id="2_47r8t"]
+
+[node name="SongSelectMenu" type="Control" node_paths=PackedStringArray("initButton")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+focus_neighbor_top = NodePath("Song4Button")
+focus_neighbor_bottom = NodePath("Song2Button")
+focus_next = NodePath("Song2Button")
+focus_previous = NodePath("Song4Button")
+theme = ExtResource("1_tvowl")
+script = ExtResource("2_47r8t")
+initButton = NodePath("Song1Button")
+addCode = 512
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 160.0
+offset_bottom = 24.0
+scale = Vector2(2, 2)
+text = "Choose a song:"
+
+[node name="Song1Button" type="Button" parent="."]
+layout_mode = 0
+offset_top = 64.0
+offset_right = 160.0
+offset_bottom = 72.0
+scale = Vector2(2, 2)
+text = "Magical Raceway"
+
+[node name="Song2Button" type="Button" parent="."]
+layout_mode = 0
+offset_top = 96.0
+offset_right = 160.0
+offset_bottom = 104.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../Song1Button")
+focus_neighbor_bottom = NodePath("../Song3Button")
+focus_next = NodePath("../Song3Button")
+focus_previous = NodePath("../Song1Button")
+text = "Kosoku Majo"
+
+[node name="Song3Button" type="Button" parent="."]
+layout_mode = 0
+offset_top = 128.0
+offset_right = 160.0
+offset_bottom = 136.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../Song2Button")
+focus_neighbor_bottom = NodePath("../Song4Button")
+focus_next = NodePath("../Song4Button")
+focus_previous = NodePath("../Song2Button")
+text = "Beat the Timer"
+
+[node name="Song4Button" type="Button" parent="."]
+layout_mode = 0
+offset_top = 160.0
+offset_right = 160.0
+offset_bottom = 168.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../Song3Button")
+focus_neighbor_bottom = NodePath("../Song1Button")
+focus_next = NodePath("../Song1Button")
+focus_previous = NodePath("../Song3Button")
+text = "Riding on Magic"
+
+[node name="EmuNote" type="Label" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 192.0
+offset_right = 312.0
+offset_bottom = 232.0
+text = "Enjoy the emulated OPNA tunes!"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[connection signal="button_down" from="Song1Button" to="." method="_onButtonSelected" binds= [0]]
+[connection signal="button_down" from="Song2Button" to="." method="_onButtonSelected" binds= [1]]
+[connection signal="button_down" from="Song3Button" to="." method="_onButtonSelected" binds= [2]]
+[connection signal="button_down" from="Song4Button" to="." method="_onButtonSelected" binds= [3]]

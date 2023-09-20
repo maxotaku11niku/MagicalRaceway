@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://b0jjayjhfifnk"]
+
+[ext_resource type="FontFile" uid="uid://opk2ud6yvgp8" path="res://Images/UIElements/nums.png" id="1_0pxln"]
+
+[resource]
+default_font = ExtResource("1_0pxln")
+Label/colors/font_color = Color(1, 0.776471, 0, 1)

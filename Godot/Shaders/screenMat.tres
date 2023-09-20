@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cyt7ta7hx0uka"]
+
+[ext_resource type="Shader" path="res://Shaders/screenQuantise.gdshader" id="1_5w18e"]
+
+[resource]
+shader = ExtResource("1_5w18e")

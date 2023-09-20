@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://dfffeidrsnyyr"]
+
+[ext_resource type="Shader" path="res://Shaders/sky.gdshader" id="1_5ierl"]
+[ext_resource type="Texture2D" uid="uid://7d3mo2fb47d4" path="res://Images/roadPal.png" id="2_uu8ei"]
+
+[resource]
+shader = ExtResource("1_5ierl")
+shader_parameter/yOffset = 0.0
+shader_parameter/palette = ExtResource("2_uu8ei")

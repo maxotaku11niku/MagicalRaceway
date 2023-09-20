@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dp3a18l2wr24h"]
+
+[ext_resource type="Shader" path="res://Shaders/logo.gdshader" id="1_oblfa"]
+
+[resource]
+shader = ExtResource("1_oblfa")
+shader_parameter/split = -0.1
+shader_parameter/colourAdd = 0.0
+shader_parameter/blendCol = Color(0.133333, 0.333333, 0.266667, 1)

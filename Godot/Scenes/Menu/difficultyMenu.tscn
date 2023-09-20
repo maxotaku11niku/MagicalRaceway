@@ -1,0 +1,88 @@
+[gd_scene load_steps=3 format=3 uid="uid://cg2wygun7tvyk"]
+
+[ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_8aecy"]
+[ext_resource type="Script" path="res://Scripts/MenuScreen.gd" id="1_500ww"]
+
+[node name="DifficultyMenu" type="Control" node_paths=PackedStringArray("initButton")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+theme = ExtResource("1_8aecy")
+script = ExtResource("1_500ww")
+initButton = NodePath("EasyButton")
+addCode = 256
+
+[node name="ChoiceLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 16.0
+offset_right = 160.0
+offset_bottom = 24.0
+scale = Vector2(2, 2)
+text = "Choose a level:"
+
+[node name="EasyButton" type="Button" parent="."]
+layout_mode = 0
+offset_top = 64.0
+offset_right = 160.0
+offset_bottom = 72.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../InsaneButton")
+focus_neighbor_bottom = NodePath("../MediumButton")
+focus_next = NodePath("../MediumButton")
+focus_previous = NodePath("../InsaneButton")
+theme_override_colors/font_color = Color(0.290196, 1, 0.290196, 1)
+text = "EASY"
+
+[node name="MediumButton" type="Button" parent="."]
+offset_top = 96.0
+offset_right = 160.0
+offset_bottom = 104.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../EasyButton")
+focus_neighbor_bottom = NodePath("../HardButton")
+focus_next = NodePath("../HardButton")
+focus_previous = NodePath("../EasyButton")
+theme_override_colors/font_color = Color(0.419608, 0.611765, 1, 1)
+text = "MEDIUM"
+
+[node name="HardButton" type="Button" parent="."]
+offset_top = 128.0
+offset_right = 160.0
+offset_bottom = 136.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../MediumButton")
+focus_neighbor_bottom = NodePath("../InsaneButton")
+focus_next = NodePath("../InsaneButton")
+focus_previous = NodePath("../MediumButton")
+theme_override_colors/font_color = Color(1, 0.870588, 0.290196, 1)
+text = "HARD"
+
+[node name="InsaneButton" type="Button" parent="."]
+offset_top = 160.0
+offset_right = 160.0
+offset_bottom = 168.0
+scale = Vector2(2, 2)
+focus_neighbor_top = NodePath("../HardButton")
+focus_neighbor_bottom = NodePath("../EasyButton")
+focus_next = NodePath("../EasyButton")
+focus_previous = NodePath("../HardButton")
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "INSANE"
+
+[node name="IndevNote" type="Label" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 192.0
+offset_right = 316.0
+offset_bottom = 232.0
+text = "In this version, only the Easy and Medium tracks are available. The other difficulties go to the test track."
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[connection signal="button_down" from="EasyButton" to="." method="_onButtonSelected" binds= [0]]
+[connection signal="button_down" from="MediumButton" to="." method="_onButtonSelected" binds= [1]]
+[connection signal="button_down" from="HardButton" to="." method="_onButtonSelected" binds= [2]]
+[connection signal="button_down" from="InsaneButton" to="." method="_onButtonSelected" binds= [3]]

@@ -1,0 +1,179 @@
+[gd_scene load_steps=16 format=3 uid="uid://dvr3wf81xo871"]
+
+[ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
+[ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="2_jevb4"]
+[ext_resource type="Theme" uid="uid://b0jjayjhfifnk" path="res://Images/UIElements/numTheme.tres" id="3_6kt2q"]
+[ext_resource type="SpriteFrames" uid="uid://c3lguymgm5xjx" path="res://Animations/player.tres" id="4_0qg0g"]
+[ext_resource type="Texture2D" uid="uid://db7o7lmx1fe5c" path="res://Images/UIElements/progressBarBG.png" id="4_j23ni"]
+[ext_resource type="Texture2D" uid="uid://c1fgky81bd5ao" path="res://Images/UIElements/progressBarFG.png" id="5_e8lp0"]
+[ext_resource type="Texture2D" uid="uid://ba7dlfljgwl7r" path="res://Images/UIElements/progressBarGirl.png" id="6_j410h"]
+[ext_resource type="Material" uid="uid://dfffeidrsnyyr" path="res://Shaders/skyMat.tres" id="8_5ep0t"]
+[ext_resource type="Script" path="res://Scripts/Sky2D.gd" id="8_sdmq8"]
+[ext_resource type="Texture2D" uid="uid://7d3mo2fb47d4" path="res://Images/roadPal.png" id="9_1t8dp"]
+[ext_resource type="Texture2D" uid="uid://b064oslcrpnmq" path="res://Images/sky.png" id="9_2wmts"]
+[ext_resource type="Shader" path="res://Shaders/spline.gdshader" id="11_ed6u4"]
+[ext_resource type="Script" path="res://Scripts/Pseudo3DSpline.gd" id="11_q2xxr"]
+[ext_resource type="Texture2D" uid="uid://b01sg464srnsh" path="res://Images/road.png" id="14_6frcd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7np3q"]
+shader = ExtResource("11_ed6u4")
+shader_parameter/numLines = 239
+shader_parameter/width = 320
+shader_parameter/positLines = 256
+shader_parameter/palettised = true
+shader_parameter/texPixSize = Vector2(0.007, 0.016)
+shader_parameter/pPos = null
+shader_parameter/palette = ExtResource("9_1t8dp")
+
+[node name="PlayMaster" type="Node"]
+script = ExtResource("1_dxmhm")
+
+[node name="UIRoot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+theme = ExtResource("2_jevb4")
+
+[node name="ScoreLabel" type="Label" parent="UIRoot"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 8.0
+offset_right = 88.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(0.482353, 1, 0.580392, 1)
+text = "SCORE"
+
+[node name="ScoreNum" type="Label" parent="UIRoot/ScoreLabel"]
+layout_mode = 0
+offset_left = -40.0
+offset_top = 8.0
+offset_right = 56.0
+offset_bottom = 24.0
+theme = ExtResource("3_6kt2q")
+text = "0"
+horizontal_alignment = 2
+
+[node name="TimeLabel" type="Label" parent="UIRoot"]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 8.0
+offset_right = 184.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(1, 0.517647, 0.258824, 1)
+text = "TIME"
+
+[node name="TimeNum" type="Label" parent="UIRoot/TimeLabel"]
+layout_mode = 0
+offset_top = 8.0
+offset_right = 24.0
+offset_bottom = 24.0
+theme = ExtResource("3_6kt2q")
+text = "0"
+horizontal_alignment = 2
+
+[node name="SpeedLabel" type="Label" parent="UIRoot"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 224.0
+offset_right = 80.0
+offset_bottom = 232.0
+theme_override_colors/font_color = Color(0.870588, 0.517647, 1, 1)
+text = "KM/H"
+
+[node name="SpeedNum" type="Label" parent="UIRoot/SpeedLabel"]
+layout_mode = 0
+offset_left = -40.0
+offset_top = -8.0
+offset_right = -8.0
+offset_bottom = 8.0
+theme = ExtResource("3_6kt2q")
+text = "0"
+horizontal_alignment = 2
+
+[node name="StageLabel" type="Label" parent="UIRoot"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 224.0
+offset_right = 288.0
+offset_bottom = 232.0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "STAGE"
+
+[node name="StageNum" type="Label" parent="UIRoot/StageLabel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 8.0
+offset_top = -8.0
+offset_right = 24.0
+offset_bottom = 8.0
+grow_horizontal = 0
+theme = ExtResource("3_6kt2q")
+text = "1"
+horizontal_alignment = 2
+
+[node name="StageProgressBar" type="TextureProgressBar" parent="UIRoot"]
+self_modulate = Color(0.870588, 0.517647, 1, 1)
+layout_mode = 0
+offset_left = 216.0
+offset_top = 24.0
+offset_right = 296.0
+offset_bottom = 32.0
+max_value = 80.0
+step = 0.0
+value = 6.0
+nine_patch_stretch = true
+stretch_margin_left = 2
+stretch_margin_right = 2
+texture_under = ExtResource("4_j23ni")
+texture_progress = ExtResource("5_e8lp0")
+
+[node name="CurrentStageNum" type="Label" parent="UIRoot/StageProgressBar"]
+layout_mode = 0
+offset_left = -16.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "1"
+horizontal_alignment = 2
+
+[node name="NextStageNum" type="Label" parent="UIRoot/StageProgressBar"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_right = 16.0
+offset_bottom = 8.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "2"
+
+[node name="GirlFigure" type="TextureRect" parent="UIRoot/StageProgressBar"]
+modulate = Color(0.870588, 0.517647, 1, 1)
+layout_mode = 0
+offset_left = -4.0
+offset_top = -14.0
+offset_right = 12.0
+offset_bottom = 2.0
+texture = ExtResource("6_j410h")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(160, 200)
+sprite_frames = ExtResource("4_0qg0g")
+animation = &"idle_front"
+
+[node name="Sky" type="Node2D" parent="."]
+z_index = -4000
+material = ExtResource("8_5ep0t")
+script = ExtResource("8_sdmq8")
+texture = ExtResource("9_2wmts")
+bound = Rect2(0, 0, 320, 240)
+bottomY = 128.0
+
+[node name="RoadSpline" type="Node2D" parent="."]
+z_index = -512
+material = SubResource("ShaderMaterial_7np3q")
+script = ExtResource("11_q2xxr")
+texture = ExtResource("14_6frcd")
+bound = Rect2(0, 0, 320, 240)

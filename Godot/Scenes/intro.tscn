@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://c5t43awjac242"]
+
+[ext_resource type="Texture2D" uid="uid://c5e7eetitsv2x" path="res://Images/creatorLogo.png" id="1_8l1xm"]
+[ext_resource type="Script" path="res://Scripts/IntroControl.gd" id="1_do13l"]
+[ext_resource type="Material" uid="uid://dp3a18l2wr24h" path="res://Shaders/logoMat.tres" id="2_hpvx7"]
+[ext_resource type="AnimationLibrary" uid="uid://cv5y5prff6hnx" path="res://Animations/introAnimation.tres" id="3_2sysp"]
+[ext_resource type="AudioStream" uid="uid://b07jvgui8vyf1" path="res://Sounds/BGM/creatorJingle.wav" id="4_t4kog"]
+
+[node name="Intro" type="Node" node_paths=PackedStringArray("logoSprite", "introAnimationPlayer")]
+script = ExtResource("1_do13l")
+logoSprite = NodePath("Logo")
+introAnimationPlayer = NodePath("AnimationPlayer")
+logoSplit = -0.1
+logoCol = Color(0.133333, 0.333333, 0.266667, 1)
+
+[node name="BGColour" type="ColorRect" parent="."]
+offset_right = 320.0
+offset_bottom = 240.0
+color = Color(0, 0, 0, 1)
+
+[node name="Logo" type="Sprite2D" parent="."]
+texture_repeat = 2
+material = ExtResource("2_hpvx7")
+position = Vector2(160, 120)
+texture = ExtResource("1_8l1xm")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": ExtResource("3_2sysp")
+}
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_t4kog")
+autoplay = true
+bus = &"BGM"
