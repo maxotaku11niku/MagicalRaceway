@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://dvr3wf81xo871"]
+[gd_scene load_steps=18 format=3 uid="uid://dvr3wf81xo871"]
 
 [ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
+[ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="2_8i8yp"]
 [ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="2_jevb4"]
 [ext_resource type="Theme" uid="uid://b0jjayjhfifnk" path="res://Images/UIElements/numTheme.tres" id="3_6kt2q"]
 [ext_resource type="SpriteFrames" uid="uid://c3lguymgm5xjx" path="res://Animations/player.tres" id="4_0qg0g"]
@@ -8,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://c1fgky81bd5ao" path="res://Images/UIElements/progressBarFG.png" id="5_e8lp0"]
 [ext_resource type="Texture2D" uid="uid://ba7dlfljgwl7r" path="res://Images/UIElements/progressBarGirl.png" id="6_j410h"]
 [ext_resource type="Material" uid="uid://dfffeidrsnyyr" path="res://Shaders/skyMat.tres" id="8_5ep0t"]
+[ext_resource type="Script" path="res://Scripts/SplineRenderer.gd" id="8_esje0"]
 [ext_resource type="Script" path="res://Scripts/Sky2D.gd" id="8_sdmq8"]
 [ext_resource type="Texture2D" uid="uid://7d3mo2fb47d4" path="res://Images/roadPal.png" id="9_1t8dp"]
 [ext_resource type="Texture2D" uid="uid://b064oslcrpnmq" path="res://Images/sky.png" id="9_2wmts"]
@@ -17,7 +19,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7np3q"]
 shader = ExtResource("11_ed6u4")
-shader_parameter/numLines = 239
+shader_parameter/startLine = 128
+shader_parameter/numLines = 111
 shader_parameter/width = 320
 shader_parameter/positLines = 256
 shader_parameter/palettised = true
@@ -25,8 +28,10 @@ shader_parameter/texPixSize = Vector2(0.007, 0.016)
 shader_parameter/pPos = null
 shader_parameter/palette = ExtResource("9_1t8dp")
 
-[node name="PlayMaster" type="Node"]
+[node name="PlayMaster" type="Node" node_paths=PackedStringArray("splineRenderer")]
 script = ExtResource("1_dxmhm")
+currentTrack = ExtResource("2_8i8yp")
+splineRenderer = NodePath("SplineRenderer")
 
 [node name="UIRoot" type="Control" parent="."]
 layout_mode = 3
@@ -163,17 +168,28 @@ position = Vector2(160, 200)
 sprite_frames = ExtResource("4_0qg0g")
 animation = &"idle_front"
 
-[node name="Sky" type="Node2D" parent="."]
+[node name="SplineRenderer" type="Node" parent="." node_paths=PackedStringArray("road", "sky")]
+script = ExtResource("8_esje0")
+road = NodePath("RoadSpline")
+sky = NodePath("Sky")
+screenSize = Vector2i(320, 240)
+frontSplinePoints = 250
+backSplinePoints = 20
+cameraRelativePosition = Vector2(-30, 30)
+nearClipPosition = -25.0
+farClipPosition = 800.0
+
+[node name="RoadSpline" type="Node2D" parent="SplineRenderer"]
+z_index = -512
+material = SubResource("ShaderMaterial_7np3q")
+script = ExtResource("11_q2xxr")
+texture = ExtResource("14_6frcd")
+bound = Rect2(0, 128, 320, 112)
+
+[node name="Sky" type="Node2D" parent="SplineRenderer"]
 z_index = -4000
 material = ExtResource("8_5ep0t")
 script = ExtResource("8_sdmq8")
 texture = ExtResource("9_2wmts")
 bound = Rect2(0, 0, 320, 240)
 bottomY = 128.0
-
-[node name="RoadSpline" type="Node2D" parent="."]
-z_index = -512
-material = SubResource("ShaderMaterial_7np3q")
-script = ExtResource("11_q2xxr")
-texture = ExtResource("14_6frcd")
-bound = Rect2(0, 0, 320, 240)

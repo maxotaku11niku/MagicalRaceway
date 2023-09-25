@@ -33,6 +33,10 @@ window/size/resizable=false
 
 project/assembly_name="Magical Raceway (Godot engine port)"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/TrackDefinitionInspector/plugin.cfg")
+
 [importer_defaults]
 
 texture={
