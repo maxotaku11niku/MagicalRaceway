@@ -34,6 +34,9 @@ var turnStrStartInd: int
 var pitchStrStartInd: int
 var splitAmtStartInd: int
 var colourStartInd: int
+var curXcurve: float
+var curYcurve: float
+var curSplit: float
 
 func setSplinePositioningParameters() -> void:
 	# Calculate spline parameters
@@ -186,6 +189,12 @@ func setSplinePositioningParameters() -> void:
 	roadMat.set_shader_parameter("positioning", posTex)
 	roadMat.set_shader_parameter("pPos", Vector2(xpos, fmod(dist, road.texture.get_height())))
 
+func Reset() -> void:
+	turnStrStartInd = 0
+	pitchStrStartInd = 0
+	splitAmtStartInd = 0
+	colourStartInd = 0
+
 func _ready() -> void:
 	splinePoints = frontSplinePoints + backSplinePoints
 	pointDists.resize(splinePoints)
@@ -238,23 +247,32 @@ func _process(delta: float) -> void:
 	if turnStrStartInd < (len(turnStrList) - 2):
 		while dist >= turnStrList[turnStrStartInd + 1].dist:
 			turnStrStartInd += 1
-			if turnStrStartInd >= (len(turnStrList) - 1):
+			if turnStrStartInd >= (len(turnStrList) - 2):
 				break
 	if pitchStrStartInd < (len(pitchStrList) - 2):
 		while dist >= pitchStrList[pitchStrStartInd + 1].dist:
 			pitchStrStartInd += 1
-			if pitchStrStartInd >= (len(pitchStrList) - 1):
+			if pitchStrStartInd >= (len(pitchStrList) - 2):
 				break
 	if splitAmtStartInd < (len(splitAmtList) - 2):
 		while dist >= splitAmtList[splitAmtStartInd + 1].dist:
 			splitAmtStartInd += 1
-			if splitAmtStartInd >= (len(splitAmtList) - 1):
+			if splitAmtStartInd >= (len(splitAmtList) - 2):
 				break
 	if colourStartInd < (len(colourList) - 2):
 		while dist >= colourList[colourStartInd + 1].dist:
 			colourStartInd += 1
-			if colourStartInd >= (len(colourList) - 1):
+			if colourStartInd >= (len(colourList) - 2):
 				break
+	var dlerpx: float = (dist - turnStrList[turnStrStartInd].dist) / (turnStrList[turnStrStartInd + 1].dist - turnStrList[turnStrStartInd].dist)
+	var dlerpy: float = (dist - pitchStrList[pitchStrStartInd].dist) / (pitchStrList[pitchStrStartInd + 1].dist - pitchStrList[pitchStrStartInd].dist)
+	var dlerps: float = (dist - splitAmtList[splitAmtStartInd].dist) / (splitAmtList[splitAmtStartInd + 1].dist - splitAmtList[splitAmtStartInd].dist)
+	if dlerpx >= 1.0: dlerpx = 1.0
+	if dlerpy >= 1.0: dlerpy = 1.0
+	if dlerps >= 1.0: dlerps = 1.0
+	curXcurve = lerpf(turnStrList[turnStrStartInd].val, turnStrList[turnStrStartInd + 1].val, dlerpx)
+	curYcurve = lerpf(pitchStrList[pitchStrStartInd].val, pitchStrList[pitchStrStartInd + 1].val, dlerpy)
+	curSplit = lerpf(splitAmtList[splitAmtStartInd].val, splitAmtList[splitAmtStartInd + 1].val, dlerps)
 	setSplinePositioningParameters()
 	var curColourList := colourList[colourStartInd].cols
 	var nextColourList := colourList[colourStartInd + 1].cols

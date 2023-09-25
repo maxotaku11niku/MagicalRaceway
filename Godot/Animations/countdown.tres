@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://41udobvb28ux"]
+
+[ext_resource type="Texture2D" uid="uid://b1483jx0mdqtx" path="res://Images/UIElements/countdownNums.png" id="1_dt4q4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y72tc"]
+atlas = ExtResource("1_dt4q4")
+region = Rect2(0, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n4i3x"]
+atlas = ExtResource("1_dt4q4")
+region = Rect2(32, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7whwl"]
+atlas = ExtResource("1_dt4q4")
+region = Rect2(64, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bfiv8"]
+atlas = ExtResource("1_dt4q4")
+region = Rect2(96, 0, 128, 48)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y72tc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n4i3x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7whwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bfiv8")
+}],
+"loop": true,
+"name": &"default",
+"speed": 1.0
+}]
