@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BGSpriteDef" load_steps=3 format=3 uid="uid://cmy3ropit2sh"]
+
+[ext_resource type="Texture2D" uid="uid://ccglnrrayv0t6" path="res://Images/BGSprites/bluefieldsbg.png" id="1_4xri6"]
+[ext_resource type="Script" path="res://Scripts/BGSpriteDef.gd" id="1_wm0mx"]
+
+[resource]
+script = ExtResource("1_wm0mx")
+bgTexture = ExtResource("1_4xri6")
+bg1Region = Rect2i(0, 0, 512, 32)
+bg2Region = Rect2i(0, 32, 512, 48)
+bg1ZeroY = 32.0
+bg2ZeroY = 48.0

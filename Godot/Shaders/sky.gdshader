@@ -1,7 +1,7 @@
 //Shader for the sky
 shader_type canvas_item;
 
-uniform sampler2D palette;
+uniform sampler2D palette : filter_nearest;
 uniform float yOffset;
 
 void fragment()

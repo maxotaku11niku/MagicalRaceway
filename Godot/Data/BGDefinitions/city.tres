@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BGSpriteDef" load_steps=3 format=3 uid="uid://df6n022obmj5"]
+
+[ext_resource type="Texture2D" uid="uid://cbg0nxgemisdc" path="res://Images/BGSprites/citybg.png" id="1_ex5kk"]
+[ext_resource type="Script" path="res://Scripts/BGSpriteDef.gd" id="1_u2v1p"]
+
+[resource]
+script = ExtResource("1_u2v1p")
+bgTexture = ExtResource("1_ex5kk")
+bg1Region = Rect2i(0, 0, 512, 32)
+bg2Region = Rect2i(0, 32, 512, 64)
+bg1ZeroY = 32.0
+bg2ZeroY = 64.0

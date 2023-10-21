@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c5v47t30t1alk"]
+
+[ext_resource type="FontFile" uid="uid://vfeaskny42xs" path="res://Images/UIElements/systemfont.png" id="1_o3ye6"]
+
+[resource]
+default_font = ExtResource("1_o3ye6")
+default_font_size = 8
+Label/constants/line_spacing = 0

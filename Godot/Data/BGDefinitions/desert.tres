@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BGSpriteDef" load_steps=3 format=3 uid="uid://b6x5al05mqc20"]
+
+[ext_resource type="Texture2D" uid="uid://b5bhr45hdjqe5" path="res://Images/BGSprites/desertbg.png" id="1_atr8m"]
+[ext_resource type="Script" path="res://Scripts/BGSpriteDef.gd" id="1_osdsg"]
+
+[resource]
+script = ExtResource("1_osdsg")
+bgTexture = ExtResource("1_atr8m")
+bg1Region = Rect2i(0, 0, 512, 32)
+bg2Region = Rect2i(0, 32, 512, 64)
+bg1ZeroY = 32.0
+bg2ZeroY = 64.0

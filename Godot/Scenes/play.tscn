@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://dvr3wf81xo871"]
+[gd_scene load_steps=23 format=3 uid="uid://dvr3wf81xo871"]
 
 [ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="2_8i8yp"]
@@ -19,6 +19,8 @@
 [ext_resource type="Shader" path="res://Shaders/spline.gdshader" id="11_ed6u4"]
 [ext_resource type="Script" path="res://Scripts/Pseudo3DSpline.gd" id="11_q2xxr"]
 [ext_resource type="Texture2D" uid="uid://b01sg464srnsh" path="res://Images/road.png" id="14_6frcd"]
+[ext_resource type="Material" uid="uid://c4gp2oawlvfmo" path="res://Shaders/colMixMat.tres" id="20_8wav0"]
+[ext_resource type="Texture2D" uid="uid://dnrn2a2cnesqr" path="res://Images/BGSprites/hometownbg.png" id="20_16sbs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7np3q"]
 shader = ExtResource("11_ed6u4")
@@ -298,6 +300,7 @@ text = "0
 horizontal_alignment = 2
 
 [node name="NextCheckLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 8.0
 offset_right = 56.0
@@ -316,6 +319,7 @@ text = "0
 horizontal_alignment = 2
 
 [node name="XOffLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 16.0
 offset_right = 56.0
@@ -333,6 +337,7 @@ text = "0.00
 horizontal_alignment = 2
 
 [node name="TimeLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 24.0
 offset_right = 56.0
@@ -350,6 +355,7 @@ text = "0.00
 horizontal_alignment = 2
 
 [node name="TurnLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 32.0
 offset_right = 56.0
@@ -367,6 +373,7 @@ text = "0.00000
 horizontal_alignment = 2
 
 [node name="SplitLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 40.0
 offset_right = 56.0
@@ -384,6 +391,7 @@ text = "0.00
 horizontal_alignment = 2
 
 [node name="PitchLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 48.0
 offset_right = 56.0
@@ -401,6 +409,7 @@ text = "0.00000
 horizontal_alignment = 2
 
 [node name="BalanceLabel" type="Label" parent="PlayUIRoot/DevParams"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 56.0
 offset_right = 56.0
@@ -431,16 +440,22 @@ position = Vector2(160, 200)
 sprite_frames = ExtResource("4_0qg0g")
 animation = &"idle_front"
 
-[node name="SplineRenderer" type="Node" parent="." node_paths=PackedStringArray("road", "sky")]
+[node name="SplineRenderer" type="Node" parent="." node_paths=PackedStringArray("road", "sky", "bgLayer1Part1", "bgLayer1Part2", "bgLayer2Part1", "bgLayer2Part2")]
 script = ExtResource("8_esje0")
 road = NodePath("RoadSpline")
 sky = NodePath("Sky")
+bgLayer1Part1 = NodePath("BGLayer1_1")
+bgLayer1Part2 = NodePath("BGLayer1_2")
+bgLayer2Part1 = NodePath("BGLayer2_1")
+bgLayer2Part2 = NodePath("BGLayer2_2")
 screenSize = Vector2i(320, 240)
 frontSplinePoints = 250
 backSplinePoints = 20
 cameraRelativePosition = Vector2(-30, 30)
 nearClipPosition = -25.0
 farClipPosition = 800.0
+bg1TravelFactor = 200.0
+bg2TravelFactor = 100.0
 
 [node name="RoadSpline" type="Node2D" parent="SplineRenderer"]
 z_index = -512
@@ -456,5 +471,41 @@ script = ExtResource("8_sdmq8")
 texture = ExtResource("9_2wmts")
 bound = Rect2(0, 0, 320, 240)
 bottomY = 128.0
+
+[node name="BGLayer1_1" type="Sprite2D" parent="SplineRenderer"]
+z_index = -3800
+material = ExtResource("20_8wav0")
+position = Vector2(0, 88)
+texture = ExtResource("20_16sbs")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 512, 32)
+
+[node name="BGLayer2_1" type="Sprite2D" parent="SplineRenderer"]
+z_index = -3900
+material = ExtResource("20_8wav0")
+position = Vector2(0, 56)
+texture = ExtResource("20_16sbs")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 32, 512, 64)
+
+[node name="BGLayer1_2" type="Sprite2D" parent="SplineRenderer"]
+z_index = -3800
+material = ExtResource("20_8wav0")
+position = Vector2(-512, 88)
+texture = ExtResource("20_16sbs")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 512, 32)
+
+[node name="BGLayer2_2" type="Sprite2D" parent="SplineRenderer"]
+z_index = -3900
+material = ExtResource("20_8wav0")
+position = Vector2(-512, 56)
+texture = ExtResource("20_16sbs")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 32, 512, 64)
 
 [connection signal="animation_looped" from="PlayUIRoot/Countdown" to="." method="_onCountdownAnimationLooped"]

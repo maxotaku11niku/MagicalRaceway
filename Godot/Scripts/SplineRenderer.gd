@@ -4,16 +4,23 @@ extends Node
 
 @export var road: Pseudo3DSpline
 @export var sky: Sky2D
+@export var bgLayer1Part1: Sprite2D
+@export var bgLayer1Part2: Sprite2D
+@export var bgLayer2Part1: Sprite2D
+@export var bgLayer2Part2: Sprite2D
 @export var screenSize: Vector2i
 @export var frontSplinePoints: int
 @export var backSplinePoints: int
 @export var cameraRelativePosition: Vector2
 @export var nearClipPosition: float
 @export var farClipPosition: float
+@export var bg1TravelFactor: float
+@export var bg2TravelFactor: float
 var turnStrList: Array[FloatWithDistance]
 var pitchStrList: Array[FloatWithDistance]
 var splitAmtList: Array[FloatWithDistance]
 var colourList: Array[ColourListWithDistance]
+var bgList: Array[BGSpriteDefWithDistance]
 var roadMat: ShaderMaterial
 var posTex: ImageTexture
 var posImg := Image.create(4, 256, false, Image.FORMAT_RF)
@@ -34,9 +41,13 @@ var turnStrStartInd: int
 var pitchStrStartInd: int
 var splitAmtStartInd: int
 var colourStartInd: int
+var bgStartInd: int
 var curXcurve: float
 var curYcurve: float
 var curSplit: float
+var curBGDef: BGSpriteDef
+var bg1Offset: float
+var bg2Offset: float
 
 func setSplinePositioningParameters() -> void:
 	# Calculate spline parameters
@@ -181,7 +192,13 @@ func setSplinePositioningParameters() -> void:
 			rayGrad = rayVec.y/rayVec.x
 			compY = cameraRelativePosition.y + (pointDists[i+1] - cameraRelativePosition.x) * rayGrad
 		if lineNum < 0: break
-	sky.bottomY = float(screenSize.y - 1) * (0.5 + (cameraRelativePosition.x/(2.0 * cameraRelativePosition.y)) * ((pointYs[splinePoints-1] - cameraRelativePosition.y)/(pointDists[splinePoints-1] - cameraRelativePosition.x)))
+	var skyBottom: float = float(screenSize.y - 1) * (0.5 + (cameraRelativePosition.x/(2.0 * cameraRelativePosition.y)) * ((pointYs[splinePoints-1] - cameraRelativePosition.y)/(pointDists[splinePoints-1] - cameraRelativePosition.x)))
+	skyBottom = maxf(skyBottom, lineNum + 1) #This prevents an ugly seam from forming
+	sky.bottomY = skyBottom
+	bgLayer1Part1.position.y = skyBottom - curBGDef.bg1ZeroY
+	bgLayer1Part2.position.y = skyBottom - curBGDef.bg1ZeroY
+	bgLayer2Part1.position.y = skyBottom - curBGDef.bg2ZeroY
+	bgLayer2Part2.position.y = skyBottom - curBGDef.bg2ZeroY
 	road.bound.position.y = lineNum + 1
 	road.bound.size.y = screenSize.y - (lineNum + 1)
 	posImg.set_data(4, 256, false, Image.FORMAT_RF, posDat)
@@ -189,11 +206,50 @@ func setSplinePositioningParameters() -> void:
 	roadMat.set_shader_parameter("positioning", posTex)
 	roadMat.set_shader_parameter("pPos", Vector2(xpos, fmod(dist, road.texture.get_height())))
 
+func TryChangeBGSprites() -> void:
+	var newBGDef := bgList[bgStartInd].def
+	if newBGDef != curBGDef:
+		curBGDef = newBGDef
+		bgLayer1Part1.texture = newBGDef.bgTexture
+		bgLayer1Part1.region_rect = newBGDef.bg1Region
+		bgLayer1Part2.texture = newBGDef.bgTexture
+		bgLayer1Part2.region_rect = newBGDef.bg1Region
+		bgLayer2Part1.texture = newBGDef.bgTexture
+		bgLayer2Part1.region_rect = newBGDef.bg2Region
+		bgLayer2Part2.texture = newBGDef.bgTexture
+		bgLayer2Part2.region_rect = newBGDef.bg2Region
+
 func Reset() -> void:
 	turnStrStartInd = 0
 	pitchStrStartInd = 0
 	splitAmtStartInd = 0
 	colourStartInd = 0
+	bgStartInd = 0
+	TryChangeBGSprites()
+
+func GetEdgeGrazeMultiplier(cForce: float) -> float:
+	if xpos <= -32.0 - curSplit:
+		return 1.0 + (exp((-xpos - 56.0 - curSplit) * 0.125) * absf(cForce) * 0.05)
+	elif xpos >= 32.0 + curSplit:
+		return 1.0 + (exp((xpos - 56.0 - curSplit) * 0.125) * absf(cForce) * 0.05)
+	elif curSplit >= 56.0:
+		if xpos <= -32.0 + curSplit and xpos > 0.0:
+			return 1.0 + (exp((-xpos - 56.0 + curSplit) * 0.125) * absf(cForce) * 0.05)
+		elif xpos >= 32.0 - curSplit and xpos < 0.0:
+			return 1.0 + (exp((xpos - 56.0 + curSplit) * 0.125) * absf(cForce) * 0.05)
+		else: return 1.0
+	else: return 1.0
+
+func IsPlayerOnRoad() -> bool:
+	if xpos >= -56.0 - curSplit and xpos <= 56.0 + curSplit:
+		if xpos <= 56.0 - curSplit or xpos >= -56.0 + curSplit:
+			return true
+		else: return false
+	else: return false
+	
+func SetBGOffsets(accumOffset: float) -> void:
+	bg1Offset = bg1TravelFactor * accumOffset
+	bg2Offset = bg2TravelFactor * accumOffset
 
 func _ready() -> void:
 	splinePoints = frontSplinePoints + backSplinePoints
@@ -232,10 +288,6 @@ func _ready() -> void:
 	roadMat = road.material
 	roadMat.set_shader_parameter("positioning", posTex)
 	roadMat.set_shader_parameter("positLines", 256)
-	turnStrStartInd = 0
-	pitchStrStartInd = 0
-	splitAmtStartInd = 0
-	colourStartInd = 0
 	palDat.resize(4 * 256)
 	palDat.fill(0)
 	palImg.set_data(256, 1, false, Image.FORMAT_RGBA8, palDat)
@@ -264,6 +316,12 @@ func _process(delta: float) -> void:
 			colourStartInd += 1
 			if colourStartInd >= (len(colourList) - 2):
 				break
+	if bgStartInd < (len(bgList) - 2):
+		while dist >= bgList[bgStartInd + 1].dist:
+			bgStartInd += 1
+			TryChangeBGSprites()
+			if bgStartInd >= (len(bgList) - 2):
+				break
 	var dlerpx: float = (dist - turnStrList[turnStrStartInd].dist) / (turnStrList[turnStrStartInd + 1].dist - turnStrList[turnStrStartInd].dist)
 	var dlerpy: float = (dist - pitchStrList[pitchStrStartInd].dist) / (pitchStrList[pitchStrStartInd + 1].dist - pitchStrList[pitchStrStartInd].dist)
 	var dlerps: float = (dist - splitAmtList[splitAmtStartInd].dist) / (splitAmtList[splitAmtStartInd + 1].dist - splitAmtList[splitAmtStartInd].dist)
@@ -274,6 +332,19 @@ func _process(delta: float) -> void:
 	curYcurve = lerpf(pitchStrList[pitchStrStartInd].val, pitchStrList[pitchStrStartInd + 1].val, dlerpy)
 	curSplit = lerpf(splitAmtList[splitAmtStartInd].val, splitAmtList[splitAmtStartInd + 1].val, dlerps)
 	setSplinePositioningParameters()
+	bgLayer1Part1.position.x = fmod(bg1Offset, curBGDef.bg1Region.size.x)
+	bgLayer2Part1.position.x = fmod(bg2Offset, curBGDef.bg2Region.size.x)
+	bgLayer1Part2.position.x = bgLayer1Part1.position.x - curBGDef.bg1Region.size.x
+	bgLayer2Part2.position.x = bgLayer2Part1.position.x - curBGDef.bg2Region.size.x
+	var curBGColour := bgList[bgStartInd].spriteColour
+	var nextBGColour := bgList[bgStartInd + 1].spriteColour
+	var dlerpb: float = (dist - bgList[bgStartInd].dist) / (bgList[bgStartInd + 1].dist - bgList[bgStartInd].dist)
+	if dlerpb >= 1.0: dlerpb = 1.0
+	var bgcol: Color = curBGColour.lerp(nextBGColour, dlerpb)
+	(bgLayer1Part1.material as ShaderMaterial).set_shader_parameter("col", bgcol)
+	(bgLayer1Part2.material as ShaderMaterial).set_shader_parameter("col", bgcol)
+	(bgLayer2Part1.material as ShaderMaterial).set_shader_parameter("col", bgcol)
+	(bgLayer2Part2.material as ShaderMaterial).set_shader_parameter("col", bgcol)
 	var curColourList := colourList[colourStartInd].cols
 	var nextColourList := colourList[colourStartInd + 1].cols
 	var dlerpc: float = (dist - colourList[colourStartInd].dist) / (colourList[colourStartInd + 1].dist - colourList[colourStartInd].dist)

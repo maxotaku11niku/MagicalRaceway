@@ -32,9 +32,11 @@ var isFinalStage: bool
 var stageNum: int
 var displayScore: int
 var score: float
+var edgeGrazeMult: float
 var xpos: float
 var yspeed: float
 var centrifugalBalance: float
+var accumulatedXOffset: float
 
 var runTimer: bool
 
@@ -46,10 +48,14 @@ func _ready() -> void:
 	dist = 0.0
 	xpos = 0.0
 	yspeed = 0.0
+	accumulatedXOffset = 0.0
+	edgeGrazeMult = 1.0
 	splineRenderer.turnStrList = currentTrack.turnStrList
 	splineRenderer.pitchStrList = currentTrack.pitchStrList
 	splineRenderer.splitAmtList = currentTrack.splitAmtList
 	splineRenderer.colourList = currentTrack.colourList
+	splineRenderer.bgList = currentTrack.bgList
+	splineRenderer.Reset()
 	score = 0.0
 	stageNum = 1
 	time = currentTrack.timeList[0].val
@@ -79,6 +85,7 @@ func _process(delta: float) -> void:
 						nextCheckDist = currentTrack.timeList[stageNum + 1].dist
 						isFinalStage = false
 					time += currentTrack.timeList[stageNum].val
+					score += 200000.0
 					playUI.displayTimeBonus(currentTrack.timeList[stageNum].val)
 					stageNum += 1
 			var accelAmount: float = Input.get_action_strength("accel")
@@ -86,19 +93,25 @@ func _process(delta: float) -> void:
 			yspeed += (accelAmount * accelPower - brakeAmount * brakePower) * delta
 			if yspeed <= 0.0: yspeed = 0.0
 			var xspeed: float = turnPower * (Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left"))
-			centrifugalBalance = (xspeed - centrifugalFactor * yspeed * yspeed * splineRenderer.curXcurve) * delta
+			var centrifugalForce: float = - centrifugalFactor * yspeed * yspeed * splineRenderer.curXcurve
+			centrifugalBalance = (xspeed + centrifugalForce) * delta
 			xpos += centrifugalBalance
 			if xspeed != 0.0: centrifugalBalance *= signf(xspeed)
 			else: centrifugalBalance *= signf(splineRenderer.curXcurve)
-			score += pow(yspeed, 1.4) * delta
+			var onRoad: bool = splineRenderer.IsPlayerOnRoad()
+			edgeGrazeMult = splineRenderer.GetEdgeGrazeMultiplier(centrifugalForce) if onRoad else 1.0
+			score += pow(yspeed, 1.4) * edgeGrazeMult * delta
 			dist += delta * yspeed
-			yspeed -= delta * dragFactor * yspeed * yspeed * signf(yspeed)
+			accumulatedXOffset -= splineRenderer.curXcurve * yspeed * delta
+			var dfac: float = dragFactor if onRoad else offRoadDragFactor
+			yspeed -= delta * dfac * yspeed * yspeed * signf(yspeed)
 			if runTimer: time -= delta
 	splineRenderer.dist = dist
 	splineRenderer.xpos = xpos
+	splineRenderer.SetBGOffsets(accumulatedXOffset)
 	displayScore = score
 	var stageProg: float = (dist - lastCheckDist) / (nextCheckDist - lastCheckDist)
-	playUI.updateMainUI(displayScore, time, yspeed/3.0, stageNum, stageProg, isFinalStage, 1.0)
+	playUI.updateMainUI(displayScore, time, yspeed/3.0, stageNum, stageProg, isFinalStage, edgeGrazeMult)
 	playUI.updateDevScreen(dist, 0.0, xpos, time, splineRenderer.curXcurve, splineRenderer.curSplit, splineRenderer.curYcurve, centrifugalBalance)
 	if playUI.DevScreen.visible:
 		if Input.is_action_just_pressed("dev_toggletimer"):

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BGSpriteDef" load_steps=3 format=3 uid="uid://cwb8hqnrqbodj"]
+
+[ext_resource type="Texture2D" uid="uid://dnsg72g8qxqk3" path="res://Images/BGSprites/icymountainsbg.png" id="1_n4qs7"]
+[ext_resource type="Script" path="res://Scripts/BGSpriteDef.gd" id="2_84f2v"]
+
+[resource]
+script = ExtResource("2_84f2v")
+bgTexture = ExtResource("1_n4qs7")
+bg1Region = Rect2i(0, 0, 512, 32)
+bg2Region = Rect2i(0, 32, 512, 64)
+bg1ZeroY = 32.0
+bg2ZeroY = 64.0

@@ -6,8 +6,8 @@ shader_type canvas_item;
 #define PARAM_CENTER 0.625
 #define PARAM_SPLIT 0.875
 
-uniform sampler2D palette;
-uniform sampler2D positioning;
+uniform sampler2D palette : filter_nearest;
+uniform sampler2D positioning : filter_nearest;
 /*
 This 'texture' contains information on how to draw the spline
 It must be in RF format (a single channel that is a 32-bit float)

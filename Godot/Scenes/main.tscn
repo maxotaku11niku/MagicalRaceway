@@ -1,21 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://r3lotwoipgni"]
+[gd_scene load_steps=8 format=3 uid="uid://r3lotwoipgni"]
 
 [ext_resource type="Script" path="res://Scripts/GameMaster.gd" id="1_gajsv"]
 [ext_resource type="PackedScene" uid="uid://c5t43awjac242" path="res://Scenes/intro.tscn" id="2_cthp8"]
 [ext_resource type="Material" uid="uid://cyt7ta7hx0uka" path="res://Shaders/screenMat.tres" id="3_gimpd"]
 [ext_resource type="PackedScene" uid="uid://tcwiwby8ugnd" path="res://Scenes/menu.tscn" id="3_rvgnx"]
 [ext_resource type="PackedScene" uid="uid://dvr3wf81xo871" path="res://Scenes/play.tscn" id="4_turl1"]
+[ext_resource type="Theme" uid="uid://c5v47t30t1alk" path="res://Images/UIElements/systemTheme.tres" id="5_iop6o"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_o3r2o"]
 viewport_path = NodePath("SubViewportContainer/MainScreen")
 
-[node name="GameMaster" type="Node" node_paths=PackedStringArray("virtualScreen", "displayRoot")]
+[node name="GameMaster" type="Node" node_paths=PackedStringArray("virtualScreen", "displayRoot", "fakeTextInterface")]
 script = ExtResource("1_gajsv")
 introScene = ExtResource("2_cthp8")
 menuScene = ExtResource("3_rvgnx")
 playScene = ExtResource("4_turl1")
 virtualScreen = NodePath("VirtualScreen")
 displayRoot = NodePath("SubViewportContainer/MainScreen")
+fakeTextInterface = NodePath("SubViewportContainer/MainScreen/TextLayer")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 offset_right = 40.0
@@ -31,6 +33,14 @@ size = Vector2i(320, 240)
 size_2d_override = Vector2i(320, 240)
 size_2d_override_stretch = true
 render_target_update_mode = 4
+
+[node name="TextLayer" type="Label" parent="SubViewportContainer/MainScreen"]
+z_index = 4080
+custom_minimum_size = Vector2(320, 240)
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("5_iop6o")
+autowrap_mode = 1
 
 [node name="VirtualScreen" type="TextureRect" parent="."]
 texture_filter = 1
