@@ -55,6 +55,7 @@ func _ready() -> void:
 	splineRenderer.splitAmtList = currentTrack.splitAmtList
 	splineRenderer.colourList = currentTrack.colourList
 	splineRenderer.bgList = currentTrack.bgList
+	splineRenderer.spriteList = currentTrack.spriteList
 	splineRenderer.Reset()
 	score = 0.0
 	stageNum = 1

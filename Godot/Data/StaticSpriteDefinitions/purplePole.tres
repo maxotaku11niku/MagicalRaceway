@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://dbmmrghdf8ajn"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_d8xca"]
+[ext_resource type="Texture2D" uid="uid://c8fmg1bav5q71" path="res://Images/ObstacleSprites/purplePole.png" id="2_431c5"]
+
+[resource]
+script = ExtResource("1_d8xca")
+texture = ExtResource("2_431c5")
+region = Rect2i(0, 0, 16, 128)
+colBounds = Vector3(16, 128, 16)

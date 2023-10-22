@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://dahwmpfi4rfkg"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_n3l4h"]
+[ext_resource type="Texture2D" uid="uid://cjblfpiycobla" path="res://Images/ObstacleSprites/twistPole.png" id="2_ft05j"]
+
+[resource]
+script = ExtResource("1_n3l4h")
+texture = ExtResource("2_ft05j")
+region = Rect2i(0, 0, 24, 64)
+colBounds = Vector3(24, 64, 16)

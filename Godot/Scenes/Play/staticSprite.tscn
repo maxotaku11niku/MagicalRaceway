@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdeipj28d31gv"]
+
+[ext_resource type="Script" path="res://Scripts/RoadSprite.gd" id="1_6rx0c"]
+[ext_resource type="Texture2D" uid="uid://c8fmg1bav5q71" path="res://Images/ObstacleSprites/purplePole.png" id="2_cldok"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_la36j"]
+size = Vector2(16, 16)
+
+[node name="StaticSprite" type="Area2D" node_paths=PackedStringArray("colBox", "visSprite")]
+script = ExtResource("1_6rx0c")
+colBox = NodePath("CollisionBox")
+visSprite = NodePath("VisibleSprite")
+
+[node name="CollisionBox" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_la36j")
+
+[node name="VisibleSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_cldok")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 128)

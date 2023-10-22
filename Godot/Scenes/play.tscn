@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dvr3wf81xo871"]
+[gd_scene load_steps=26 format=3 uid="uid://dvr3wf81xo871"]
 
 [ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="2_8i8yp"]
@@ -18,9 +18,14 @@
 [ext_resource type="Texture2D" uid="uid://cqpvhthkv67i1" path="res://Images/UIElements/selectors.png" id="10_2eh55"]
 [ext_resource type="Shader" path="res://Shaders/spline.gdshader" id="11_ed6u4"]
 [ext_resource type="Script" path="res://Scripts/Pseudo3DSpline.gd" id="11_q2xxr"]
+[ext_resource type="Script" path="res://Scripts/AnimatedRoadSprite.gd" id="11_vtgvb"]
 [ext_resource type="Texture2D" uid="uid://b01sg464srnsh" path="res://Images/road.png" id="14_6frcd"]
+[ext_resource type="PackedScene" uid="uid://bdeipj28d31gv" path="res://Scenes/Play/staticSprite.tscn" id="14_otp3g"]
 [ext_resource type="Material" uid="uid://c4gp2oawlvfmo" path="res://Shaders/colMixMat.tres" id="20_8wav0"]
 [ext_resource type="Texture2D" uid="uid://dnrn2a2cnesqr" path="res://Images/BGSprites/hometownbg.png" id="20_16sbs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eii6y"]
+size = Vector2(8, 8)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7np3q"]
 shader = ExtResource("11_ed6u4")
@@ -435,13 +440,23 @@ text = "t: toggle timer
 c: next check
 r: reset"
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="PlayerSprite" type="Area2D" parent="." node_paths=PackedStringArray("colBox", "visSprite")]
+script = ExtResource("11_vtgvb")
+colBox = NodePath("CollisionBox")
+visSprite = NodePath("VisibleSprite")
+screenPosition = Vector2(160, 200)
+
+[node name="CollisionBox" type="CollisionShape2D" parent="PlayerSprite"]
+shape = SubResource("RectangleShape2D_eii6y")
+
+[node name="VisibleSprite" type="AnimatedSprite2D" parent="PlayerSprite"]
 position = Vector2(160, 200)
 sprite_frames = ExtResource("4_0qg0g")
 animation = &"idle_front"
 
 [node name="SplineRenderer" type="Node" parent="." node_paths=PackedStringArray("road", "sky", "bgLayer1Part1", "bgLayer1Part2", "bgLayer2Part1", "bgLayer2Part2")]
 script = ExtResource("8_esje0")
+staticSpriteScene = ExtResource("14_otp3g")
 road = NodePath("RoadSpline")
 sky = NodePath("Sky")
 bgLayer1Part1 = NodePath("BGLayer1_1")
@@ -449,7 +464,7 @@ bgLayer1Part2 = NodePath("BGLayer1_2")
 bgLayer2Part1 = NodePath("BGLayer2_1")
 bgLayer2Part2 = NodePath("BGLayer2_2")
 screenSize = Vector2i(320, 240)
-frontSplinePoints = 250
+frontSplinePoints = 256
 backSplinePoints = 20
 cameraRelativePosition = Vector2(-30, 30)
 nearClipPosition = -25.0

@@ -40,7 +40,7 @@ void fragment()
 	vec2 pos;
 	pos.x = UV.x;
 	float sfac = scale * float(width) * texPixSize.x;
-	float cLine = 0.5 + center - pPos.x / (scale * float(width));
+	float cLine = 0.5 + (center / scale) - pPos.x / (scale * float(width));
 	pos.x -= cLine;
 	pos.x *= sfac;
 	if (UV.x > cLine)

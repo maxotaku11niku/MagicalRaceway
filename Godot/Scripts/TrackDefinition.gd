@@ -14,3 +14,4 @@ extends Resource
 @export var pitchStrList: Array[FloatWithDistance]
 @export var colourList: Array[ColourListWithDistance]
 @export var bgList: Array[BGSpriteDefWithDistance]
+@export var spriteList: Array[StaticSpriteDefWithDistance]
