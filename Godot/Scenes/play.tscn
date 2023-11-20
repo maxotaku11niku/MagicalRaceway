@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://dvr3wf81xo871"]
+[gd_scene load_steps=28 format=3 uid="uid://dvr3wf81xo871"]
 
 [ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="2_8i8yp"]
@@ -18,7 +18,9 @@
 [ext_resource type="Texture2D" uid="uid://cqpvhthkv67i1" path="res://Images/UIElements/selectors.png" id="10_2eh55"]
 [ext_resource type="Shader" path="res://Shaders/spline.gdshader" id="11_ed6u4"]
 [ext_resource type="Script" path="res://Scripts/Pseudo3DSpline.gd" id="11_q2xxr"]
-[ext_resource type="Script" path="res://Scripts/AnimatedRoadSprite.gd" id="11_vtgvb"]
+[ext_resource type="Script" path="res://Scripts/PlayerCharacter.gd" id="11_s0u70"]
+[ext_resource type="AudioStream" uid="uid://b5xetw1yfhx3n" path="res://Sounds/SFX/skid.wav" id="13_lw633"]
+[ext_resource type="AudioStream" uid="uid://c3vlc4lu76act" path="res://Sounds/SFX/flying.wav" id="13_qswb0"]
 [ext_resource type="Texture2D" uid="uid://b01sg464srnsh" path="res://Images/road.png" id="14_6frcd"]
 [ext_resource type="PackedScene" uid="uid://bdeipj28d31gv" path="res://Scenes/Play/staticSprite.tscn" id="14_otp3g"]
 [ext_resource type="Material" uid="uid://c4gp2oawlvfmo" path="res://Shaders/colMixMat.tres" id="20_8wav0"]
@@ -38,12 +40,13 @@ shader_parameter/texPixSize = Vector2(0.007, 0.016)
 shader_parameter/pPos = null
 shader_parameter/palette = ExtResource("9_1t8dp")
 
-[node name="PlayMaster" type="Node" node_paths=PackedStringArray("splineRenderer", "playUI", "countdownSprite")]
+[node name="PlayMaster" type="Node" node_paths=PackedStringArray("splineRenderer", "playUI", "countdownSprite", "playerSprite")]
 script = ExtResource("1_dxmhm")
 currentTrack = ExtResource("2_8i8yp")
 splineRenderer = NodePath("SplineRenderer")
 playUI = NodePath("PlayUIRoot")
 countdownSprite = NodePath("PlayUIRoot/Countdown")
+playerSprite = NodePath("PlayerSprite")
 accelPower = 80.0
 brakePower = 200.0
 turnPower = 90.0
@@ -440,8 +443,11 @@ text = "t: toggle timer
 c: next check
 r: reset"
 
-[node name="PlayerSprite" type="Area2D" parent="." node_paths=PackedStringArray("colBox", "visSprite")]
-script = ExtResource("11_vtgvb")
+[node name="PlayerSprite" type="Area2D" parent="." node_paths=PackedStringArray("flyingSoundPlayer", "colBox", "visSprite")]
+script = ExtResource("11_s0u70")
+flyingSoundPlayer = NodePath("AudioStreamPlayer")
+normalFlyingSound = ExtResource("13_qswb0")
+skiddingSound = ExtResource("13_lw633")
 colBox = NodePath("CollisionBox")
 visSprite = NodePath("VisibleSprite")
 screenPosition = Vector2(160, 200)
@@ -453,6 +459,10 @@ shape = SubResource("RectangleShape2D_eii6y")
 position = Vector2(160, 200)
 sprite_frames = ExtResource("4_0qg0g")
 animation = &"idle_front"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PlayerSprite"]
+stream = ExtResource("13_qswb0")
+bus = &"SFX"
 
 [node name="SplineRenderer" type="Node" parent="." node_paths=PackedStringArray("road", "sky", "bgLayer1Part1", "bgLayer1Part2", "bgLayer2Part1", "bgLayer2Part2")]
 script = ExtResource("8_esje0")
@@ -494,7 +504,7 @@ position = Vector2(0, 88)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 512, 32)
+region_rect = Rect2(0, 0, 512, 24)
 
 [node name="BGLayer2_1" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3900
@@ -503,7 +513,7 @@ position = Vector2(0, 56)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 32, 512, 64)
+region_rect = Rect2(0, 32, 512, 56)
 
 [node name="BGLayer1_2" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3800
@@ -512,7 +522,7 @@ position = Vector2(-512, 88)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 512, 32)
+region_rect = Rect2(0, 0, 512, 24)
 
 [node name="BGLayer2_2" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3900
@@ -521,6 +531,6 @@ position = Vector2(-512, 56)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 32, 512, 64)
+region_rect = Rect2(0, 32, 512, 56)
 
 [connection signal="animation_looped" from="PlayUIRoot/Countdown" to="." method="_onCountdownAnimationLooped"]

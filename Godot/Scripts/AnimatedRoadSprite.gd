@@ -6,6 +6,9 @@ extends Area2D
 @export var logicalPosition: Vector3
 @export var screenPosition: Vector2
 @export var layer: int
+var animationType: int
+var animationDir: float
+var animationSpeed: float
 
 func _ready() -> void:
 	pass

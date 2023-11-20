@@ -17,6 +17,7 @@ enum
 @export var splineRenderer: SplineRenderer
 @export var playUI: PlayUI
 @export var countdownSprite: AnimatedSprite2D
+@export var playerSprite: PlayerCharacter
 @export var accelPower: float
 @export var brakePower: float
 @export var turnPower: float
@@ -70,6 +71,7 @@ func _ready() -> void:
 		isFinalStage = false
 
 func _process(delta: float) -> void:
+	var steerStrength: float = 0.0
 	match state:
 		PSTATE_COUNTDOWN:
 			pass
@@ -91,14 +93,16 @@ func _process(delta: float) -> void:
 					stageNum += 1
 			var accelAmount: float = Input.get_action_strength("accel")
 			var brakeAmount: float = Input.get_action_strength("brake")
+			steerStrength = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 			yspeed += (accelAmount * accelPower - brakeAmount * brakePower) * delta
 			if yspeed <= 0.0: yspeed = 0.0
-			var xspeed: float = turnPower * (Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left"))
+			var xspeed: float = turnPower * steerStrength
 			var centrifugalForce: float = - centrifugalFactor * yspeed * yspeed * splineRenderer.curXcurve
 			centrifugalBalance = (xspeed + centrifugalForce) * delta
 			xpos += centrifugalBalance
 			if xspeed != 0.0: centrifugalBalance *= signf(xspeed)
 			else: centrifugalBalance *= signf(splineRenderer.curXcurve)
+			playerSprite.setSkidding(centrifugalBalance < 0.0 and absf(steerStrength) > 0.95)
 			var onRoad: bool = splineRenderer.IsPlayerOnRoad()
 			edgeGrazeMult = splineRenderer.GetEdgeGrazeMultiplier(centrifugalForce) if onRoad else 1.0
 			score += pow(yspeed, 1.4) * edgeGrazeMult * delta
@@ -112,6 +116,8 @@ func _process(delta: float) -> void:
 	splineRenderer.SetBGOffsets(accumulatedXOffset)
 	displayScore = score
 	var stageProg: float = (dist - lastCheckDist) / (nextCheckDist - lastCheckDist)
+	playerSprite.animationSpeed = yspeed * 0.002
+	playerSprite.animationDir = steerStrength
 	playUI.updateMainUI(displayScore, time, yspeed/3.0, stageNum, stageProg, isFinalStage, edgeGrazeMult)
 	playUI.updateDevScreen(dist, 0.0, xpos, time, splineRenderer.curXcurve, splineRenderer.curSplit, splineRenderer.curYcurve, centrifugalBalance)
 	if playUI.DevScreen.visible:
