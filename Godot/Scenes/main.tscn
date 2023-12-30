@@ -42,13 +42,26 @@ offset_bottom = 23.0
 theme = ExtResource("5_iop6o")
 autowrap_mode = 1
 
-[node name="VirtualScreen" type="TextureRect" parent="."]
-texture_filter = 1
-texture_repeat = 1
-material = ExtResource("3_gimpd")
+[node name="ViewportCover" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VirtualScreen" type="TextureRect" parent="."]
+texture_filter = 1
+texture_repeat = 1
+material = ExtResource("3_gimpd")
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_right = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
 texture = SubResource("ViewportTexture_o3r2o")
+expand_mode = 3

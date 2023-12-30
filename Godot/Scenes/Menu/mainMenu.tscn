@@ -143,9 +143,9 @@ text = "Start"
 
 [node name="ScoresButton" type="Button" parent="."]
 layout_mode = 0
-offset_top = 144.0
+offset_top = 140.0
 offset_right = 160.0
-offset_bottom = 152.0
+offset_bottom = 148.0
 scale = Vector2(2, 2)
 focus_neighbor_top = NodePath("../StartButton")
 focus_neighbor_bottom = NodePath("../MusicButton")
@@ -155,9 +155,9 @@ text = "High Scores"
 
 [node name="MusicButton" type="Button" parent="."]
 layout_mode = 0
-offset_top = 168.0
+offset_top = 160.0
 offset_right = 160.0
-offset_bottom = 176.0
+offset_bottom = 168.0
 scale = Vector2(2, 2)
 focus_neighbor_top = NodePath("../ScoresButton")
 focus_neighbor_bottom = NodePath("../ConfigButton")
@@ -167,9 +167,9 @@ text = "Music Room"
 
 [node name="ConfigButton" type="Button" parent="."]
 layout_mode = 0
-offset_top = 192.0
+offset_top = 180.0
 offset_right = 160.0
-offset_bottom = 200.0
+offset_bottom = 188.0
 scale = Vector2(2, 2)
 focus_neighbor_top = NodePath("../MusicButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
@@ -179,9 +179,9 @@ text = "Config"
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 0
-offset_top = 216.0
+offset_top = 200.0
 offset_right = 160.0
-offset_bottom = 224.0
+offset_bottom = 208.0
 scale = Vector2(2, 2)
 focus_neighbor_top = NodePath("../ConfigButton")
 focus_neighbor_bottom = NodePath("../StartButton")
@@ -198,7 +198,7 @@ anchor_bottom = 1.0
 offset_top = -8.0
 offset_right = 200.0
 grow_vertical = 0
-text = "CC-BY-NC 2023 Maxim Hoxha"
+text = "CC-BY-NC 2024 Maxim Hoxha"
 
 [node name="VersionLabel" type="Label" parent="."]
 layout_mode = 1

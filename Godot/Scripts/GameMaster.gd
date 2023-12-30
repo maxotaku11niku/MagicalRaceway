@@ -84,6 +84,7 @@ func _ready() -> void:
 	framesToNextLine = 5
 	startupDone = false
 	ym2608RegViewVisible = false
+	get_tree().root.size = Vector2i(640, 480)
 
 func _process(delta: float) -> void:
 	#State change -> need to load a new root scene

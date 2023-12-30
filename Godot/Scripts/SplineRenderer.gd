@@ -426,6 +426,7 @@ func _ready() -> void:
 		staticSprmngPool[i] = StaticSprite.new()
 		var curspr := staticSpriteScene.instantiate()
 		add_child(curspr)
+		curspr.colBox.shape = RectangleShape2D.new()
 		curspr.logicalPosition = Vector3(-6969.0, 420.0, 393939.0)
 		curspr.screenPosition = Vector2(-6969.0, 393939.0)
 		curspr.scale = Vector2(1.0, 1.0)

@@ -1,11 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://tcwiwby8ugnd"]
+[gd_scene load_steps=15 format=3 uid="uid://tcwiwby8ugnd"]
 
 [ext_resource type="Script" path="res://Scripts/MenuMaster.gd" id="1_b0422"]
 [ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_mly80"]
 [ext_resource type="Texture2D" uid="uid://duh7xsvw5v5sp" path="res://Images/UIElements/menuBG.png" id="2_fda7w"]
 [ext_resource type="PackedScene" uid="uid://cg2wygun7tvyk" path="res://Scenes/Menu/difficultyMenu.tscn" id="3_pydhx"]
 [ext_resource type="PackedScene" uid="uid://2fva7yly72hi" path="res://Scenes/Menu/mainMenu.tscn" id="4_55nud"]
+[ext_resource type="PackedScene" uid="uid://b8hwg6v1jg1xf" path="res://Scenes/Menu/highscoresMenu.tscn" id="5_fjo17"]
 [ext_resource type="PackedScene" uid="uid://dk703uq2ybk46" path="res://Scenes/Menu/songSelectMenu.tscn" id="6_g4cgk"]
+[ext_resource type="PackedScene" uid="uid://dxryubh7uc4di" path="res://Scenes/Menu/musicMenu.tscn" id="6_t42b5"]
+[ext_resource type="PackedScene" uid="uid://bian6vy36j8px" path="res://Scenes/Menu/configMenu.tscn" id="7_j0gn5"]
+[ext_resource type="AudioStream" uid="uid://gjer3sen4k1e" path="res://Sounds/SFX/select.wav" id="10_uinwc"]
+[ext_resource type="AudioStream" uid="uid://b1p1ykos7d0nb" path="res://Sounds/SFX/confirm.wav" id="11_gphbi"]
+[ext_resource type="AudioStream" uid="uid://ju8lh6pvyln7" path="res://Sounds/SFX/decline.wav" id="12_8yc1i"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rf88j"]
 texture = ExtResource("2_fda7w")
@@ -17,13 +23,19 @@ texture_region_size = Vector2i(64, 64)
 tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_rf88j")
 
-[node name="MenuRoot" type="Node" node_paths=PackedStringArray("menuBG", "UIRoot")]
+[node name="MenuRoot" type="Node" node_paths=PackedStringArray("menuBG", "UIRoot", "selectSoundPlayer", "confirmSoundPlayer", "declineSoundPlayer")]
 script = ExtResource("1_b0422")
 menuBG = NodePath("MenuBG")
 UIRoot = NodePath("UIRoot")
 mainMenuScene = ExtResource("4_55nud")
 difficultyMenuScene = ExtResource("3_pydhx")
 songSelectMenuScene = ExtResource("6_g4cgk")
+highScoresScene = ExtResource("5_fjo17")
+musicRoomScene = ExtResource("6_t42b5")
+configMenuScene = ExtResource("7_j0gn5")
+selectSoundPlayer = NodePath("SelectSoundPlayer")
+confirmSoundPlayer = NodePath("ConfirmSoundPlayer")
+declineSoundPlayer = NodePath("DeclineSoundPlayer")
 
 [node name="MenuBG" type="TileMap" parent="."]
 modulate = Color(0.807843, 0.419608, 1, 1)
@@ -39,3 +51,12 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("1_mly80")
+
+[node name="SelectSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_uinwc")
+
+[node name="ConfirmSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_gphbi")
+
+[node name="DeclineSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_8yc1i")

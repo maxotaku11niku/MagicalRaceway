@@ -10,7 +10,7 @@ func _onButtonSelected(num: int) -> void:
 	sigMoveToNewScreen.emit(num + addCode)
 
 func _ready() -> void:
-	initButton.grab_focus.call_deferred()
+	if initButton != null: initButton.grab_focus.call_deferred()
 
 func _process(delta: float) -> void:
 	pass

@@ -9,6 +9,9 @@ extends Node
 @export var musicRoomScene: PackedScene
 @export var configMenuScene: PackedScene
 @export var keybindsMenuScene: PackedScene
+@export var selectSoundPlayer: AudioStreamPlayer
+@export var confirmSoundPlayer: AudioStreamPlayer
+@export var declineSoundPlayer: AudioStreamPlayer
 
 var BGOffset: float
 var currentScreen: MenuScreen
@@ -131,7 +134,13 @@ func _process(delta: float) -> void:
 	menuBG.position = Vector2(-BGOffset, BGOffset)
 	BGOffset += 60.0 * delta
 	if BGOffset > 64.0: BGOffset -= 64.0
-	if Input.is_action_just_pressed("ui_cancel"): _onMenuScreenChange(BUTTON_RETURN)
+	if Input.is_action_just_pressed("ui_up") or Input.is_action_just_pressed("ui_down") or Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
+		selectSoundPlayer.play()
+	if Input.is_action_just_pressed("ui_accept"):
+		confirmSoundPlayer.play()
+	if Input.is_action_just_pressed("ui_cancel"):
+		declineSoundPlayer.play()
+		_onMenuScreenChange(BUTTON_RETURN)
 	if enterPlaytime:
 		sigMenuEnd.emit()
 	if curScreenNum != prevScreenNum:

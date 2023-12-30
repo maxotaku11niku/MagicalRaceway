@@ -67,7 +67,7 @@ func displayTimeBonus(bonus: int) -> void:
 func displayGoBackNotif(display: bool, dir: int) -> void:
 	GoBackNotification.visible = display
 	if display:
-		goBackDir.region_rect.position.x = 0 if dir < 0 else 8
+		goBackDir.region_rect.position.x = 0 if dir > 0 else 8
 
 func _ready() -> void:
 	DevScreen.visible = false

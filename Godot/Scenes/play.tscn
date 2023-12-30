@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dvr3wf81xo871"]
+[gd_scene load_steps=32 format=3 uid="uid://dvr3wf81xo871"]
 
 [ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="2_8i8yp"]
@@ -25,6 +25,10 @@
 [ext_resource type="PackedScene" uid="uid://bdeipj28d31gv" path="res://Scenes/Play/staticSprite.tscn" id="14_otp3g"]
 [ext_resource type="Material" uid="uid://c4gp2oawlvfmo" path="res://Shaders/colMixMat.tres" id="20_8wav0"]
 [ext_resource type="Texture2D" uid="uid://dnrn2a2cnesqr" path="res://Images/BGSprites/hometownbg.png" id="20_16sbs"]
+[ext_resource type="AudioStream" uid="uid://3qt73mhv37tq" path="res://Sounds/SFX/hit.wav" id="26_hsp02"]
+[ext_resource type="AudioStream" uid="uid://cv36707dexdhv" path="res://Sounds/SFX/smack.wav" id="26_x7jon"]
+[ext_resource type="AudioStream" uid="uid://dtp7aea7g2psr" path="res://Sounds/SFX/flyby.wav" id="28_8yqan"]
+[ext_resource type="AudioStream" uid="uid://cxs2wo4etpl6s" path="res://Sounds/SFX/checkpoint.wav" id="29_tt8sv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eii6y"]
 size = Vector2(8, 8)
@@ -40,7 +44,7 @@ shader_parameter/texPixSize = Vector2(0.007, 0.016)
 shader_parameter/pPos = null
 shader_parameter/palette = ExtResource("9_1t8dp")
 
-[node name="PlayMaster" type="Node" node_paths=PackedStringArray("splineRenderer", "playUI", "countdownSprite", "playerSprite")]
+[node name="PlayMaster" type="Node" node_paths=PackedStringArray("splineRenderer", "playUI", "countdownSprite", "playerSprite", "oneShotSFXPlayers")]
 script = ExtResource("1_dxmhm")
 currentTrack = ExtResource("2_8i8yp")
 splineRenderer = NodePath("SplineRenderer")
@@ -53,6 +57,8 @@ turnPower = 90.0
 dragFactor = 0.00012
 offRoadDragFactor = 0.00036
 centrifugalFactor = 0.12
+collisionStrength = 0.2
+oneShotSFXPlayers = [NodePath("HitSoundPlayer"), NodePath("CheckpointSoundPlayer"), NodePath("FlybySoundPlayer"), NodePath("SmackSoundPlayer")]
 
 [node name="PlayUIRoot" type="Control" parent="." node_paths=PackedStringArray("MainUI", "DevScreen", "CheckPointNotification", "GoBackNotification")]
 z_index = 4000
@@ -445,7 +451,7 @@ r: reset"
 
 [node name="PlayerSprite" type="Area2D" parent="." node_paths=PackedStringArray("flyingSoundPlayer", "colBox", "visSprite")]
 script = ExtResource("11_s0u70")
-flyingSoundPlayer = NodePath("AudioStreamPlayer")
+flyingSoundPlayer = NodePath("FlyingSoundPlayer")
 normalFlyingSound = ExtResource("13_qswb0")
 skiddingSound = ExtResource("13_lw633")
 colBox = NodePath("CollisionBox")
@@ -460,7 +466,7 @@ position = Vector2(160, 200)
 sprite_frames = ExtResource("4_0qg0g")
 animation = &"idle_front"
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="PlayerSprite"]
+[node name="FlyingSoundPlayer" type="AudioStreamPlayer" parent="PlayerSprite"]
 stream = ExtResource("13_qswb0")
 bus = &"SFX"
 
@@ -533,4 +539,19 @@ centered = false
 region_enabled = true
 region_rect = Rect2(0, 32, 512, 56)
 
+[node name="SmackSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("26_x7jon")
+
+[node name="HitSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("26_hsp02")
+
+[node name="FlybySoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("28_8yqan")
+
+[node name="CheckpointSoundPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("29_tt8sv")
+
 [connection signal="animation_looped" from="PlayUIRoot/Countdown" to="." method="_onCountdownAnimationLooped"]
+[connection signal="area_entered" from="PlayerSprite" to="." method="_onPlayerCollideWithObject"]
+[connection signal="landed_after_crash" from="PlayerSprite" to="." method="_onPlayerLandedAfterCrash"]
+[connection signal="stopped_spinning" from="PlayerSprite" to="." method="_onPlayerStoppedSpinning"]
