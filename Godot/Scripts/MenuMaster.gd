@@ -12,6 +12,8 @@ extends Node
 @export var selectSoundPlayer: AudioStreamPlayer
 @export var confirmSoundPlayer: AudioStreamPlayer
 @export var declineSoundPlayer: AudioStreamPlayer
+@export var leftPointer: Sprite2D
+@export var rightPointer: Sprite2D
 
 var BGOffset: float
 var currentScreen: MenuScreen
@@ -20,6 +22,7 @@ var prevScreenNum: int
 var selectedDifficulty: int
 var selectedSong: int
 var enterPlaytime: bool
+var testSoundCooldown: float
 
 enum
 {
@@ -79,6 +82,22 @@ enum
 
 signal sigMenuEnd
 
+func _onNewControlSelected(control: Control, invertedPointing: bool) -> void:
+	if control == null:
+		leftPointer.visible = false
+		rightPointer.visible = false
+	else:
+		leftPointer.visible = true
+		rightPointer.visible = true
+		leftPointer.scale = control.scale
+		rightPointer.scale = control.scale
+		if invertedPointing:
+			rightPointer.position = control.position + control.scale * Vector2(-8.0, control.size.y * 0.5)
+			leftPointer.position = control.position + control.scale * Vector2(8.0 + control.size.x, control.size.y * 0.5)
+		else:
+			leftPointer.position = control.position + control.scale * Vector2(-8.0, control.size.y * 0.5)
+			rightPointer.position = control.position + control.scale * Vector2(8.0 + control.size.x, control.size.y * 0.5)
+
 func _onMenuScreenChange(buttNum: int) -> void:
 	match buttNum:
 		BUTTON_RETURN:
@@ -118,19 +137,25 @@ func _onMenuScreenChange(buttNum: int) -> void:
 		BUTTON_SONG4:
 			selectedSong = 3
 			enterPlaytime = true
-	
+
+func _onTestSFXVolume() -> void:
+	if testSoundCooldown <= 0.0:
+		selectSoundPlayer.play()
+		testSoundCooldown = 0.2 # Prevents annoying buzzing sounds
 
 func _ready() -> void:
 	BGOffset = 0.0
 	currentScreen = mainMenuScene.instantiate()
 	UIRoot.add_child(currentScreen)
 	currentScreen.sigMoveToNewScreen.connect(_onMenuScreenChange)
+	currentScreen.sigFocusOnNewControl.connect(_onNewControlSelected)
 	curScreenNum = MSCREEN_MAIN
 	prevScreenNum = MSCREEN_MAIN
 	menuBG.modulate = bgCols[curScreenNum]
 	enterPlaytime = false
 
 func _process(delta: float) -> void:
+	testSoundCooldown -= delta
 	menuBG.position = Vector2(-BGOffset, BGOffset)
 	BGOffset += 60.0 * delta
 	if BGOffset > 64.0: BGOffset -= 64.0
@@ -162,10 +187,15 @@ func _process(delta: float) -> void:
 				nextScene = keybindsMenuScene
 			_:
 				return
+		leftPointer.visible = false
+		rightPointer.visible = false
 		UIRoot.remove_child(currentScreen)
 		currentScreen.free()
 		currentScreen = nextScene.instantiate()
 		UIRoot.add_child(currentScreen)
 		currentScreen.sigMoveToNewScreen.connect(_onMenuScreenChange)
+		currentScreen.sigFocusOnNewControl.connect(_onNewControlSelected)
+		if curScreenNum == MSCREEN_CONFIG:
+			currentScreen.sigSFXVolTest.connect(_onTestSFXVolume)
 		prevScreenNum = curScreenNum
 		menuBG.modulate = bgCols[curScreenNum]

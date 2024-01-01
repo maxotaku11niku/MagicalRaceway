@@ -1,27 +1,212 @@
 [gd_scene load_steps=3 format=3 uid="uid://bian6vy36j8px"]
 
 [ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_2yf33"]
-[ext_resource type="Script" path="res://Scripts/MenuScreen.gd" id="2_vxiho"]
+[ext_resource type="Script" path="res://Scripts/ConfigScreen.gd" id="2_ui2i5"]
 
-[node name="ConfigMenu" type="Control"]
+[node name="ConfigMenu" type="Control" node_paths=PackedStringArray("initSetting", "settings", "descriptionLabel")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
 offset_bottom = 240.0
 theme = ExtResource("1_2yf33")
-script = ExtResource("2_vxiho")
+script = ExtResource("2_ui2i5")
+initSetting = NodePath("DisplayModeSetting")
+settings = [NodePath("DisplayModeSetting"), NodePath("ResolutionSetting"), NodePath("MusicVolSetting"), NodePath("SFXVolSetting"), NodePath("MusicEmuSetting"), NodePath("AccelholdSetting"), NodePath("RebindButton"), NodePath("ResetButton"), NodePath("SaveButton")]
+descriptionLabel = NodePath("Description")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -72.0
-offset_top = -4.0
-offset_right = 72.0
-offset_bottom = 4.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Under Construction"
+[node name="DisplayModeLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 104.0
+offset_bottom = 16.0
+text = "Display Mode"
+
+[node name="DisplayModeSetting" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 8.0
+offset_right = 304.0
+offset_bottom = 16.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../SaveButton")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../ResolutionSetting")
+focus_next = NodePath("../ResolutionSetting")
+focus_previous = NodePath("../SaveButton")
+focus_mode = 2
+text = "Windowed"
+horizontal_alignment = 2
+
+[node name="ResolutionLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 24.0
+offset_right = 104.0
+offset_bottom = 32.0
+text = "Window Resolution"
+
+[node name="ResolutionSetting" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 24.0
+offset_right = 304.0
+offset_bottom = 32.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../DisplayModeSetting")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../MusicVolSetting")
+focus_next = NodePath("../MusicVolSetting")
+focus_previous = NodePath("../DisplayModeSetting")
+focus_mode = 2
+text = "640x480"
+horizontal_alignment = 2
+
+[node name="MusicVolLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 40.0
+offset_right = 104.0
+offset_bottom = 48.0
+text = "Music Volume"
+
+[node name="MusicVolSetting" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 40.0
+offset_right = 304.0
+offset_bottom = 48.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../ResolutionSetting")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../SFXVolSetting")
+focus_next = NodePath("../SFXVolSetting")
+focus_previous = NodePath("../ResolutionSetting")
+focus_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="SFXVolLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 56.0
+offset_right = 88.0
+offset_bottom = 64.0
+text = "SFX Volume"
+
+[node name="SFXVolSetting" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 56.0
+offset_right = 304.0
+offset_bottom = 64.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../MusicVolSetting")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../MusicEmuSetting")
+focus_next = NodePath("../MusicEmuSetting")
+focus_previous = NodePath("../MusicVolSetting")
+focus_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="MusicEmuLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 72.0
+offset_right = 104.0
+offset_bottom = 80.0
+text = "Soundchip Emulation"
+
+[node name="MusicEmuSetting" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 72.0
+offset_right = 304.0
+offset_bottom = 80.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../SFXVolSetting")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../AccelholdSetting")
+focus_next = NodePath("../AccelholdSetting")
+focus_previous = NodePath("../SFXVolSetting")
+focus_mode = 2
+text = "YM2608"
+horizontal_alignment = 2
+
+[node name="AccelholdLabel" type="Label" parent="."]
+offset_left = 8.0
+offset_top = 88.0
+offset_right = 136.0
+offset_bottom = 96.0
+text = "Accelerator Hold"
+
+[node name="AccelholdSetting" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 88.0
+offset_right = 304.0
+offset_bottom = 96.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath("../MusicEmuSetting")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath("../RebindButton")
+focus_next = NodePath("../RebindButton")
+focus_previous = NodePath("../MusicEmuSetting")
+focus_mode = 2
+text = "Off"
+horizontal_alignment = 2
+
+[node name="RebindButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 104.0
+offset_right = 136.0
+offset_bottom = 112.0
+focus_neighbor_top = NodePath("../AccelholdSetting")
+focus_neighbor_bottom = NodePath("../ResetButton")
+focus_next = NodePath("../ResetButton")
+focus_previous = NodePath("../AccelholdSetting")
+text = "Rebind Controls"
+
+[node name="ResetButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 120.0
+offset_right = 152.0
+offset_bottom = 128.0
+focus_neighbor_top = NodePath("../RebindButton")
+focus_neighbor_bottom = NodePath("../SaveButton")
+focus_next = NodePath("../SaveButton")
+focus_previous = NodePath("../RebindButton")
+text = "Reset to Defaults"
+
+[node name="SaveButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 136.0
+offset_right = 120.0
+offset_bottom = 144.0
+focus_neighbor_top = NodePath("../ResetButton")
+focus_neighbor_bottom = NodePath("../DisplayModeSetting")
+focus_next = NodePath("../DisplayModeSetting")
+focus_previous = NodePath("../ResetButton")
+text = "Save Settings"
+
+[node name="Description" type="Label" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 160.0
+offset_right = 312.0
+offset_bottom = 232.0
+text = "Describe setting here"
+autowrap_mode = 2
+text_overrun_behavior = 2
+
+[connection signal="focus_entered" from="DisplayModeSetting" to="." method="_onSettingSelected" binds= [0]]
+[connection signal="focus_entered" from="ResolutionSetting" to="." method="_onSettingSelected" binds= [1]]
+[connection signal="focus_entered" from="MusicVolSetting" to="." method="_onSettingSelected" binds= [2]]
+[connection signal="focus_entered" from="SFXVolSetting" to="." method="_onSettingSelected" binds= [3]]
+[connection signal="focus_entered" from="MusicEmuSetting" to="." method="_onSettingSelected" binds= [4]]
+[connection signal="focus_entered" from="AccelholdSetting" to="." method="_onSettingSelected" binds= [5]]
+[connection signal="focus_entered" from="RebindButton" to="." method="_onSettingSelected" binds= [6]]
+[connection signal="button_down" from="ResetButton" to="." method="_onResetSettings"]
+[connection signal="focus_entered" from="ResetButton" to="." method="_onSettingSelected" binds= [7]]
+[connection signal="button_down" from="SaveButton" to="." method="_onSaveSettings"]
+[connection signal="focus_entered" from="SaveButton" to="." method="_onSettingSelected" binds= [8]]

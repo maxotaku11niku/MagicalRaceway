@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://tcwiwby8ugnd"]
+[gd_scene load_steps=16 format=3 uid="uid://tcwiwby8ugnd"]
 
 [ext_resource type="Script" path="res://Scripts/MenuMaster.gd" id="1_b0422"]
 [ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_mly80"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dk703uq2ybk46" path="res://Scenes/Menu/songSelectMenu.tscn" id="6_g4cgk"]
 [ext_resource type="PackedScene" uid="uid://dxryubh7uc4di" path="res://Scenes/Menu/musicMenu.tscn" id="6_t42b5"]
 [ext_resource type="PackedScene" uid="uid://bian6vy36j8px" path="res://Scenes/Menu/configMenu.tscn" id="7_j0gn5"]
+[ext_resource type="Texture2D" uid="uid://cqpvhthkv67i1" path="res://Images/UIElements/selectors.png" id="10_tk8m2"]
 [ext_resource type="AudioStream" uid="uid://gjer3sen4k1e" path="res://Sounds/SFX/select.wav" id="10_uinwc"]
 [ext_resource type="AudioStream" uid="uid://b1p1ykos7d0nb" path="res://Sounds/SFX/confirm.wav" id="11_gphbi"]
 [ext_resource type="AudioStream" uid="uid://ju8lh6pvyln7" path="res://Sounds/SFX/decline.wav" id="12_8yc1i"]
@@ -23,7 +24,7 @@ texture_region_size = Vector2i(64, 64)
 tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_rf88j")
 
-[node name="MenuRoot" type="Node" node_paths=PackedStringArray("menuBG", "UIRoot", "selectSoundPlayer", "confirmSoundPlayer", "declineSoundPlayer")]
+[node name="MenuRoot" type="Node" node_paths=PackedStringArray("menuBG", "UIRoot", "selectSoundPlayer", "confirmSoundPlayer", "declineSoundPlayer", "leftPointer", "rightPointer")]
 script = ExtResource("1_b0422")
 menuBG = NodePath("MenuBG")
 UIRoot = NodePath("UIRoot")
@@ -36,12 +37,28 @@ configMenuScene = ExtResource("7_j0gn5")
 selectSoundPlayer = NodePath("SelectSoundPlayer")
 confirmSoundPlayer = NodePath("ConfirmSoundPlayer")
 declineSoundPlayer = NodePath("DeclineSoundPlayer")
+leftPointer = NodePath("LeftPointer")
+rightPointer = NodePath("RightPointer")
 
 [node name="MenuBG" type="TileMap" parent="."]
 modulate = Color(0.807843, 0.419608, 1, 1)
 tile_set = SubResource("TileSet_geylh")
 format = 2
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 65537, 0, 0, 131074, 0, 0, -1, 0, 0, 131071, 0, 0, 131072, 0, 0, -65535, 0, 0, 2, 0, 0, -65536, 65536, 0, 1, 65536, 0, -65534, 65536, 0, 3, 65536, 0, 65538, 65536, 0, 65539, 0, 0, 65536, 65536, 0, 65540, 65536, 0, 4, 0, 0, 5, 65536, 0, -65533, 0, 0, -65532, 65536, 0, -65531, 0, 0, -65538, 0, 0, -65537, 65536, 0, -131072, 0, 0, -131071, 65536, 0, -131070, 0, 0, -131069, 65536, 0, -131068, 0, 0, -131067, 65536, 0, -2, 65536, 0, 65534, 0, 0, 65535, 65536, 0, 131070, 65536, 0, 196606, 0, 0, 196607, 65536, 0, 262142, 65536, 0, 327678, 0, 0, 327679, 65536, 0, 393214, 65536, 0, 393215, 0, 0, 327680, 65536, 0, 262143, 0, 0, 196608, 65536, 0, 262144, 0, 0, 262145, 65536, 0, 196609, 0, 0, 196610, 65536, 0, 131073, 65536, 0, 131075, 65536, 0, 262146, 0, 0, 262147, 65536, 0, 327681, 0, 0, 327682, 65536, 0, 196611, 0, 0, 196612, 65536, 0, 131076, 0, 0, 131077, 65536, 0, 65541, 0, 0, 196613, 0, 0, 262148, 0, 0, 262149, 65536, 0, 327683, 0, 0, 327684, 65536, 0, 327685, 0, 0)
+
+[node name="LeftPointer" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 0.678431, 0.776471, 1)
+texture = ExtResource("10_tk8m2")
+region_enabled = true
+region_rect = Rect2(0, 8, 8, 8)
+
+[node name="RightPointer" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 0.678431, 0.776471, 1)
+texture = ExtResource("10_tk8m2")
+region_enabled = true
+region_rect = Rect2(8, 8, 8, 8)
 
 [node name="UIRoot" type="Control" parent="."]
 texture_repeat = 2
@@ -54,9 +71,12 @@ theme = ExtResource("1_mly80")
 
 [node name="SelectSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_uinwc")
+bus = &"SFX"
 
 [node name="ConfirmSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_gphbi")
+bus = &"SFX"
 
 [node name="DeclineSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_8yc1i")
+bus = &"SFX"

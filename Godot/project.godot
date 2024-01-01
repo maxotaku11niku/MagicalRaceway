@@ -10,13 +10,30 @@ config_version=5
 
 [application]
 
-config/name="Magical Raceway (Godot engine port)"
+config/name="Magical Raceway"
+config/name_localized={
+"ar": "ماجكل رسو",
+"el": "Ματζικαλ Ρεσβε",
+"he": "מג׳יקל רסו",
+"hi": "मजिकल रेसवेs",
+"ja": "マジカル・レースウェー",
+"ru": "Маджикал Ресве",
+"uk": "Маджикал Ресве",
+"zh_Hans": "神奇的滚道",
+"zh_Hant": "神奇的滾道"
+}
+config/description="Magical Girl Arcade Racing Game"
+config/version="0.6.0"
 run/main_scene="res://Scenes/main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/show_image=false
 boot_splash/use_filter=false
 config/icon="res://Images/icon.png"
+
+[autoload]
+
+PersistentDataHandler="*res://Scripts/PersistentDataHandler.gd"
 
 [compression]
 
@@ -29,10 +46,11 @@ formats/gzip/compression_level=9
 window/size/viewport_width=320
 window/size/viewport_height=240
 window/size/resizable=false
+window/handheld/orientation=4
 
 [dotnet]
 
-project/assembly_name="Magical Raceway (Godot engine port)"
+project/assembly_name="Magical Raceway"
 
 [editor_plugins]
 
@@ -125,6 +143,16 @@ dev_regview={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":true,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":77,"physical_keycode":0,"key_label":0,"unicode":109,"echo":false,"script":null)
 ]
 }
+pause={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194305,"physical_keycode":0,"key_label":0,"unicode":0,"echo":false,"script":null)
+]
+}
+
+[physics]
+
+common/physics_ticks_per_second=120
+common/max_physics_steps_per_frame=10
 
 [rendering]
 
@@ -134,10 +162,42 @@ renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
 textures/webp_compression/compression_method=6
+lights_and_shadows/directional_shadow/size=256
+lights_and_shadows/directional_shadow/size.mobile=256
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=0
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=0
+2d/shadow_atlas/size=256
+reflections/sky_reflections/roughness_layers=1
+reflections/sky_reflections/texture_array_reflections=false
+reflections/sky_reflections/ggx_samples=2
+reflections/sky_reflections/ggx_samples.mobile=2
+reflections/reflection_atlas/reflection_size=64
+reflections/reflection_atlas/reflection_size.mobile=64
+reflections/reflection_atlas/reflection_count=2
+global_illumination/gi/use_half_resolution=true
 textures/default_filters/use_nearest_mipmap_filter=true
 textures/default_filters/anisotropic_filtering_level=0
+camera/depth_of_field/depth_of_field_bokeh_shape=0
+camera/depth_of_field/depth_of_field_bokeh_quality=0
+environment/ssao/quality=0
+environment/ssao/blur_passes=0
+environment/ssil/quality=0
+environment/ssil/blur_passes=0
 textures/decals/filter=0
 textures/light_projectors/filter=0
+environment/glow/upscale_mode=0
+environment/screen_space_reflection/roughness_quality=0
+environment/subsurface_scattering/subsurface_scattering_quality=0
+global_illumination/sdfgi/probe_ray_count=0
+global_illumination/sdfgi/frames_to_converge=0
+global_illumination/sdfgi/frames_to_update_lights=4
+environment/volumetric_fog/volume_size=16
+environment/volumetric_fog/volume_depth=16
+environment/volumetric_fog/use_filter=0
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
+lights_and_shadows/positional_shadow/atlas_size=256
+lights_and_shadows/positional_shadow/atlas_size.mobile=256
+lights_and_shadows/positional_shadow/atlas_quadrant_0_subdiv=0
+lights_and_shadows/positional_shadow/atlas_quadrant_1_subdiv=0
+lights_and_shadows/positional_shadow/atlas_quadrant_2_subdiv=0
+lights_and_shadows/positional_shadow/atlas_quadrant_3_subdiv=0

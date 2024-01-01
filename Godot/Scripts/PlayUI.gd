@@ -5,6 +5,9 @@ extends Control
 @export var DevScreen: Control
 @export var CheckPointNotification: Control
 @export var GoBackNotification: Control
+@export var PauseUI: Control
+@export var GameoverNotification: Control
+@export var WinNotification: Control
 # Main UI elements
 var scoreNum: Label
 var timeNum: Label
@@ -22,6 +25,12 @@ var timeBonusNum: Label
 var timeLeftToDisplayTimeBonus: float
 # Direction to the track
 var goBackDir: Sprite2D
+# Win notification
+var bonusTimeLeft: Label
+var perSecondBonus: Label
+# Pause buttons
+var backToGameButton: Button
+var quitToMenuButton: Button
 # Dev debug panel elements
 var distNum: Label
 var nextCheckNum: Label
@@ -48,6 +57,10 @@ func updateMainUI(dScore: int, timeLeft: int, dSpeed: int, stage: int, stageProg
 	stageProgBar.value = 6.0 + barfill
 	girlFigure.position = figureInitPos + Vector2(barfill, 0.0)
 
+func updateWinNotif(timeLeft: int) -> void:
+	if timeLeft <= 0.0: bonusTimeLeft.text = "0"
+	else: bonusTimeLeft.text = "%d" % timeLeft
+
 func updateDevScreen(dist: float, nextCheck: float, xoff: float, time: float, turnStr: float, split: float, pitchStr: float, cfugb: float) -> void:
 	if not DevScreen.visible: return
 	distNum.text = "%d" % dist
@@ -69,6 +82,19 @@ func displayGoBackNotif(display: bool, dir: int) -> void:
 	if display:
 		goBackDir.region_rect.position.x = 0 if dir > 0 else 8
 
+func displayGameoverNotif(display: bool) -> void:
+	GameoverNotification.visible = display
+
+func displayWinNotif(display: bool, bonusPerSecond: int = 0) -> void:
+	WinNotification.visible = display
+	if display:
+		perSecondBonus.text = "x%d0" % bonusPerSecond
+
+func displayPauseScreen(display: bool) -> void:
+	PauseUI.visible = display
+	if display:
+		backToGameButton.grab_focus.call_deferred()
+
 func _ready() -> void:
 	DevScreen.visible = false
 	CheckPointNotification.visible = false
@@ -89,6 +115,12 @@ func _ready() -> void:
 	
 	timeBonusNum = CheckPointNotification.find_child("TimeBonusNum")
 	goBackDir = GoBackNotification.find_child("GoBackDir")
+	
+	bonusTimeLeft = WinNotification.find_child("TimeLeftCounter")
+	perSecondBonus = WinNotification.find_child("PerSecondBonus")
+	
+	backToGameButton = PauseUI.find_child("BackButton")
+	quitToMenuButton = PauseUI.find_child("QuitButton")
 	
 	distNum = DevScreen.find_child("DistanceNum")
 	nextCheckNum = DevScreen.find_child("NextCheckNum")

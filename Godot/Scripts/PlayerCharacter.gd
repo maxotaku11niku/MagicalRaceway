@@ -16,6 +16,7 @@ var prevState: int
 var stateTimer: float
 var flyUpVel: float
 var lyingOnFloor: bool
+var gamePaused: bool
 
 signal stopped_spinning()
 signal landed_after_crash()
@@ -53,6 +54,10 @@ func _ready() -> void:
 	logicalPosition.y = 8.0
 
 func _process(delta: float) -> void:
+	if gamePaused:
+		flyingSoundPlayer.stop()
+		visSprite.stop()
+		return
 	if animationSpeed <= 0.0:
 		flyingSoundPlayer.stop()
 	else:

@@ -1,11 +1,8 @@
 extends Node
 
-const configID = "MRCF"
-const configVersion = "42"
-const configPath = "user://init.cfg"
 const fakeSetupLines =\
 [\
-	"Init MH4KSYM2608 Arcade System...\n",\
+	"Init MH1KSYM2608 Arcade System...\n",\
 	"Read ROM Header...\n",\
 	"Set 1024-colour enable...\n",\
 	"Set YM2608 mode...\n",\
@@ -64,7 +61,6 @@ var startupLine: int
 var startupDone: bool
 var curState: int
 var prevState: int
-var maxRes: int #Highest allowable resolution multiplier, from the dimensions of the screen
 var screenRoot: Node
 var ym2608RegViewVisible: bool
 
@@ -84,7 +80,6 @@ func _ready() -> void:
 	framesToNextLine = 5
 	startupDone = false
 	ym2608RegViewVisible = false
-	get_tree().root.size = Vector2i(640, 480)
 
 func _process(delta: float) -> void:
 	#State change -> need to load a new root scene

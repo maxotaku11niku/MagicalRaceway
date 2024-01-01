@@ -60,7 +60,7 @@ centrifugalFactor = 0.12
 collisionStrength = 0.2
 oneShotSFXPlayers = [NodePath("HitSoundPlayer"), NodePath("CheckpointSoundPlayer"), NodePath("FlybySoundPlayer"), NodePath("SmackSoundPlayer")]
 
-[node name="PlayUIRoot" type="Control" parent="." node_paths=PackedStringArray("MainUI", "DevScreen", "CheckPointNotification", "GoBackNotification")]
+[node name="PlayUIRoot" type="Control" parent="." node_paths=PackedStringArray("MainUI", "DevScreen", "CheckPointNotification", "GoBackNotification", "PauseUI", "GameoverNotification", "WinNotification")]
 z_index = 4000
 layout_mode = 3
 anchors_preset = 0
@@ -72,6 +72,9 @@ MainUI = NodePath("MainUI")
 DevScreen = NodePath("DevParams")
 CheckPointNotification = NodePath("CheckpointNotif")
 GoBackNotification = NodePath("GoBackNotif")
+PauseUI = NodePath("PauseUI")
+GameoverNotification = NodePath("GameoverNotif")
+WinNotification = NodePath("WinNotif")
 
 [node name="Countdown" type="AnimatedSprite2D" parent="PlayUIRoot"]
 visible = false
@@ -449,6 +452,115 @@ text = "t: toggle timer
 c: next check
 r: reset"
 
+[node name="GameoverNotif" type="Control" parent="PlayUIRoot"]
+visible = false
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+
+[node name="Label" type="Label" parent="PlayUIRoot/GameoverNotif"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 104.0
+offset_right = 88.0
+offset_bottom = 112.0
+scale = Vector2(4, 4)
+theme_override_colors/font_color = Color(0.807843, 0, 0, 1)
+text = "GAME OVER"
+
+[node name="WinNotif" type="Control" parent="PlayUIRoot"]
+visible = false
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+
+[node name="WinTitle" type="Label" parent="PlayUIRoot/WinNotif"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 64.0
+offset_right = 160.0
+offset_bottom = 72.0
+scale = Vector2(2, 2)
+theme_override_colors/font_color = Color(0.482353, 1, 0.580392, 1)
+text = "YOU WIN!"
+
+[node name="TimeLeftCounter" type="Label" parent="PlayUIRoot/WinNotif"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 96.0
+offset_right = 88.0
+offset_bottom = 112.0
+scale = Vector2(2, 2)
+theme = ExtResource("3_6kt2q")
+text = "69"
+horizontal_alignment = 2
+
+[node name="PerSecondBonus" type="Label" parent="PlayUIRoot/WinNotif"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 112.0
+offset_right = 176.0
+offset_bottom = 120.0
+scale = Vector2(2, 2)
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "x1000000"
+
+[node name="BonusLabel" type="Label" parent="PlayUIRoot/WinNotif"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 128.0
+offset_right = 160.0
+offset_bottom = 136.0
+scale = Vector2(2, 2)
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "TIME BONUS!"
+
+[node name="PauseUI" type="Control" parent="PlayUIRoot"]
+visible = false
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+
+[node name="PauseTitle" type="Label" parent="PlayUIRoot/PauseUI"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = 112.0
+offset_bottom = 72.0
+scale = Vector2(4, 4)
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "PAUSED"
+
+[node name="BackButton" type="Button" parent="PlayUIRoot/PauseUI"]
+layout_mode = 0
+offset_top = 128.0
+offset_right = 160.0
+offset_bottom = 136.0
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../QuitButton")
+focus_neighbor_top = NodePath("../QuitButton")
+focus_neighbor_right = NodePath("../QuitButton")
+focus_neighbor_bottom = NodePath("../QuitButton")
+focus_next = NodePath("../QuitButton")
+focus_previous = NodePath("../QuitButton")
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "Back to game"
+
+[node name="QuitButton" type="Button" parent="PlayUIRoot/PauseUI"]
+layout_mode = 0
+offset_top = 160.0
+offset_right = 160.0
+offset_bottom = 168.0
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../BackButton")
+focus_neighbor_top = NodePath("../BackButton")
+focus_neighbor_right = NodePath("../BackButton")
+focus_neighbor_bottom = NodePath("../BackButton")
+focus_next = NodePath("../BackButton")
+focus_previous = NodePath("../BackButton")
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "Quit to menu"
+
 [node name="PlayerSprite" type="Area2D" parent="." node_paths=PackedStringArray("flyingSoundPlayer", "colBox", "visSprite")]
 script = ExtResource("11_s0u70")
 flyingSoundPlayer = NodePath("FlyingSoundPlayer")
@@ -465,6 +577,7 @@ shape = SubResource("RectangleShape2D_eii6y")
 position = Vector2(160, 200)
 sprite_frames = ExtResource("4_0qg0g")
 animation = &"idle_front"
+frame_progress = 0.462341
 
 [node name="FlyingSoundPlayer" type="AudioStreamPlayer" parent="PlayerSprite"]
 stream = ExtResource("13_qswb0")
@@ -541,17 +654,23 @@ region_rect = Rect2(0, 32, 512, 56)
 
 [node name="SmackSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("26_x7jon")
+bus = &"SFX"
 
 [node name="HitSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("26_hsp02")
+bus = &"SFX"
 
 [node name="FlybySoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("28_8yqan")
+bus = &"SFX"
 
 [node name="CheckpointSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("29_tt8sv")
+bus = &"SFX"
 
 [connection signal="animation_looped" from="PlayUIRoot/Countdown" to="." method="_onCountdownAnimationLooped"]
+[connection signal="pressed" from="PlayUIRoot/PauseUI/BackButton" to="." method="_onBackToGameButtonPressed"]
+[connection signal="pressed" from="PlayUIRoot/PauseUI/QuitButton" to="." method="_onQuitButtonPressed"]
 [connection signal="area_entered" from="PlayerSprite" to="." method="_onPlayerCollideWithObject"]
 [connection signal="landed_after_crash" from="PlayerSprite" to="." method="_onPlayerLandedAfterCrash"]
 [connection signal="stopped_spinning" from="PlayerSprite" to="." method="_onPlayerStoppedSpinning"]

@@ -131,6 +131,7 @@ region_rect = Rect2(48, 48, 16, 24)
 
 [node name="StartButton" type="Button" parent="."]
 layout_mode = 0
+offset_left = 120.0
 offset_top = 120.0
 offset_right = 160.0
 offset_bottom = 128.0
@@ -143,6 +144,7 @@ text = "Start"
 
 [node name="ScoresButton" type="Button" parent="."]
 layout_mode = 0
+offset_left = 72.0
 offset_top = 140.0
 offset_right = 160.0
 offset_bottom = 148.0
@@ -155,6 +157,7 @@ text = "High Scores"
 
 [node name="MusicButton" type="Button" parent="."]
 layout_mode = 0
+offset_left = 80.0
 offset_top = 160.0
 offset_right = 160.0
 offset_bottom = 168.0
@@ -167,6 +170,7 @@ text = "Music Room"
 
 [node name="ConfigButton" type="Button" parent="."]
 layout_mode = 0
+offset_left = 112.0
 offset_top = 180.0
 offset_right = 160.0
 offset_bottom = 188.0
@@ -179,6 +183,7 @@ text = "Config"
 
 [node name="QuitButton" type="Button" parent="."]
 layout_mode = 0
+offset_left = 128.0
 offset_top = 200.0
 offset_right = 160.0
 offset_bottom = 208.0
@@ -215,7 +220,12 @@ text = "v 0.6"
 horizontal_alignment = 2
 
 [connection signal="button_down" from="StartButton" to="." method="_onButtonSelected" binds= [0]]
+[connection signal="focus_entered" from="StartButton" to="." method="_onFocusOnNewControl" binds= ["StartButton", true]]
 [connection signal="button_down" from="ScoresButton" to="." method="_onButtonSelected" binds= [1]]
+[connection signal="focus_entered" from="ScoresButton" to="." method="_onFocusOnNewControl" binds= ["ScoresButton", true]]
 [connection signal="button_down" from="MusicButton" to="." method="_onButtonSelected" binds= [2]]
+[connection signal="focus_entered" from="MusicButton" to="." method="_onFocusOnNewControl" binds= ["MusicButton", true]]
 [connection signal="button_down" from="ConfigButton" to="." method="_onButtonSelected" binds= [3]]
+[connection signal="focus_entered" from="ConfigButton" to="." method="_onFocusOnNewControl" binds= ["ConfigButton", true]]
 [connection signal="button_down" from="QuitButton" to="." method="_onButtonSelected" binds= [4]]
+[connection signal="focus_entered" from="QuitButton" to="." method="_onFocusOnNewControl" binds= ["QuitButton", true]]
