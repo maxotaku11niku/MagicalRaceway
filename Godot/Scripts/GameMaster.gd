@@ -13,7 +13,7 @@ const regViewString =\
 "000 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
 010 There is nothing here\n\
 020 because YM2608 emulation\n\
-030 has not been implemented.\n\
+030 doesn't yet show registers.\n\
 040 Please wait warmly\n\
 050 until it is done.\n\
 060\n\
@@ -67,8 +67,9 @@ var ym2608RegViewVisible: bool
 func _onIntroEnd() -> void:
 	curState = MSTATE_MENU
 	
-func _onMenuEnd() -> void:
+func _onMenuEnd(songNum: int) -> void:
 	curState = MSTATE_PLAYTIME
+	MusicMaster.PlaySong(songNum + 1)
 
 func _onPlayEnd() -> void:
 	curState = MSTATE_MENU

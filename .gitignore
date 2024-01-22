@@ -18,6 +18,7 @@ obj/
 Temp/
 x64/
 UserSettings/
+releases/
 *.meta
 *.bak
 Assets/Sounds/BGM/EoSD.btm

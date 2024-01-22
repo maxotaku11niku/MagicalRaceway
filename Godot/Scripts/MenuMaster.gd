@@ -80,7 +80,7 @@ enum
 	DIFFICULTY_TEST
 }
 
-signal sigMenuEnd
+signal sigMenuEnd(songNum: int)
 
 func _onNewControlSelected(control: Control, invertedPointing: bool) -> void:
 	if control == null:
@@ -153,6 +153,7 @@ func _ready() -> void:
 	prevScreenNum = MSCREEN_MAIN
 	menuBG.modulate = bgCols[curScreenNum]
 	enterPlaytime = false
+	MusicMaster.PlaySong(0)
 
 func _process(delta: float) -> void:
 	testSoundCooldown -= delta
@@ -167,7 +168,7 @@ func _process(delta: float) -> void:
 		declineSoundPlayer.play()
 		_onMenuScreenChange(BUTTON_RETURN)
 	if enterPlaytime:
-		sigMenuEnd.emit()
+		sigMenuEnd.emit(selectedSong)
 	if curScreenNum != prevScreenNum:
 		var nextScene: PackedScene
 		match curScreenNum:

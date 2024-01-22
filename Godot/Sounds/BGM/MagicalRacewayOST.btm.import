@@ -1,0 +1,14 @@
+[remap]
+
+importer="mhoxha.bambootrackerimporter"
+type="BambooTrackerModule"
+uid="uid://qdi81yeqrteb"
+path="res://.godot/imported/MagicalRacewayOST.btm-44369719948e3ba72233acd909e06995.res"
+
+[deps]
+
+source_file="res://Sounds/BGM/MagicalRacewayOST.btm"
+dest_files=["res://.godot/imported/MagicalRacewayOST.btm-44369719948e3ba72233acd909e06995.res"]
+
+[params]
+

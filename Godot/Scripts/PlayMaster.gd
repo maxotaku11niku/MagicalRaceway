@@ -127,6 +127,7 @@ func _process(delta: float) -> void:
 				if isFinalStage:
 					playUI.displayWinNotif(true, currentTrack.endScoreBonusFactor)
 					state = PSTATE_WIN
+					MusicMaster.PlaySong(6)
 					winAnimationStage = WSTATE_MOVING_TO_CENTER
 					timeBonusCountdownNum = time
 					timeToTransition = 4.0
@@ -162,8 +163,9 @@ func _process(delta: float) -> void:
 					if yspeed <= 0.0:
 						playUI.displayGameoverNotif(true)
 						state = PSTATE_LOSE
+						MusicMaster.PlaySong(5)
 						playerSprite.gamePaused = true
-						timeToTransition = 5.0
+						timeToTransition = 10.0
 				steerStrength = Input.get_action_strength("steer_right") - Input.get_action_strength("steer_left")
 			elif playerSprite.animationType == PlayerCharacter.PASTATE_SPIN:
 				steerStrength = lastCollisionSpeedDelta * collisionStrength * sin(lastCollisionAngle)/turnPower
@@ -181,8 +183,9 @@ func _process(delta: float) -> void:
 						if time <= 0.0: #if this happens, it would be extra embarassing for the player
 							playUI.displayGameoverNotif(true)
 							state = PSTATE_LOSE
+							MusicMaster.PlaySong(5)
 							playerSprite.gamePaused = true
-							timeToTransition = 5.0
+							timeToTransition = 10.0
 						else:
 							timeToReset -= delta
 							if timeToReset <= 0.0:

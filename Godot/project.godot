@@ -34,6 +34,7 @@ config/icon="res://Images/icon.png"
 [autoload]
 
 PersistentDataHandler="*res://Scripts/PersistentDataHandler.gd"
+MusicMaster="*res://Scripts/MusicMaster.gd"
 
 [compression]
 
@@ -54,7 +55,7 @@ project/assembly_name="Magical Raceway"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/bambootrackerimporter/plugin.cfg")
 
 [importer_defaults]
 
