@@ -8,6 +8,7 @@ const optionDescriptions =\
 	"Volume of sound effects, higher is louder of course.",\
 	"Set which soundchip to emulate for the music. Use YM2608 if you want music, or you can turn it off entirely to save processing power. YM2203 is only for curiosity's sake, as it's objectively worse than the YM2608.",\
 	"Enable this to allow acceleration to be the default in playtime. This is helpful for eliminating the strain when holding down the accelerate button.",\
+	"Enable a simple CRT filter, doesn't emulate CRT geometry though. Nostalgia time!",\
 	"Rebind controls to make them more comfortable for you.",\
 	"Reset everything to the default, including control bindings.",\
 	"Save your settings, press the back button if you don't want to save your settings.",\
@@ -25,6 +26,7 @@ var midBGMVol: float
 var midSFXVol: float
 var midEmuChip: int
 var midAccelHold: bool
+var midCRTFilter: bool
 
 enum
 {
@@ -34,6 +36,7 @@ enum
 	SETTING_SFXVOL,
 	SETTING_CHIP,
 	SETTING_ACCELHOLD,
+	SETTING_CRTFILTER,
 	SETTING_REBIND,
 	SETTING_RESET,
 	SETTING_SAVE
@@ -42,7 +45,7 @@ enum
 signal sigSFXVolTest
 
 func _onSettingSelected(num: int) -> void:
-	if num > SETTING_ACCELHOLD:
+	if num > SETTING_CRTFILTER:
 		sigFocusOnNewControl.emit(settings[num], true)
 	else:
 		sigFocusOnNewControl.emit(settings[num], false)
@@ -58,12 +61,14 @@ func _onResetSettings() -> void:
 	midSFXVol = PersistentDataHandler.sfxvol
 	midEmuChip = PersistentDataHandler.emuchip
 	midAccelHold = PersistentDataHandler.accelhold
+	midCRTFilter = PersistentDataHandler.CRTfilter
 	(settings[SETTING_DMODE] as Label).text = "Fullscreen" if midDmode else "Windowed"
 	(settings[SETTING_RESMULT] as Label).text = "%dx%d" % [320 * midResMult, 240 * midResMult]
 	(settings[SETTING_BGMVOL] as Label).text = "%d%%" % midBGMVol
 	(settings[SETTING_SFXVOL] as Label).text = "%d%%" % midSFXVol
 	(settings[SETTING_CHIP] as Label).text = chipNames[midEmuChip]
 	(settings[SETTING_ACCELHOLD] as Label).text = "On" if midAccelHold else "Off"
+	(settings[SETTING_CRTFILTER] as Label).text = "On" if midCRTFilter else "Off"
 
 func _onSaveSettings() -> void:
 	PersistentDataHandler.fullscreen = midDmode
@@ -72,6 +77,7 @@ func _onSaveSettings() -> void:
 	PersistentDataHandler.sfxvol = midSFXVol
 	PersistentDataHandler.emuchip = midEmuChip
 	PersistentDataHandler.accelhold = midAccelHold
+	PersistentDataHandler.CRTfilter = midCRTFilter
 	PersistentDataHandler.writeConfig()
 	PersistentDataHandler.setAccordingToConfigSettings()
 	sigMoveToNewScreen.emit(-1)
@@ -84,12 +90,14 @@ func _ready():
 	midSFXVol = PersistentDataHandler.sfxvol
 	midEmuChip = PersistentDataHandler.emuchip
 	midAccelHold = PersistentDataHandler.accelhold
+	midCRTFilter = PersistentDataHandler.CRTfilter
 	(settings[SETTING_DMODE] as Label).text = "Fullscreen" if midDmode else "Windowed"
 	(settings[SETTING_RESMULT] as Label).text = "%dx%d" % [320 * midResMult, 240 * midResMult]
 	(settings[SETTING_BGMVOL] as Label).text = "%d%%" % midBGMVol
 	(settings[SETTING_SFXVOL] as Label).text = "%d%%" % midSFXVol
 	(settings[SETTING_CHIP] as Label).text = chipNames[midEmuChip]
 	(settings[SETTING_ACCELHOLD] as Label).text = "On" if midAccelHold else "Off"
+	(settings[SETTING_CRTFILTER] as Label).text = "On" if midCRTFilter else "Off"
 
 func _process(delta):
 	match selectedSetting:
@@ -139,6 +147,10 @@ func _process(delta):
 			if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
 				midAccelHold = not midAccelHold
 				(settings[SETTING_ACCELHOLD] as Label).text = "On" if midAccelHold else "Off"
+		SETTING_CRTFILTER:
+			if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
+				midCRTFilter = not midCRTFilter
+				(settings[SETTING_CRTFILTER] as Label).text = "On" if midCRTFilter else "Off"
 
 func _exit_tree():
 	PersistentDataHandler.resetSettingsAfterDecline()

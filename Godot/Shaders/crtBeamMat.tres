@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://da3mp8s4tu8k2"]
+
+[ext_resource type="Shader" path="res://Shaders/crtBeam.gdshader" id="1_2m4iy"]
+
+[resource]
+shader = ExtResource("1_2m4iy")

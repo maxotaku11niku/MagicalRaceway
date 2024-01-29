@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://r3lotwoipgni"]
+[gd_scene load_steps=11 format=3 uid="uid://r3lotwoipgni"]
 
 [ext_resource type="Script" path="res://Scripts/GameMaster.gd" id="1_gajsv"]
 [ext_resource type="PackedScene" uid="uid://c5t43awjac242" path="res://Scenes/intro.tscn" id="2_cthp8"]
@@ -6,26 +6,76 @@
 [ext_resource type="PackedScene" uid="uid://tcwiwby8ugnd" path="res://Scenes/menu.tscn" id="3_rvgnx"]
 [ext_resource type="PackedScene" uid="uid://dvr3wf81xo871" path="res://Scenes/play.tscn" id="4_turl1"]
 [ext_resource type="Theme" uid="uid://c5v47t30t1alk" path="res://Images/UIElements/systemTheme.tres" id="5_iop6o"]
+[ext_resource type="Material" uid="uid://bieiewe54142o" path="res://Shaders/crtMaskMat.tres" id="6_g3001"]
+[ext_resource type="Material" uid="uid://da3mp8s4tu8k2" path="res://Shaders/crtBeamMat.tres" id="7_y41ig"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_70j5o"]
+viewport_path = NodePath("PostContainer/ScanlinedContainer")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_o3r2o"]
-viewport_path = NodePath("SubViewportContainer/MainScreen")
+viewport_path = NodePath("MainContainer/MainScreen")
 
-[node name="GameMaster" type="Node" node_paths=PackedStringArray("virtualScreen", "displayRoot", "fakeTextInterface")]
+[node name="GameMaster" type="Node" node_paths=PackedStringArray("virtualScreen", "displayRoot", "mainContainer", "viewportCover", "fakeTextInterface", "scanlinedContainer", "postContainer", "postScreen", "crtScanlines")]
 script = ExtResource("1_gajsv")
 introScene = ExtResource("2_cthp8")
 menuScene = ExtResource("3_rvgnx")
 playScene = ExtResource("4_turl1")
 virtualScreen = NodePath("VirtualScreen")
-displayRoot = NodePath("SubViewportContainer/MainScreen")
-fakeTextInterface = NodePath("SubViewportContainer/MainScreen/TextLayer")
+displayRoot = NodePath("MainContainer/MainScreen")
+mainContainer = NodePath("MainContainer")
+viewportCover = NodePath("ViewportCover")
+fakeTextInterface = NodePath("MainContainer/MainScreen/TextLayer")
+scanlinedContainer = NodePath("PostContainer/ScanlinedContainer")
+postContainer = NodePath("PostContainer")
+postScreen = NodePath("PostScreen")
+crtScanlines = NodePath("PostContainer/ScanlinedContainer/CRTScanlines")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="PostContainer" type="SubViewportContainer" parent="."]
+visible = false
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -640.0
+offset_right = 640.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScanlinedContainer" type="SubViewport" parent="PostContainer"]
+handle_input_locally = false
+size = Vector2i(1280, 960)
+size_2d_override = Vector2i(1280, 960)
+render_target_update_mode = 0
+
+[node name="CRTScanlines" type="ColorRect" parent="PostContainer/ScanlinedContainer"]
+material = ExtResource("7_y41ig")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PostScreen" type="TextureRect" parent="."]
+visible = false
+texture_filter = 2
+material = ExtResource("6_g3001")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+texture = SubResource("ViewportTexture_70j5o")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MainContainer" type="SubViewportContainer" parent="."]
+offset_right = 320.0
+offset_bottom = 240.0
 mouse_filter = 0
 mouse_force_pass_scroll_events = false
 
-[node name="MainScreen" type="SubViewport" parent="SubViewportContainer"]
+[node name="MainScreen" type="SubViewport" parent="MainContainer"]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 canvas_item_default_texture_repeat = 1
@@ -34,7 +84,7 @@ size_2d_override = Vector2i(320, 240)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
-[node name="TextLayer" type="Label" parent="SubViewportContainer/MainScreen"]
+[node name="TextLayer" type="Label" parent="MainContainer/MainScreen"]
 z_index = 4080
 custom_minimum_size = Vector2(320, 240)
 offset_right = 40.0
@@ -54,14 +104,12 @@ color = Color(0, 0, 0, 1)
 texture_filter = 1
 texture_repeat = 1
 material = ExtResource("3_gimpd")
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -160.0
-offset_right = 160.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 texture = SubResource("ViewportTexture_o3r2o")
-expand_mode = 3
+expand_mode = 1
+stretch_mode = 5

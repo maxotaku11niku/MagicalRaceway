@@ -11,6 +11,7 @@ enum
 	CHIP_YM2608
 }
 
+var gm: GameMaster
 var maxRes: int #Highest allowable resolution multiplier, from the dimensions of the screen
 var fullscreen: bool
 var resmult: int
@@ -18,6 +19,10 @@ var bgmvol: int
 var sfxvol: int
 var emuchip: int
 var accelhold: bool
+var CRTfilter: bool
+
+func setAsGameMaster(master: GameMaster) -> void:
+	gm = master
 
 func tempSetVol(bgm: int, sfx: int) -> void:
 	AudioServer.set_bus_volume_db(2, linear_to_db(float(bgm)/100.0))
@@ -37,6 +42,7 @@ func writeConfig() -> void:
 	cfgFile.store_8(sfxvol)
 	cfgFile.store_8(emuchip)
 	cfgFile.store_8(0x01 if accelhold else 0x00)
+	cfgFile.store_8(0x01 if CRTfilter else 0x00)
 	cfgFile.close()
 
 func writeDefaultConfig() -> void:
@@ -46,6 +52,7 @@ func writeDefaultConfig() -> void:
 	sfxvol = 100
 	emuchip = CHIP_YM2608
 	accelhold = false
+	CRTfilter = false
 	writeConfig()
 
 func readConfig() -> void:
@@ -65,6 +72,7 @@ func readConfig() -> void:
 				sfxvol = cfgFile.get_8()
 				emuchip = cfgFile.get_8()
 				accelhold = cfgFile.get_8()
+				CRTfilter = cfgFile.get_8()
 			_: #invalid version -> corrupt file? -> rewrite defaults
 				cfgFile.close()
 				writeDefaultConfig()
@@ -78,6 +86,7 @@ func setAccordingToConfigSettings() -> void:
 	get_tree().root.size = Vector2i(320 * resmult, 240 * resmult)
 	AudioServer.set_bus_volume_db(2, linear_to_db(float(bgmvol)/100.0))
 	AudioServer.set_bus_volume_db(1, linear_to_db(float(sfxvol)/100.0))
+	if gm != null: gm.configureCRTFilter(CRTfilter)
 
 func _ready():
 	var screenSize := DisplayServer.screen_get_size()

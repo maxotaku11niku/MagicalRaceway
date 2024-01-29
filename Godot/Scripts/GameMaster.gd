@@ -1,3 +1,4 @@
+class_name GameMaster
 extends Node
 
 const fakeSetupLines =\
@@ -54,7 +55,13 @@ enum
 @export var playScene: PackedScene
 @export var virtualScreen: TextureRect
 @export var displayRoot: SubViewport
+@export var mainContainer: SubViewportContainer
+@export var viewportCover: ColorRect
 @export var fakeTextInterface: Label
+@export var scanlinedContainer: SubViewport
+@export var postContainer: SubViewportContainer
+@export var postScreen: TextureRect
+@export var crtScanlines: ColorRect
 
 var framesToNextLine: int
 var startupLine: int
@@ -63,6 +70,28 @@ var curState: int
 var prevState: int
 var screenRoot: Node
 var ym2608RegViewVisible: bool
+var CRTfilteron: bool
+
+func configureCRTFilter(enabled: bool) -> void:
+	if enabled == CRTfilteron: return
+	if enabled:
+		mainContainer.reparent(scanlinedContainer)
+		viewportCover.reparent(scanlinedContainer)
+		virtualScreen.reparent(scanlinedContainer)
+		virtualScreen.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		postContainer.visible = true
+		postScreen.visible = true
+		scanlinedContainer.move_child(crtScanlines, -1)
+	else:
+		mainContainer.reparent(self)
+		move_child(mainContainer, -1)
+		viewportCover.reparent(self)
+		move_child(viewportCover, -1)
+		virtualScreen.reparent(self)
+		move_child(virtualScreen, -1)
+		virtualScreen.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	CRTfilteron = enabled
+	
 
 func _onIntroEnd() -> void:
 	curState = MSTATE_MENU
@@ -81,6 +110,8 @@ func _ready() -> void:
 	framesToNextLine = 5
 	startupDone = false
 	ym2608RegViewVisible = false
+	CRTfilteron = false
+	PersistentDataHandler.setAsGameMaster(self)
 
 func _process(delta: float) -> void:
 	#State change -> need to load a new root scene
@@ -90,6 +121,7 @@ func _process(delta: float) -> void:
 			screenRoot.free()
 		match (curState):
 			MSTATE_INTRO: #Included just in case
+				configureCRTFilter(PersistentDataHandler.CRTfilter) #hack
 				screenRoot = introScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigIntroEnd.connect(_onIntroEnd)

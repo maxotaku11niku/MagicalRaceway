@@ -48,6 +48,7 @@ window/size/viewport_width=320
 window/size/viewport_height=240
 window/size/resizable=false
 window/handheld/orientation=4
+window/vsync/vsync_mode=0
 
 [dotnet]
 

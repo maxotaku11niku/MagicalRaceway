@@ -1,0 +1,6 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bieiewe54142o"]
+
+[ext_resource type="Shader" path="res://Shaders/crtMask.gdshader" id="1_mo1ux"]
+
+[resource]
+shader = ExtResource("1_mo1ux")
