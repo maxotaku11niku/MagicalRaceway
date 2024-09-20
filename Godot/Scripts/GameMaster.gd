@@ -12,34 +12,34 @@ const fakeSetupLines =\
 ]
 const regViewString =\
 "000 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
-010 There is nothing here\n\
-020 because YM2608 emulation\n\
-030 doesn't yet show registers.\n\
-040 Please wait warmly\n\
-050 until it is done.\n\
-060\n\
-070\n\
-080\n\
-090\n\
-0A0\n\
-0B0\n\
-0C0\n\
-0D0\n\
-0E0\n\
-0F0\n\
-100\n\
-110\n\
-120\n\
-130\n\
-140\n\
-150\n\
-160\n\
-170\n\
-180\n\
-190\n\
-1A0\n\
-1B0\n\
-1C0\n\
+010 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+020 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+030 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+040 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+050 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+060 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+070 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+080 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+090 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+0A0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+0B0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+0C0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+0D0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+0E0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+0F0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+100 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+110 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+120 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+130 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+140 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+150 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+160 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+170 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+180 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+190 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+1A0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+1B0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
+1C0 %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X\n\
 YM2608 Register Viewer - Press Alt-M"
 
 enum
@@ -53,6 +53,7 @@ enum
 @export var introScene: PackedScene
 @export var menuScene: PackedScene
 @export var playScene: PackedScene
+@export var trackCorr: Array[TrackDefinition]
 @export var virtualScreen: TextureRect
 @export var displayRoot: SubViewport
 @export var mainContainer: SubViewportContainer
@@ -63,6 +64,8 @@ enum
 @export var postScreen: TextureRect
 @export var crtScanlines: ColorRect
 
+var YM2608Regs: Array[int]
+var currTrack: TrackDefinition
 var framesToNextLine: int
 var startupLine: int
 var startupDone: bool
@@ -96,9 +99,10 @@ func configureCRTFilter(enabled: bool) -> void:
 func _onIntroEnd() -> void:
 	curState = MSTATE_MENU
 	
-func _onMenuEnd(songNum: int) -> void:
+func _onMenuEnd(selectedTrack: int, songNum: int) -> void:
 	curState = MSTATE_PLAYTIME
 	MusicMaster.PlaySong(songNum + 1)
+	currTrack = trackCorr[selectedTrack]
 
 func _onPlayEnd() -> void:
 	curState = MSTATE_MENU
@@ -112,6 +116,7 @@ func _ready() -> void:
 	ym2608RegViewVisible = false
 	CRTfilteron = false
 	PersistentDataHandler.setAsGameMaster(self)
+	YM2608Regs.resize(0x1D0)
 
 func _process(delta: float) -> void:
 	#State change -> need to load a new root scene
@@ -121,7 +126,6 @@ func _process(delta: float) -> void:
 			screenRoot.free()
 		match (curState):
 			MSTATE_INTRO: #Included just in case
-				configureCRTFilter(PersistentDataHandler.CRTfilter) #hack
 				screenRoot = introScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigIntroEnd.connect(_onIntroEnd)
@@ -133,6 +137,7 @@ func _process(delta: float) -> void:
 				screenRoot = playScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigPlayEnd.connect(_onPlayEnd)
+				screenRoot.ResetWithNewTrack(currTrack)
 			_:
 				fakeTextInterface.visible = true
 		prevState = curState
@@ -142,6 +147,7 @@ func _process(delta: float) -> void:
 		else: #do startup sequence
 			framesToNextLine -= 1
 			if framesToNextLine <= 0:
+				configureCRTFilter(PersistentDataHandler.CRTfilter) #hack
 				if startupLine >= len(fakeSetupLines):
 					curState = MSTATE_INTRO
 					fakeTextInterface.text = ""
@@ -154,5 +160,6 @@ func _process(delta: float) -> void:
 		ym2608RegViewVisible = not ym2608RegViewVisible
 		fakeTextInterface.visible = ym2608RegViewVisible
 	if ym2608RegViewVisible:
-		fakeTextInterface.text = regViewString %\
-		[45, 69, 189, 34, 0xDE, 0xAD, 0xBE, 0xEF, 0x69, 0x29, 0x04, 0x20, 1, 2, 3, 4]
+		for i in range(0, 0x1D0):
+			YM2608Regs[i] = MusicMaster.GetRegister(i)
+		fakeTextInterface.text = regViewString % YM2608Regs

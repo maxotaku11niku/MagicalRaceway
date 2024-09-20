@@ -80,7 +80,7 @@ enum
 	DIFFICULTY_TEST
 }
 
-signal sigMenuEnd(songNum: int)
+signal sigMenuEnd(selectedTrack: int, songNum: int)
 
 func _onNewControlSelected(control: Control, invertedPointing: bool) -> void:
 	if control == null:
@@ -168,7 +168,7 @@ func _process(delta: float) -> void:
 		declineSoundPlayer.play()
 		_onMenuScreenChange(BUTTON_RETURN)
 	if enterPlaytime:
-		sigMenuEnd.emit(selectedSong)
+		sigMenuEnd.emit(selectedDifficulty, selectedSong)
 	if curScreenNum != prevScreenNum:
 		var nextScene: PackedScene
 		match curScreenNum:

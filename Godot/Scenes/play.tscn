@@ -597,7 +597,7 @@ frontSplinePoints = 256
 backSplinePoints = 20
 cameraRelativePosition = Vector2(-30, 30)
 nearClipPosition = -25.0
-farClipPosition = 800.0
+farClipPosition = 700.0
 bg1TravelFactor = 200.0
 bg2TravelFactor = 100.0
 

@@ -82,31 +82,23 @@ var resetFromXpos: float
 
 var runTimer: bool
 
-func _ready() -> void:
+func Reset() -> void:
 	state = PSTATE_COUNTDOWN
 	countdownSprite.visible = true
 	countdownSprite.stop()
 	countdownSprite.play(&"default")
-	accelHold = PersistentDataHandler.accelhold
-	dist = 0.0
-	xpos = 0.0
-	yspeed = 0.0
-	accumulatedXOffset = 0.0
-	edgeGrazeMult = 1.0
 	canCollide = true
 	crashStage = CSTATE_NOTCRASHING
-	pspriteDepth = (playerSprite.colBox.shape as RectangleShape2D).size.y/2.0
-	splineRenderer.turnStrList = currentTrack.turnStrList
-	splineRenderer.pitchStrList = currentTrack.pitchStrList
-	splineRenderer.splitAmtList = currentTrack.splitAmtList
-	splineRenderer.colourList = currentTrack.colourList
-	splineRenderer.bgList = currentTrack.bgList
-	splineRenderer.spriteList = currentTrack.spriteList
-	splineRenderer.Reset()
+	dist = 0.0
+	xpos = 0.0
+	edgeGrazeMult = 1.0
+	splineRenderer.dist = 0.0
+	splineRenderer.xpos = 0.0
+	yspeed = 0.0
 	score = 0.0
+	accumulatedXOffset = 0.0
 	stageNum = 1
 	time = currentTrack.timeList[0].val
-	runTimer = true
 	lastCheckDist = currentTrack.timeList[0].dist
 	if len(currentTrack.timeList) == 1:
 		nextCheckDist = currentTrack.endDistance
@@ -114,6 +106,29 @@ func _ready() -> void:
 	else:
 		nextCheckDist = currentTrack.timeList[1].dist
 		isFinalStage = false
+	splineRenderer.Reset()
+
+func ResetWithNewTrack(newTrack: TrackDefinition) -> void:
+	currentTrack = newTrack
+	splineRenderer.turnStrList = currentTrack.turnStrList
+	splineRenderer.pitchStrList = currentTrack.pitchStrList
+	splineRenderer.splitAmtList = currentTrack.splitAmtList
+	splineRenderer.colourList = currentTrack.colourList
+	splineRenderer.bgList = currentTrack.bgList
+	splineRenderer.spriteList = currentTrack.spriteList
+	Reset()
+
+func _ready() -> void:
+	accelHold = PersistentDataHandler.accelhold
+	pspriteDepth = (playerSprite.colBox.shape as RectangleShape2D).size.y/2.0
+	splineRenderer.turnStrList = currentTrack.turnStrList
+	splineRenderer.pitchStrList = currentTrack.pitchStrList
+	splineRenderer.splitAmtList = currentTrack.splitAmtList
+	splineRenderer.colourList = currentTrack.colourList
+	splineRenderer.bgList = currentTrack.bgList
+	splineRenderer.spriteList = currentTrack.spriteList
+	Reset()
+	runTimer = true
 
 func _process(delta: float) -> void:
 	var steerStrength: float = 0.0
@@ -288,28 +303,7 @@ func _process(delta: float) -> void:
 			dist = nextCheckDist - 200.0
 			yspeed = 600.0
 		if Input.is_action_just_pressed("dev_resetplay"):
-			state = PSTATE_COUNTDOWN
-			countdownSprite.visible = true
-			countdownSprite.stop()
-			countdownSprite.play(&"default")
-			canCollide = true
-			crashStage = CSTATE_NOTCRASHING
-			dist = 0.0
-			xpos = 0.0
-			splineRenderer.dist = 0.0
-			splineRenderer.xpos = 0.0
-			yspeed = 0.0
-			score = 0.0
-			stageNum = 1
-			time = currentTrack.timeList[0].val
-			lastCheckDist = currentTrack.timeList[0].dist
-			if len(currentTrack.timeList) == 1:
-				nextCheckDist = currentTrack.endDistance
-				isFinalStage = true
-			else:
-				nextCheckDist = currentTrack.timeList[1].dist
-				isFinalStage = false
-			splineRenderer.Reset()
+			Reset()
 
 func _onCountdownAnimationLooped() -> void:
 	state = PSTATE_PLAY

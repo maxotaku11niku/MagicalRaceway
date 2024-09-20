@@ -142,9 +142,6 @@ func SetSplinePositioningParameters() -> void:
 	var yCurve: float
 	var xDev: float
 	var yDev: float
-	var dlerpx: float
-	var dlerpy: float
-	var dlerps: float
 	var xc0: float
 	var xc1: float
 	var yc0: float
@@ -164,9 +161,9 @@ func SetSplinePositioningParameters() -> void:
 	yc1 = 0.0
 	sa0 = 0.0
 	sa1 = 0.0
-	dlerpx = 0.0
-	dlerpy = 0.0
-	dlerps = 0.0
+	var dlerpx: float = 0.0
+	var dlerpy: float = 0.0
+	var dlerps: float = 0.0
 	# Backwards trace to near clipping plane
 	for i in range(zeroPoint, -1, -1):
 		xCurve = lerpf(xc0, xc1, dlerpx)
@@ -192,8 +189,7 @@ func SetSplinePositioningParameters() -> void:
 	sa1 = splitAmtList[saInd + 1].val
 	pointXs[zeroPoint] = 0.0
 	pointYs[zeroPoint] = 0.0
-	dlerps = (dist - splitAmtList[saInd].dist) / (splitAmtList[saInd + 1].dist - splitAmtList[saInd].dist)
-	pointSplits[zeroPoint] = lerpf(sa0, sa1, dlerps)
+	pointSplits[zeroPoint] = remap(dist, splitAmtList[saInd].dist, splitAmtList[saInd + 1].dist, sa0, sa1)
 	# Forwards trace to far clipping plane
 	for i in range(zeroPoint + 1, splinePoints):
 		var realDist: float = dist + pointDists[i]
@@ -212,15 +208,9 @@ func SetSplinePositioningParameters() -> void:
 				saInd += 1
 				sa0 = splitAmtList[saInd].val
 				sa1 = splitAmtList[saInd + 1].val
-		dlerpx = (realDist - turnStrList[tsInd].dist) / (turnStrList[tsInd + 1].dist - turnStrList[tsInd].dist)
-		dlerpy = (realDist - pitchStrList[psInd].dist) / (pitchStrList[psInd + 1].dist - pitchStrList[psInd].dist)
-		dlerps = (realDist - splitAmtList[saInd].dist) / (splitAmtList[saInd + 1].dist - splitAmtList[saInd].dist)
-		if dlerpx >= 1.0: dlerpx = 1.0
-		if dlerpy >= 1.0: dlerpy = 1.0
-		if dlerps >= 1.0: dlerps = 1.0
-		xCurve = lerpf(xc0, xc1, dlerpx)
-		yCurve = lerpf(yc0, yc1, dlerpy)
-		pointSplits[i] = lerpf(sa0, sa1, dlerps)
+		xCurve = clampf(remap(realDist, turnStrList[tsInd].dist, turnStrList[tsInd + 1].dist, xc0, xc1), minf(xc0, xc1), maxf(xc0, xc1))
+		yCurve = clampf(remap(realDist, pitchStrList[psInd].dist, pitchStrList[psInd + 1].dist, yc0, yc1), minf(yc0, yc1), maxf(yc0, yc1))
+		pointSplits[i] = clampf(remap(realDist, splitAmtList[saInd].dist, splitAmtList[saInd + 1].dist, sa0, sa1), minf(sa0, sa1), maxf(sa0, sa1))
 		var dy: float = pointDists[i] - pointDists[i-1]
 		if xAngle <= (-PI * 0.5): # Extreme angle -> escape value
 			xDev = -100000.0
@@ -316,7 +306,7 @@ func TryChangeBGSprites() -> void:
 func TryMakeNewSpawner() -> void:
 	var curSprDef := spriteList[spriteStartInd]
 	if curSprDef.numSprite > 0 and curSprDef.spawnSide != 0:
-		var newSpawner := spriteSpawnerPool[firstSpawner + numActiveSpawners]
+		var newSpawner := spriteSpawnerPool[(firstSpawner + numActiveSpawners) % len(spriteSpawnerPool)]
 		newSpawner.spriteInfo = curSprDef
 		newSpawner.nextSpawnDistance = curSprDef.dist
 		newSpawner.spritesSpawned = 0
@@ -503,7 +493,7 @@ func _process(delta: float) -> void:
 			if bgStartInd >= (len(bgList) - 2):
 				break
 	if spriteStartInd <= (len(spriteList) - 1):
-		while (dist + farClipPosition + 100.0) >= spriteList[spriteStartInd].dist:
+		while (dist + farClipPosition + 200.0) >= spriteList[spriteStartInd].dist:
 			TryMakeNewSpawner()
 			spriteStartInd += 1
 			if spriteStartInd >= (len(spriteList) - 1):
@@ -544,7 +534,7 @@ func _process(delta: float) -> void:
 						numActiveSpawners -= 1
 						firstSpawner += 1
 						firstSpawner %= len(spriteSpawnerPool)
-				elif curspwn.nextSpawnDistance < curClosestSpriteDist:
+				elif curspwn.nextSpawnDistance <= curClosestSpriteDist:
 					nextSpawner = i
 					curClosestSpriteDist = curspwn.nextSpawnDistance
 			if nextSpawner < 0: break
@@ -563,8 +553,8 @@ func _process(delta: float) -> void:
 				firstStaticSprite += 1
 				firstStaticSprite %= len(staticSprmngPool)
 			startSearchPoint = 0
-	bgLayer1Part1.position.x = fmod(bg1Offset, curBGDef.bg1Region.size.x)
-	bgLayer2Part1.position.x = fmod(bg2Offset, curBGDef.bg2Region.size.x)
+	bgLayer1Part1.position.x = fposmod(bg1Offset, curBGDef.bg1Region.size.x)
+	bgLayer2Part1.position.x = fposmod(bg2Offset, curBGDef.bg2Region.size.x)
 	bgLayer1Part2.position.x = bgLayer1Part1.position.x - curBGDef.bg1Region.size.x
 	bgLayer2Part2.position.x = bgLayer2Part1.position.x - curBGDef.bg2Region.size.x
 	var curBGColour := bgList[bgStartInd].spriteColour
