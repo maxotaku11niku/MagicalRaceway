@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://b1x2w30muec2d"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_rs8kc"]
+[ext_resource type="Texture2D" uid="uid://7swvsxxkv4mu" path="res://Images/ObstacleSprites/telephonePoles.png" id="2_en5ek"]
+
+[resource]
+script = ExtResource("1_rs8kc")
+texture = ExtResource("2_en5ek")
+region = Rect2i(0, 0, 32, 96)
+colBounds = Vector3(4, 96, 4)

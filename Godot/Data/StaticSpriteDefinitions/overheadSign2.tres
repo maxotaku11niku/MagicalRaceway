@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://dxp37xib1wfr7"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_g0pbw"]
+[ext_resource type="Texture2D" uid="uid://br7fqdoy3bmn2" path="res://Images/ObstacleSprites/overheadSigns.png" id="2_uo41f"]
+
+[resource]
+script = ExtResource("1_g0pbw")
+texture = ExtResource("2_uo41f")
+region = Rect2i(24, 32, 40, 32)
+colBounds = Vector3(40, 32, 8)

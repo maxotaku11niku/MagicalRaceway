@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=2 format=3 uid="uid://bw8kgclp7vkpb"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_wpiwq"]
+
+[resource]
+script = ExtResource("1_wpiwq")
+region = Rect2i(0, 0, 0, 0)
+colBounds = Vector3(0, 0, 0)

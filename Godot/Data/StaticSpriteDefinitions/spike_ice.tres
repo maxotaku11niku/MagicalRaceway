@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://bi1ysmf1la5ok"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_qcoyf"]
+[ext_resource type="Texture2D" uid="uid://dkwoq4nmsapia" path="res://Images/ObstacleSprites/spikes.png" id="2_v66wq"]
+
+[resource]
+script = ExtResource("1_qcoyf")
+texture = ExtResource("2_v66wq")
+region = Rect2i(0, 0, 24, 96)
+colBounds = Vector3(24, 96, 16)

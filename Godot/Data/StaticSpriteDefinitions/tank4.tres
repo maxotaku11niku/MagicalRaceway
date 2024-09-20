@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://d01af5ar4rf5l"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_hvja4"]
+[ext_resource type="Texture2D" uid="uid://q6q2n83q50f" path="res://Images/ObstacleSprites/industrialTanks.png" id="2_xq2rw"]
+
+[resource]
+script = ExtResource("1_hvja4")
+texture = ExtResource("2_xq2rw")
+region = Rect2i(120, 0, 40, 96)
+colBounds = Vector3(40, 96, 16)

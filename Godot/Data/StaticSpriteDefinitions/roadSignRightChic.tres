@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="StaticSpriteDef" load_steps=3 format=3 uid="uid://bjnp3swq2wd6k"]
+
+[ext_resource type="Script" path="res://Scripts/StaticSpriteDef.gd" id="1_je60m"]
+[ext_resource type="Texture2D" uid="uid://hofkmq6dugfw" path="res://Images/ObstacleSprites/roadSigns.png" id="2_tup8l"]
+
+[resource]
+script = ExtResource("1_je60m")
+texture = ExtResource("2_tup8l")
+region = Rect2i(64, 0, 32, 64)
+colBounds = Vector3(32, 64, 8)
