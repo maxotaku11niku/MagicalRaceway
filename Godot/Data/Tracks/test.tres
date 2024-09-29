@@ -507,11 +507,11 @@ spawnSide = 2
 numSprite = 1
 separation = 100.0
 offset = Vector2(-64, 0)
-baseScale = 1.796
+baseScale = 1.71429
 flip = false
 flipOnOtherSide = false
 canCollide = false
-dist = 32.0
+dist = 40.0
 
 [sub_resource type="Resource" id="Resource_ls0nk"]
 script = ExtResource("7_qgwub")
@@ -1001,11 +1001,11 @@ spawnSide = 2
 numSprite = 1
 separation = 100.0
 offset = Vector2(-64, 0)
-baseScale = 1.796
+baseScale = 1.71429
 flip = false
 flipOnOtherSide = false
 canCollide = false
-dist = 102282.0
+dist = 102290.0
 
 [sub_resource type="Resource" id="Resource_4342q"]
 script = ExtResource("3_3w41p")
@@ -1462,3 +1462,4 @@ pitchStrList = Array[ExtResource("3_3w41p")]([SubResource("Resource_p2ria"), Sub
 colourList = Array[ExtResource("1_d4ysk")]([SubResource("Resource_nghhg"), SubResource("Resource_xwlhl"), SubResource("Resource_i2o1u"), SubResource("Resource_jfq1t")])
 bgList = Array[ExtResource("2_6hhld")]([SubResource("Resource_7rcg4"), SubResource("Resource_sl270"), SubResource("Resource_fo6vl"), SubResource("Resource_4yl1u")])
 spriteList = Array[ExtResource("7_qgwub")]([SubResource("Resource_p7le7"), SubResource("Resource_1pej8"), SubResource("Resource_ls0nk"), SubResource("Resource_avmbj"), SubResource("Resource_d8s1h"), SubResource("Resource_o7afd"), SubResource("Resource_1pmbn"), SubResource("Resource_45qm5"), SubResource("Resource_nsac0"), SubResource("Resource_rrmk5"), SubResource("Resource_7bhcd"), SubResource("Resource_dotwq"), SubResource("Resource_m0yqq"), SubResource("Resource_j5ae7"), SubResource("Resource_imo0p"), SubResource("Resource_um4q0"), SubResource("Resource_xmmea"), SubResource("Resource_6p2f7"), SubResource("Resource_pdtus"), SubResource("Resource_st6ig"), SubResource("Resource_5kpru"), SubResource("Resource_3gbtb"), SubResource("Resource_41p54"), SubResource("Resource_7bddh"), SubResource("Resource_vjt5u"), SubResource("Resource_lhups"), SubResource("Resource_083b5"), SubResource("Resource_ust5c"), SubResource("Resource_5yvsp"), SubResource("Resource_dwegl"), SubResource("Resource_lmkjv"), SubResource("Resource_jjpxe"), SubResource("Resource_7dakl"), SubResource("Resource_va3wj"), SubResource("Resource_hivl4"), SubResource("Resource_4qdjh"), SubResource("Resource_qmkgm"), SubResource("Resource_rf2ti"), SubResource("Resource_0cgtq"), SubResource("Resource_mpr8s")])
+stripList = Array[Resource("res://Scripts/HackyDataContainers/TexturedStripWithDistance.gd")]([])

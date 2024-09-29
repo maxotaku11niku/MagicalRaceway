@@ -6,5 +6,5 @@
 [resource]
 script = ExtResource("1_dm8x2")
 texture = ExtResource("2_ywmg4")
-region = Rect2i(0, 0, 0, 0)
+region = Rect2i(0, 0, 40, 24)
 colBounds = Vector3(40, 24, 8)

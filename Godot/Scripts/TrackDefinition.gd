@@ -15,3 +15,4 @@ extends Resource
 @export var colourList: Array[ColourListWithDistance]
 @export var bgList: Array[BGSpriteDefWithDistance]
 @export var spriteList: Array[StaticSpriteDefWithDistance]
+@export var stripList: Array[TexturedStripWithDistance]

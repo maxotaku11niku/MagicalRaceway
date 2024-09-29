@@ -305,7 +305,8 @@ func TryChangeBGSprites() -> void:
 
 func TryMakeNewSpawner() -> void:
 	var curSprDef := spriteList[spriteStartInd]
-	if curSprDef.numSprite > 0 and curSprDef.spawnSide != 0:
+	var lastSprDist := curSprDef.dist + (curSprDef.numSprite - 1) * curSprDef.separation
+	if curSprDef.numSprite > 0 and curSprDef.spawnSide != 0 and (dist + nearClipPosition - 100.0) < lastSprDist:
 		var newSpawner := spriteSpawnerPool[(firstSpawner + numActiveSpawners) % len(spriteSpawnerPool)]
 		newSpawner.spriteInfo = curSprDef
 		newSpawner.nextSpawnDistance = curSprDef.dist
@@ -520,7 +521,7 @@ func _process(delta: float) -> void:
 					firstSpawner += 1
 					firstSpawner %= len(spriteSpawnerPool)
 			elif curspwn.nextSpawnDistance < curClosestSpriteDist:
-				nextSpawner = i
+				nextSpawner = realInd
 				curClosestSpriteDist = curspwn.nextSpawnDistance
 	if nextSpawner >= 0:
 		while spriteSpawnerPool[nextSpawner].TrySpawnSprite(dist + farClipPosition + 100.0):
@@ -535,7 +536,7 @@ func _process(delta: float) -> void:
 						firstSpawner += 1
 						firstSpawner %= len(spriteSpawnerPool)
 				elif curspwn.nextSpawnDistance <= curClosestSpriteDist:
-					nextSpawner = i
+					nextSpawner = realInd
 					curClosestSpriteDist = curspwn.nextSpawnDistance
 			if nextSpawner < 0: break
 	var startSearchPoint: int = 0

@@ -7,8 +7,8 @@ uniform sampler2D screenTex : hint_screen_texture, repeat_disable, filter_neares
 
 const float minSigFac = 0.16;
 const float maxSigFac = 0.55;
-const float brightAdjust = 0.22;
-const float gamAdjust = 0.45;
+const float brightAdjust = 0.20;
+const float gamAdjust = 0.55;
 
 const float fCoordOffsets1[7] = { -1.0, -0.6, -0.3, 0.0, 0.3, 0.6, 1.0 };
 const float fCoordOffsets2[3] = { -0.5, 0.0, 0.5 };

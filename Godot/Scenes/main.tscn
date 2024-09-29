@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://r3lotwoipgni"]
+[gd_scene load_steps=14 format=3 uid="uid://r3lotwoipgni"]
 
 [ext_resource type="Script" path="res://Scripts/GameMaster.gd" id="1_gajsv"]
 [ext_resource type="PackedScene" uid="uid://c5t43awjac242" path="res://Scenes/intro.tscn" id="2_cthp8"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dvr3wf81xo871" path="res://Scenes/play.tscn" id="4_turl1"]
 [ext_resource type="Resource" uid="uid://b8lrf14u8jd6j" path="res://Data/Tracks/easy.tres" id="5_1ne0b"]
 [ext_resource type="Theme" uid="uid://c5v47t30t1alk" path="res://Images/UIElements/systemTheme.tres" id="5_iop6o"]
+[ext_resource type="Resource" uid="uid://cfxdttfuwidm1" path="res://Data/Tracks/medium.tres" id="6_6hsfb"]
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="6_57tq2"]
 [ext_resource type="Material" uid="uid://bieiewe54142o" path="res://Shaders/crtMaskMat.tres" id="6_g3001"]
 [ext_resource type="Material" uid="uid://da3mp8s4tu8k2" path="res://Shaders/crtBeamMat.tres" id="7_y41ig"]
@@ -22,7 +23,7 @@ script = ExtResource("1_gajsv")
 introScene = ExtResource("2_cthp8")
 menuScene = ExtResource("3_rvgnx")
 playScene = ExtResource("4_turl1")
-trackCorr = Array[Resource("res://Scripts/TrackDefinition.gd")]([ExtResource("5_1ne0b"), ExtResource("6_57tq2"), ExtResource("6_57tq2"), ExtResource("6_57tq2"), ExtResource("6_57tq2")])
+trackCorr = Array[Resource("res://Scripts/TrackDefinition.gd")]([ExtResource("5_1ne0b"), ExtResource("6_6hsfb"), ExtResource("6_57tq2"), ExtResource("6_57tq2"), ExtResource("6_57tq2")])
 virtualScreen = NodePath("VirtualScreen")
 displayRoot = NodePath("MainContainer/MainScreen")
 mainContainer = NodePath("MainContainer")

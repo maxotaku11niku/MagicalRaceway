@@ -6,7 +6,8 @@ shader_type canvas_item;
 const vec3 Yvec = vec3(0.299, 0.587, 0.114);
 const vec2 halfvec = vec2(0.5);
 
-void fragment() {
+void fragment()
+{
 	vec2 guv = UV;
 	vec2 ruv = guv + vec2(0.001, -0.0004);
 	vec2 buv = guv + vec2(-0.0004, 0.0008);
@@ -35,8 +36,8 @@ void fragment() {
 	//there would be light bloom anyway, so we do this
 	//just to make the mask apparent without making the
 	//screen way too dark
-	vec4 dark = vec4(pow(col.rgb, vec3(1.14)), col.a);
-	col.rgb = pow(col.rgb, vec3(0.574318));
+	vec4 dark = pow(col, vec4(1.8));
+    vec4 light = pow(col, vec4(0.333333333333333333333333333333333333333333));
 	//Mask doesn't scale with resolution, but in real
 	//CRTs the phosphor mask isn't the main determinant
 	//of resolution anyway, so it doesn't matter too much
@@ -48,24 +49,48 @@ void fragment() {
 	int vertcomp = fragcoord.y;
 	if (stepbit == 1) vertcomp += 2;
 	vertcomp %= 4;
-	if (vertcomp == 3) col = dark;
-	else
-	{
-		switch (maskcomp)
-		{
-			case 0:
-				col.gb = dark.gb;
-				break;
-			case 1:
-				col.rb = dark.rb;
-				break;
-			case 2:
-				col.rg = dark.rg;
-				break;
-			case 3:
-				col = dark;
-				break;
-		}
-	}
+	int maskInd = maskcomp + vertcomp * 4;
+	switch (maskInd)
+    {
+        //Red phosphor
+        case 0:
+        case 4:
+        case 8:
+            col.r = light.r;
+            col.b = dark.b;
+            break;
+        //Green phosphor
+        case 1:
+        case 5:
+        case 9:
+            col.g = light.g;
+            break;
+        //Blue phosphor
+        case 2:
+        case 6:
+        case 10:
+            col.b = light.b;
+            col.r = dark.r;
+            break;
+        //Non-phospor areas
+        case 3:
+        case 11:
+            col.g = dark.g;
+            break;
+        case 7:
+        case 14:
+            col.r = dark.r;
+            col.g = dark.g;
+            break;
+        case 12:
+        case 15:
+            col.g = dark.g;
+            col.b = dark.b;
+            break;
+        case 13:
+            col.r = dark.r;
+            col.b = dark.b;
+            break;
+    }
 	COLOR = col;
 }

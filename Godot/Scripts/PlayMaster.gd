@@ -295,7 +295,7 @@ func _process(delta: float) -> void:
 	playerSprite.animationDir = steerStrength
 	playerSprite.logicalPosition.x = xpos
 	playUI.updateMainUI(displayScore, time, yspeed/3.0, stageNum, stageProg, isFinalStage, edgeGrazeMult)
-	playUI.updateDevScreen(dist, 0.0, xpos, time, splineRenderer.curXcurve, splineRenderer.curSplit, splineRenderer.curYcurve, centrifugalBalance)
+	playUI.updateDevScreen(dist, nextCheckDist, xpos, time, splineRenderer.curXcurve, splineRenderer.curSplit, splineRenderer.curYcurve, centrifugalBalance)
 	if playUI.DevScreen.visible:
 		if Input.is_action_just_pressed("dev_toggletimer"):
 			runTimer = false if runTimer else true
