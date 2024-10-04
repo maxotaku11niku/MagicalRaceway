@@ -116,6 +116,7 @@ func ResetWithNewTrack(newTrack: TrackDefinition) -> void:
 	splineRenderer.colourList = currentTrack.colourList
 	splineRenderer.bgList = currentTrack.bgList
 	splineRenderer.spriteList = currentTrack.spriteList
+	splineRenderer.stripList = currentTrack.stripList
 	Reset()
 
 func _ready() -> void:
@@ -127,6 +128,7 @@ func _ready() -> void:
 	splineRenderer.colourList = currentTrack.colourList
 	splineRenderer.bgList = currentTrack.bgList
 	splineRenderer.spriteList = currentTrack.spriteList
+	splineRenderer.stripList = currentTrack.stripList
 	Reset()
 	runTimer = true
 

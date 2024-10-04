@@ -11,5 +11,6 @@ enum
 @export var texture: Texture2D
 @export_flags("Right:1", "Left:2") var side: int
 @export var size: Vector2
+@export var xClamp: bool
 @export var xOffsetList: Array[FloatWithDistance]
 @export var distance: float

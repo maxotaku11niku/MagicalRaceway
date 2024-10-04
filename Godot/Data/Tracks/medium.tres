@@ -60,7 +60,6 @@
 [ext_resource type="Resource" uid="uid://cb5h1khh8pkom" path="res://Data/StaticSpriteDefinitions/farmMachine1.tres" id="56_wqjfe"]
 [ext_resource type="Resource" uid="uid://8ywrj5p4ly1r" path="res://Data/StaticSpriteDefinitions/farmMachine2.tres" id="57_w00wl"]
 [ext_resource type="Resource" uid="uid://dahwmpfi4rfkg" path="res://Data/StaticSpriteDefinitions/twistPole.tres" id="58_a4rka"]
-[ext_resource type="Resource" uid="uid://bink1n4kw5muh" path="res://Data/StaticSpriteDefinitions/finishBanner.tres" id="59_4de20"]
 [ext_resource type="Script" path="res://Scripts/HackyDataContainers/TexturedStripWithDistance.gd" id="60_rv7y7"]
 [ext_resource type="Texture2D" uid="uid://bu5weoqsuu16q" path="res://Images/StripTextures/pavement.png" id="61_t243a"]
 [ext_resource type="Texture2D" uid="uid://8p3whv5nfjmk" path="res://Images/StripTextures/desertRock.png" id="62_f2umf"]
@@ -5369,16 +5368,16 @@ dist = 242005.0
 
 [sub_resource type="Resource" id="Resource_rytti"]
 script = ExtResource("10_54eub")
-spriteDef = ExtResource("59_4de20")
-spawnSide = 2
+spriteDef = ExtResource("28_q0c21")
+spawnSide = 3
 numSprite = 1
 separation = 100.0
-offset = Vector2(-64, 1.45519e-11)
-baseScale = 1.71429
+offset = Vector2(32, 1.45519e-11)
+baseScale = 1.0
 flip = false
 flipOnOtherSide = false
-canCollide = false
-dist = 252290.0
+canCollide = true
+dist = 250000.0
 
 [sub_resource type="Resource" id="Resource_f1s2n"]
 script = ExtResource("8_xy4lf")
@@ -5390,6 +5389,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("61_t243a")
 side = 2
 size = Vector2(64, 10100)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_f1s2n")])
 distance = 1400.0
 
@@ -5403,6 +5403,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("61_t243a")
 side = 1
 size = Vector2(64, 16100)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_6rvan")])
 distance = 3400.0
 
@@ -5416,6 +5417,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("61_t243a")
 side = 3
 size = Vector2(256, 20100)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_5khsg")])
 distance = 23400.0
 
@@ -5429,6 +5431,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("62_f2umf")
 side = 3
 size = Vector2(128, 4000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_w38jl")])
 distance = 120500.0
 
@@ -5442,6 +5445,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("62_f2umf")
 side = 3
 size = Vector2(256, 7000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_6j7a6")])
 distance = 140000.0
 
@@ -5455,6 +5459,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("63_gqvtw")
 side = 3
 size = Vector2(256, 4000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_fgi0q")])
 distance = 150000.0
 
@@ -5468,6 +5473,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("63_gqvtw")
 side = 1
 size = Vector2(128, 4000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_j43lf")])
 distance = 158000.0
 
@@ -5486,6 +5492,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("64_kv64x")
 side = 2
 size = Vector2(1024, 2000)
+xClamp = true
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_q3vht"), SubResource("Resource_by8a3")])
 distance = 158000.0
 
@@ -5499,6 +5506,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("63_gqvtw")
 side = 2
 size = Vector2(128, 6000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_c573f")])
 distance = 160000.0
 
@@ -5522,6 +5530,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("64_kv64x")
 side = 1
 size = Vector2(1024, 4000)
+xClamp = true
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_cy6l3"), SubResource("Resource_o3yuw"), SubResource("Resource_qteae")])
 distance = 162000.0
 
@@ -5535,6 +5544,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("63_gqvtw")
 side = 1
 size = Vector2(128, 3000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_eqns0")])
 distance = 173000.0
 
@@ -5563,6 +5573,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("64_kv64x")
 side = 2
 size = Vector2(1024, 4000)
+xClamp = true
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_2r3t7"), SubResource("Resource_45evg"), SubResource("Resource_8ut3c"), SubResource("Resource_raygo")])
 distance = 173000.0
 
@@ -5591,6 +5602,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("64_kv64x")
 side = 3
 size = Vector2(1024, 9000)
+xClamp = true
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_gkq38"), SubResource("Resource_m5bs2"), SubResource("Resource_wxoc7"), SubResource("Resource_4rbul")])
 distance = 181000.0
 
@@ -5604,6 +5616,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("63_gqvtw")
 side = 3
 size = Vector2(256, 7000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_dobcd")])
 distance = 190000.0
 
@@ -5617,6 +5630,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("65_a4kej")
 side = 3
 size = Vector2(1024, 2000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_jkl7s")])
 distance = 200100.0
 
@@ -5630,6 +5644,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("65_a4kej")
 side = 2
 size = Vector2(1024, 5000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_35y32")])
 distance = 205200.0
 
@@ -5643,15 +5658,22 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("65_a4kej")
 side = 1
 size = Vector2(1024, 4000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_hwoc6")])
 distance = 211000.0
+
+[sub_resource type="Resource" id="Resource_iqymv"]
+script = ExtResource("8_xy4lf")
+val = 8.0
+dist = 0.0
 
 [sub_resource type="Resource" id="Resource_eytpm"]
 script = ExtResource("60_rv7y7")
 texture = ExtResource("65_a4kej")
 side = 3
 size = Vector2(1024, 5000)
-xOffsetList = Array[ExtResource("8_xy4lf")]([])
+xClamp = false
+xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_iqymv")])
 distance = 215000.0
 
 [sub_resource type="Resource" id="Resource_h8ud8"]
@@ -5664,6 +5686,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("65_a4kej")
 side = 2
 size = Vector2(1024, 5000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_h8ud8")])
 distance = 229000.0
 
@@ -5677,6 +5700,7 @@ script = ExtResource("60_rv7y7")
 texture = ExtResource("65_a4kej")
 side = 3
 size = Vector2(1024, 5000)
+xClamp = false
 xOffsetList = Array[ExtResource("8_xy4lf")]([SubResource("Resource_0kksk")])
 distance = 242000.0
 

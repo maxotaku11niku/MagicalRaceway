@@ -24,6 +24,7 @@ var splitAmtList: Array[FloatWithDistance]
 var colourList: Array[ColourListWithDistance]
 var bgList: Array[BGSpriteDefWithDistance]
 var spriteList: Array[StaticSpriteDefWithDistance]
+var stripList: Array[TexturedStripWithDistance]
 
 var roadMat: ShaderMaterial
 var posTex: ImageTexture
@@ -41,15 +42,18 @@ var pointScales := PackedFloat64Array()
 var pointYs := PackedFloat64Array()
 var pointXs := PackedFloat64Array()
 var pointSplits := PackedFloat64Array()
+var pointScrLines := PackedFloat64Array()
 
 var dist: float
 var xpos: float
+var pposvec: Vector2
 var turnStrStartInd: int
 var pitchStrStartInd: int
 var splitAmtStartInd: int
 var colourStartInd: int
 var bgStartInd: int
 var spriteStartInd: int
+var stripStartInd: int
 var curXcurve: float
 var curYcurve: float
 var curSplit: float
@@ -60,15 +64,22 @@ var staticSprmngPool: Array[StaticSprite]
 var spriteSpawnerPool: Array[SpriteSpawner]
 var firstStaticSprite: int
 var numStaticSpritesRendered: int
-var firstSpawner: int
-var numActiveSpawners: int
-var nextSpawner: int 
+var firstSpriteSpawner: int
+var numActiveSpriteSpawners: int
+var nextSpriteSpawner: int 
+var stripPool: Array[TexturedStrip]
+var stripSpawnerPool: Array[TexturedStripSpawner]
+var firstStrip: int
+var numStripsRendered: int
+var firstStripSpawner: int
+var numActiveStripSpawners: int
+var nextStripSpawner: int 
 
 class StaticSprite:
 	var splRend: SplineRenderer
+	var sprite: RoadSprite
 	var position: Vector3
 	var scale: float
-	var sprite: RoadSprite
 	
 	func PositionSprite(charpos: Vector2, searchPoint: int) -> int:
 		if searchPoint < 0: return -1
@@ -132,6 +143,51 @@ class SpriteSpawner:
 		
 	func IsAllSpritesSpawned() -> bool:
 		if spritesSpawned >= spriteInfo.numSprite: return true
+		else: return false
+
+class TexturedStrip:
+	var splRend: SplineRenderer
+	var strip: Pseudo3DSpline
+	var startPos: Vector2
+	var endPos: Vector2
+	
+	func PositionStrip(charpos: Vector2, searchPoint: int) -> int:
+		if searchPoint < 0: return -1
+		return splRend.SetTruePositionsOfStrip(self, charpos, searchPoint)
+
+class TexturedStripSpawner:
+	var splRend: SplineRenderer
+	var stripInfo: TexturedStripWithDistance
+	var nextSpawnDistance: float
+	var stripsSpawned: int
+	
+	func TrySpawnStrip(dist: float) -> bool:
+		if dist >= nextSpawnDistance:
+			var curStrip := splRend.stripPool[(splRend.firstStrip + splRend.numStripsRendered) % len(splRend.stripPool)]
+			curStrip.splRend = splRend
+			curStrip.startPos = Vector2(stripInfo.xOffsetList[stripsSpawned].val, nextSpawnDistance)
+			var stripSpl := curStrip.strip
+			stripSpl.sideFlags = stripInfo.side
+			stripSpl.isXClamped = stripInfo.xClamp
+			stripSpl.texture = stripInfo.texture
+			stripSpl.z_index = -512
+			stripSpl.visible = true
+			stripSpl.process_mode = Node.PROCESS_MODE_INHERIT
+			stripSpl.SetPositioningTexture(splRend.posTex)
+			stripSpl.SetXBounds(0.0, stripInfo.size.x/stripSpl.texture.get_width())
+			stripSpl.SetPositioningParameters(splRend.pposvec, 64.0/stripSpl.texture.get_width(), 0.0)
+			stripsSpawned += 1
+			if IsAllStripsSpawned():
+				curStrip.endPos = Vector2(curStrip.startPos.x, stripInfo.size.y + stripInfo.distance)
+			else:
+				nextSpawnDistance = stripInfo.xOffsetList[stripsSpawned].dist + stripInfo.distance
+				curStrip.endPos = Vector2(stripInfo.xOffsetList[stripsSpawned].val, nextSpawnDistance)
+			splRend.numStripsRendered += 1
+			return true
+		return false
+	
+	func IsAllStripsSpawned() -> bool:
+		if stripsSpawned >= len(stripInfo.xOffsetList): return true
 		else: return false
 
 func SetSplinePositioningParameters() -> void:
@@ -276,6 +332,12 @@ func SetSplinePositioningParameters() -> void:
 		if crestCand > 0 and pointsSinceSuccess >= 8:
 			crestPoint = crestCand
 			crestCand = -1
+	for i in range(0, splinePoints):
+		var linepy := pointYs[i]
+		var linesc := pointScales[i]
+		linepy -= cameraRelativePosition.y
+		linepy = -linepy * linesc
+		pointScrLines[i] = linepy + screenSize.y * 0.5
 	var skyBottom: float = float(screenSize.y - 1) * (0.5 + (cameraRelativePosition.x/(2.0 * cameraRelativePosition.y)) * ((pointYs[splinePoints-1] - cameraRelativePosition.y)/(pointDists[splinePoints-1] - cameraRelativePosition.x)))
 	skyBottom = maxf(skyBottom, lineNum + 1) #This prevents an ugly seam from forming
 	sky.bottomY = skyBottom
@@ -287,8 +349,9 @@ func SetSplinePositioningParameters() -> void:
 	road.bound.size.y = screenSize.y - (lineNum + 1)
 	posImg.set_data(4, 256, false, Image.FORMAT_RF, posDat)
 	posTex = ImageTexture.create_from_image(posImg)
-	roadMat.set_shader_parameter("positioning", posTex)
-	roadMat.set_shader_parameter("pPos", Vector2(xpos, fmod(dist, road.texture.get_height())))
+	road.SetPositioningTexture(posTex)
+	pposvec = Vector2(xpos, fmod(dist, road.texture.get_height()))
+	road.SetPositioningParameters(pposvec, 0.0, 0.0)
 
 func TryChangeBGSprites() -> void:
 	var newBGDef := bgList[bgStartInd].def
@@ -303,16 +366,27 @@ func TryChangeBGSprites() -> void:
 		bgLayer2Part2.texture = newBGDef.bgTexture
 		bgLayer2Part2.region_rect = newBGDef.bg2Region
 
-func TryMakeNewSpawner() -> void:
+func TryMakeNewSpriteSpawner() -> void:
 	var curSprDef := spriteList[spriteStartInd]
 	var lastSprDist := curSprDef.dist + (curSprDef.numSprite - 1) * curSprDef.separation
 	if curSprDef.numSprite > 0 and curSprDef.spawnSide != 0 and (dist + nearClipPosition - 100.0) < lastSprDist:
-		var newSpawner := spriteSpawnerPool[(firstSpawner + numActiveSpawners) % len(spriteSpawnerPool)]
+		var newSpawner := spriteSpawnerPool[(firstSpriteSpawner + numActiveSpriteSpawners) % len(spriteSpawnerPool)]
 		newSpawner.spriteInfo = curSprDef
 		newSpawner.nextSpawnDistance = curSprDef.dist
 		newSpawner.spritesSpawned = 0
 		newSpawner.splRend = self
-		numActiveSpawners += 1
+		numActiveSpriteSpawners += 1
+
+func TryMakeNewStripSpawner() -> void:
+	var curStripDef := stripList[stripStartInd]
+	var lastStripDist := float(curStripDef.distance + curStripDef.size.y)
+	if len(curStripDef.xOffsetList) > 0 and curStripDef.side != 0 and (dist + nearClipPosition - 100.0) < lastStripDist:
+		var newSpawner := stripSpawnerPool[(firstStripSpawner + numActiveStripSpawners) % len(stripSpawnerPool)]
+		newSpawner.stripInfo = curStripDef
+		newSpawner.nextSpawnDistance = curStripDef.distance
+		newSpawner.stripsSpawned = 0
+		newSpawner.splRend = self
+		numActiveStripSpawners += 1
 
 func Reset() -> void:
 	turnStrStartInd = 0
@@ -321,11 +395,17 @@ func Reset() -> void:
 	colourStartInd = 0
 	bgStartInd = 0
 	spriteStartInd = 0
+	stripStartInd = 0
 	firstStaticSprite = 0
-	firstSpawner = 0
+	firstSpriteSpawner = 0
 	numStaticSpritesRendered = 0
-	numActiveSpawners = 0
-	nextSpawner = -1
+	numActiveSpriteSpawners = 0
+	nextSpriteSpawner = -1
+	firstStrip = 0
+	firstStripSpawner = 0
+	numStripsRendered = 0
+	numActiveStripSpawners = 0
+	nextStripSpawner = -1
 	for i in range(len(staticSprmngPool)):
 		var curspr := staticSprmngPool[i].sprite
 		curspr.logicalPosition = Vector3(-6969.0, 420.0, 393939.0)
@@ -335,6 +415,14 @@ func Reset() -> void:
 		curspr.monitoring = false
 		curspr.monitorable = false
 		curspr.process_mode = Node.PROCESS_MODE_DISABLED
+	for i in range(len(stripPool)):
+		var curstrip := stripPool[i].strip
+		curstrip.isMainRoad = false
+		curstrip.bound = Rect2(-6969.0, -3939.0, 0.0, 0.0)
+		curstrip.positTexHeight = 256.0
+		curstrip.sideFlags = 0
+		curstrip.visible = false
+		curstrip.z_index = -4080
 	TryChangeBGSprites()
 
 func GetEdgeGrazeMultiplier(cForce: float) -> float:
@@ -400,7 +488,56 @@ func SetTruePositionsOfSprite(spr: StaticSprite, charpos: Vector2, searchPoint: 
 			return 0
 		else: return -1
 	else: return splinePoints
-	
+
+func SetTruePositionsOfStrip(strip: TexturedStrip, charpos: Vector2, searchPoint: int) -> int:
+	var rStrip := strip.strip
+	var sDist := strip.startPos.y - charpos.y
+	var eDist := strip.endPos.y - charpos.y
+	var bx := strip.startPos.x
+	var tx := strip.endPos.x
+	var grad := (tx - bx)/(eDist - sDist)
+	bx -= grad * sDist
+	var tSearchPoint := searchPoint
+	if sDist < farClipPosition:
+		if eDist < nearClipPosition - 100.0:
+			return -1
+		elif eDist < nearClipPosition:
+			rStrip.bound = Rect2(-6969.0, -3939.0, 0.0, 0.0)
+		elif sDist >= nearClipPosition:
+			var highestY = pointScrLines[tSearchPoint]
+			var highestPoint = tSearchPoint
+			while sDist >= pointDists[tSearchPoint]:
+				tSearchPoint += 1
+				if (pointScrLines[tSearchPoint] < highestY):
+					highestY = pointScrLines[tSearchPoint]
+					highestPoint = tSearchPoint
+			if (highestPoint == tSearchPoint):
+				rStrip.bound = road.bound
+				var lerpfac := (sDist - pointDists[tSearchPoint - 1])/(pointDists[tSearchPoint] - pointDists[tSearchPoint - 1])
+				var py := lerpf(pointScrLines[tSearchPoint - 1], pointScrLines[tSearchPoint], lerpfac)
+				rStrip.bound.size.y = py - road.bound.position.y
+			else:
+				rStrip.bound = Rect2(-6969.0, -3939.0, 0.0, 0.0)
+		else:
+			rStrip.bound = road.bound
+		if eDist < farClipPosition:
+			var highestY = pointScrLines[searchPoint]
+			var highestPoint = searchPoint
+			while eDist >= pointDists[searchPoint]:
+				searchPoint += 1
+				if (pointScrLines[searchPoint] < highestY):
+					highestY = pointScrLines[searchPoint]
+					highestPoint = searchPoint
+			if (highestPoint == searchPoint):
+				var lerpfac := (eDist - pointDists[searchPoint - 1])/(pointDists[searchPoint] - pointDists[searchPoint - 1])
+				var py := lerpf(pointScrLines[searchPoint - 1], pointScrLines[searchPoint], lerpfac)
+				rStrip.bound.position.y = py
+				rStrip.bound.size.y += road.bound.position.y - py
+		rStrip.SetPositioningParameters(Vector2(xpos, dist - strip.startPos.y), 64.0 + bx, grad)
+		rStrip.SetPositioningTexture(posTex)
+		return 0
+	else: return 0
+
 func SetBGOffsets(accumOffset: float) -> void:
 	bg1Offset = bg1TravelFactor * accumOffset
 	bg2Offset = bg2TravelFactor * accumOffset
@@ -412,6 +549,7 @@ func _ready() -> void:
 	pointYs.resize(splinePoints)
 	pointXs.resize(splinePoints)
 	pointSplits.resize(splinePoints)
+	pointScrLines.resize(splinePoints)
 	staticSprmngPool.resize(1024)
 	for i in range(len(staticSprmngPool)):
 		staticSprmngPool[i] = StaticSprite.new()
@@ -429,6 +567,23 @@ func _ready() -> void:
 	spriteSpawnerPool.resize(64)
 	for i in range(len(spriteSpawnerPool)):
 		spriteSpawnerPool[i] = SpriteSpawner.new()
+	stripPool.resize(64)
+	for i in range(len(stripPool)):
+		stripPool[i] = TexturedStrip.new()
+		var curstrip := Pseudo3DSpline.new()
+		curstrip.material = ShaderMaterial.new()
+		curstrip.material.set_shader(load("res://Shaders/spline.gdshader"))
+		add_child(curstrip)
+		curstrip.isMainRoad = false
+		curstrip.bound = Rect2(-6969.0, -3939.0, 0.0, 0.0)
+		curstrip.positTexHeight = 256.0
+		curstrip.sideFlags = 0
+		curstrip.visible = false
+		curstrip.z_index = -4080
+		stripPool[i].strip = curstrip
+	stripSpawnerPool.resize(16)
+	for i in range(len(stripSpawnerPool)):
+		stripSpawnerPool[i] = TexturedStripSpawner.new()
 	var nearScale: float
 	var farScale: float
 	zeroScale = (0.5 * screenSize.y) / cameraRelativePosition.y
@@ -457,8 +612,9 @@ func _ready() -> void:
 	posImg.set_data(4, 256, false, Image.FORMAT_RF, posDat)
 	posTex = ImageTexture.create_from_image(posImg)
 	roadMat = road.material
-	roadMat.set_shader_parameter("positioning", posTex)
-	roadMat.set_shader_parameter("positLines", 256)
+	road.SetPositioningTexture(posTex)
+	road.positTexHeight = 256
+	road.isMainRoad = true
 	palDat.resize(4 * 256)
 	palDat.fill(0)
 	palImg.set_data(256, 1, false, Image.FORMAT_RGBA8, palDat)
@@ -495,9 +651,15 @@ func _process(delta: float) -> void:
 				break
 	if spriteStartInd <= (len(spriteList) - 1):
 		while (dist + farClipPosition + 200.0) >= spriteList[spriteStartInd].dist:
-			TryMakeNewSpawner()
+			TryMakeNewSpriteSpawner()
 			spriteStartInd += 1
 			if spriteStartInd >= (len(spriteList) - 1):
+				break
+	if stripStartInd <= (len(stripList) - 1):
+		while (dist + farClipPosition + 200.0) >= stripList[stripStartInd].distance:
+			TryMakeNewStripSpawner()
+			stripStartInd += 1
+			if stripStartInd >= (len(stripList) - 1):
 				break
 	var dlerpx: float = (dist - turnStrList[turnStrStartInd].dist) / (turnStrList[turnStrStartInd + 1].dist - turnStrList[turnStrStartInd].dist)
 	var dlerpy: float = (dist - pitchStrList[pitchStrStartInd].dist) / (pitchStrList[pitchStrStartInd + 1].dist - pitchStrList[pitchStrStartInd].dist)
@@ -509,36 +671,37 @@ func _process(delta: float) -> void:
 	curYcurve = lerpf(pitchStrList[pitchStrStartInd].val, pitchStrList[pitchStrStartInd + 1].val, dlerpy)
 	curSplit = lerpf(splitAmtList[splitAmtStartInd].val, splitAmtList[splitAmtStartInd + 1].val, dlerps)
 	SetSplinePositioningParameters()
+	
 	var curClosestSpriteDist := 9999999999999.0
-	if nextSpawner < 0:
-		nextSpawner = -1
-		for i in range(firstSpawner, firstSpawner + numActiveSpawners):
+	if nextSpriteSpawner < 0:
+		nextSpriteSpawner = -1
+		for i in range(firstSpriteSpawner, firstSpriteSpawner + numActiveSpriteSpawners):
 			var realInd := i % len(spriteSpawnerPool)
 			var curspwn := spriteSpawnerPool[realInd]
 			if curspwn.IsAllSpritesSpawned():
-				if i == firstSpawner:
-					numActiveSpawners -= 1
-					firstSpawner += 1
-					firstSpawner %= len(spriteSpawnerPool)
+				if i == firstSpriteSpawner:
+					numActiveSpriteSpawners -= 1
+					firstSpriteSpawner += 1
+					firstSpriteSpawner %= len(spriteSpawnerPool)
 			elif curspwn.nextSpawnDistance < curClosestSpriteDist:
-				nextSpawner = realInd
+				nextSpriteSpawner = realInd
 				curClosestSpriteDist = curspwn.nextSpawnDistance
-	if nextSpawner >= 0:
-		while spriteSpawnerPool[nextSpawner].TrySpawnSprite(dist + farClipPosition + 100.0):
-			nextSpawner = -1
+	if nextSpriteSpawner >= 0:
+		while spriteSpawnerPool[nextSpriteSpawner].TrySpawnSprite(dist + farClipPosition + 100.0):
+			nextSpriteSpawner = -1
 			curClosestSpriteDist = 9999999999999.0
-			for i in range(firstSpawner, firstSpawner + numActiveSpawners):
+			for i in range(firstSpriteSpawner, firstSpriteSpawner + numActiveSpriteSpawners):
 				var realInd := i % len(spriteSpawnerPool)
 				var curspwn := spriteSpawnerPool[realInd]
 				if curspwn.IsAllSpritesSpawned():
-					if i == firstSpawner:
-						numActiveSpawners -= 1
-						firstSpawner += 1
-						firstSpawner %= len(spriteSpawnerPool)
+					if i == firstSpriteSpawner:
+						numActiveSpriteSpawners -= 1
+						firstSpriteSpawner += 1
+						firstSpriteSpawner %= len(spriteSpawnerPool)
 				elif curspwn.nextSpawnDistance <= curClosestSpriteDist:
-					nextSpawner = realInd
+					nextSpriteSpawner = realInd
 					curClosestSpriteDist = curspwn.nextSpawnDistance
-			if nextSpawner < 0: break
+			if nextSpriteSpawner < 0: break
 	var startSearchPoint: int = 0
 	for i in range(firstStaticSprite, firstStaticSprite + numStaticSpritesRendered):
 		var realInd := i % len(staticSprmngPool)
@@ -554,6 +717,51 @@ func _process(delta: float) -> void:
 				firstStaticSprite += 1
 				firstStaticSprite %= len(staticSprmngPool)
 			startSearchPoint = 0
+	
+	var curClosestStripDist := 9999999999999.0
+	if nextStripSpawner < 0:
+		nextStripSpawner = -1
+		for i in range(firstStripSpawner, firstStripSpawner + numActiveStripSpawners):
+			var realInd := i % len(stripSpawnerPool)
+			var curspwn := stripSpawnerPool[realInd]
+			if curspwn.IsAllStripsSpawned():
+				if i == firstStripSpawner:
+					numActiveStripSpawners -= 1
+					firstStripSpawner += 1
+					firstStripSpawner %= len(stripSpawnerPool)
+			elif curspwn.nextSpawnDistance < curClosestStripDist:
+				nextStripSpawner = realInd
+				curClosestStripDist = curspwn.nextSpawnDistance
+	if nextStripSpawner >= 0:
+		while stripSpawnerPool[nextStripSpawner].TrySpawnStrip(dist + farClipPosition + 100.0):
+			nextStripSpawner = -1
+			curClosestStripDist = 9999999999999.0
+			for i in range(firstStripSpawner, firstStripSpawner + numActiveStripSpawners):
+				var realInd := i % len(stripSpawnerPool)
+				var curspwn := stripSpawnerPool[realInd]
+				if curspwn.IsAllStripsSpawned():
+					if i == firstStripSpawner:
+						numActiveStripSpawners -= 1
+						firstStripSpawner += 1
+						firstStripSpawner %= len(stripSpawnerPool)
+				elif curspwn.nextSpawnDistance <= curClosestStripDist:
+					nextStripSpawner = realInd
+					curClosestStripDist = curspwn.nextSpawnDistance
+			if nextStripSpawner < 0: break
+	startSearchPoint = 0
+	for i in range(firstStrip, firstStrip + numStripsRendered):
+		var realInd := i % len(stripPool)
+		var curstrip := stripPool[realInd]
+		startSearchPoint = curstrip.PositionStrip(Vector2(xpos, dist), startSearchPoint)
+		if startSearchPoint < 0:
+			curstrip.strip.visible = false
+			curstrip.strip.process_mode = Node.PROCESS_MODE_DISABLED
+			if i == firstStrip:
+				numStripsRendered -= 1
+				firstStrip += 1
+				firstStrip %= len(stripPool)
+			startSearchPoint = 0
+	
 	bgLayer1Part1.position.x = fposmod(bg1Offset, curBGDef.bg1Region.size.x)
 	bgLayer2Part1.position.x = fposmod(bg2Offset, curBGDef.bg2Region.size.x)
 	bgLayer1Part2.position.x = bgLayer1Part1.position.x - curBGDef.bg1Region.size.x

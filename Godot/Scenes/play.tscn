@@ -35,12 +35,10 @@ size = Vector2(8, 8)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7np3q"]
 shader = ExtResource("11_ed6u4")
-shader_parameter/startLine = 128
-shader_parameter/numLines = 111
-shader_parameter/width = 320
-shader_parameter/positLines = 256
-shader_parameter/palettised = true
+shader_parameter/positioningFactors = null
+shader_parameter/flags = 1
 shader_parameter/texPixSize = Vector2(0.007, 0.016)
+shader_parameter/xBounds = null
 shader_parameter/pPos = null
 shader_parameter/palette = ExtResource("9_1t8dp")
 
