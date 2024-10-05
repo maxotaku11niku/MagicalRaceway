@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://ca44ugm4gge6g"]
+
+[ext_resource type="Texture2D" uid="uid://dt5faw7andfu8" path="res://Images/EntitySprites/broomrider1.png" id="1_nwvoa"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gmhc3"]
+atlas = ExtResource("1_nwvoa")
+region = Rect2(0, 0, 64, 72)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gmhc3")
+}],
+"loop": true,
+"name": &"front",
+"speed": 5.0
+}]

@@ -3,6 +3,9 @@ extends Node
 ## Controls the rendering of all the splines
 
 @export var staticSpriteScene: PackedScene
+@export var dynamicSpriteScene: PackedScene
+@export var possibleDynamicSprites: Array[SpriteFrames]
+@export var possibleDynamicSpriteSizes: PackedVector2Array
 @export var road: Pseudo3DSpline
 @export var sky: Sky2D
 @export var bgLayer1Part1: Sprite2D
@@ -26,6 +29,7 @@ var bgList: Array[BGSpriteDefWithDistance]
 var spriteList: Array[StaticSpriteDefWithDistance]
 var stripList: Array[TexturedStripWithDistance]
 
+var paused: bool
 var roadMat: ShaderMaterial
 var posTex: ImageTexture
 var posImg := Image.create(4, 256, false, Image.FORMAT_RF)
@@ -66,7 +70,14 @@ var firstStaticSprite: int
 var numStaticSpritesRendered: int
 var firstSpriteSpawner: int
 var numActiveSpriteSpawners: int
-var nextSpriteSpawner: int 
+var nextSpriteSpawner: int
+var dynamicSprmngPool: Array[DynamicSprite]
+var firstDynamicSprite: int
+var numDynamicSpritesRendered: int
+var curDynamicSpriteSeparation: float
+var nextDynamicSpriteSpawnDistance: float
+var stepsSinceLastDynamicSpriteSpawnedInLane := PackedInt64Array()
+var stepsSinceLastDynamicSpriteSpawnedThisType := PackedInt64Array()
 var stripPool: Array[TexturedStrip]
 var stripSpawnerPool: Array[TexturedStripSpawner]
 var firstStrip: int
@@ -84,6 +95,21 @@ class StaticSprite:
 	func PositionSprite(charpos: Vector2, searchPoint: int) -> int:
 		if searchPoint < 0: return -1
 		return splRend.SetTruePositionsOfSprite(self, charpos, searchPoint)
+
+class DynamicSprite:
+	var splRend: SplineRenderer
+	var sprite: AnimatedRoadSprite
+	var position: Vector3
+	var velocity: Vector3
+	var size: Vector2
+	var scale: float
+	var side: int
+	var behindPlayer: bool
+	var alreadyGrazed: bool
+	
+	func PositionSprite(charpos: Vector2, searchPoint: int) -> int:
+		if searchPoint < 0: return -1
+		return splRend.SetTruePositionsOfDynamicSprite(self, charpos, searchPoint)
 
 class SpriteSpawner:
 	var splRend: SplineRenderer
@@ -377,6 +403,52 @@ func TryMakeNewSpriteSpawner() -> void:
 		newSpawner.splRend = self
 		numActiveSpriteSpawners += 1
 
+func TrySpawnDynamicSprite(dist: float) -> bool:
+	if dist >= nextDynamicSpriteSpawnDistance:
+		var curSprMng := dynamicSprmngPool[(firstDynamicSprite + numDynamicSpritesRendered) % len(dynamicSprmngPool)]
+		var curSprite := curSprMng.sprite
+		for i in range(len(stepsSinceLastDynamicSpriteSpawnedInLane)):
+			stepsSinceLastDynamicSpriteSpawnedInLane[i] += 1
+		for i in range(len(stepsSinceLastDynamicSpriteSpawnedThisType)):
+			stepsSinceLastDynamicSpriteSpawnedThisType[i] += 1
+		var lane: int = -1
+		while lane < 0:
+			var tempLane: int = randi_range(0, 5)
+			if (stepsSinceLastDynamicSpriteSpawnedInLane[tempLane] >= 3):
+				lane = tempLane
+				stepsSinceLastDynamicSpriteSpawnedInLane[tempLane] = 0
+		var sprType: int = -1
+		while sprType < 0:
+			var tempSprType: int = randi_range(0, len(possibleDynamicSprites)-1)
+			if (stepsSinceLastDynamicSpriteSpawnedThisType[tempSprType] > 2):
+				sprType = tempSprType
+				stepsSinceLastDynamicSpriteSpawnedThisType[tempSprType] = 0
+		var spwnSide: int = StaticSpriteDefWithDistance.SPAWNSIDE_LEFT if lane < 3 else StaticSpriteDefWithDistance.SPAWNSIDE_RIGHT
+		var sc := 4.0
+		curSprMng.position = GetLogicalPositionOfSprite(nextDynamicSpriteSpawnDistance, Vector2(-32.0 + 32.0 * (lane % 3), 8.0), 0)
+		curSprMng.velocity = Vector3(0.0, 0.0, 600.0)
+		curSprMng.scale = sc
+		curSprMng.splRend = self
+		curSprMng.size = possibleDynamicSpriteSizes[sprType]
+		curSprMng.side = spwnSide
+		curSprMng.behindPlayer = false
+		curSprMng.alreadyGrazed = false
+		curSprite.visSprite.sprite_frames = possibleDynamicSprites[sprType]
+		curSprite.visSprite.play(&"front")
+		curSprite.animationType = 0
+		curSprite.animationDir = 0.0
+		curSprite.animationSpeed = 0.0
+		curSprite.layer = -4080
+		(curSprite.colBox.shape as RectangleShape2D).size.x = 32.0/sc
+		(curSprite.colBox.shape as RectangleShape2D).size.y = 32.0/sc
+		curSprite.monitorable = true
+		curSprite.visible = true
+		curSprite.process_mode = Node.PROCESS_MODE_INHERIT
+		nextDynamicSpriteSpawnDistance += curDynamicSpriteSeparation
+		numDynamicSpritesRendered += 1
+		return true
+	return false
+
 func TryMakeNewStripSpawner() -> void:
 	var curStripDef := stripList[stripStartInd]
 	var lastStripDist := float(curStripDef.distance + curStripDef.size.y)
@@ -401,6 +473,9 @@ func Reset() -> void:
 	numStaticSpritesRendered = 0
 	numActiveSpriteSpawners = 0
 	nextSpriteSpawner = -1
+	firstDynamicSprite = 0
+	numDynamicSpritesRendered = 0
+	nextDynamicSpriteSpawnDistance = 2000.0
 	firstStrip = 0
 	firstStripSpawner = 0
 	numStripsRendered = 0
@@ -408,6 +483,15 @@ func Reset() -> void:
 	nextStripSpawner = -1
 	for i in range(len(staticSprmngPool)):
 		var curspr := staticSprmngPool[i].sprite
+		curspr.logicalPosition = Vector3(-6969.0, 420.0, 393939.0)
+		curspr.screenPosition = Vector2(-6969.0, 393939.0)
+		curspr.scale = Vector2(1.0, 1.0)
+		curspr.visible = false
+		curspr.monitoring = false
+		curspr.monitorable = false
+		curspr.process_mode = Node.PROCESS_MODE_DISABLED
+	for i in range(len(dynamicSprmngPool)):
+		var curspr := dynamicSprmngPool[i].sprite
 		curspr.logicalPosition = Vector3(-6969.0, 420.0, 393939.0)
 		curspr.screenPosition = Vector2(-6969.0, 393939.0)
 		curspr.scale = Vector2(1.0, 1.0)
@@ -423,6 +507,10 @@ func Reset() -> void:
 		curstrip.sideFlags = 0
 		curstrip.visible = false
 		curstrip.z_index = -4080
+	for i in range(len(stepsSinceLastDynamicSpriteSpawnedInLane)):
+		stepsSinceLastDynamicSpriteSpawnedInLane[i] = 100
+	for i in range(len(stepsSinceLastDynamicSpriteSpawnedThisType)):
+		stepsSinceLastDynamicSpriteSpawnedThisType[i] = 100
 	TryChangeBGSprites()
 
 func GetEdgeGrazeMultiplier(cForce: float) -> float:
@@ -455,6 +543,8 @@ func GetLogicalPositionOfSprite(dist: float, offset: Vector2, side: int) -> Vect
 		truexpos = offset.x + splitComp
 	elif side == StaticSpriteDefWithDistance.SPAWNSIDE_LEFT:
 		truexpos = -offset.x - splitComp
+	else:
+		truexpos = offset.x
 	return Vector3(truexpos, offset.y, dist)
 
 func SetTruePositionsOfSprite(spr: StaticSprite, charpos: Vector2, searchPoint: int) -> int:
@@ -479,6 +569,47 @@ func SetTruePositionsOfSprite(spr: StaticSprite, charpos: Vector2, searchPoint: 
 			rSprite.visSprite.scale = Vector2(sc, sc) * cScale
 			px += logPos.x
 			py += logPos.y - cameraRelativePosition.y + rSprite.visSprite.region_rect.size.y * 0.5 * cScale
+			var ps := Vector2(px, -py)
+			ps *= sc
+			rSprite.screenPosition = ps + screenSize * 0.5
+			return searchPoint
+		elif sDist >= nearClipPosition - 100.0:
+			rSprite.layer = -4080
+			return 0
+		else: return -1
+	else: return splinePoints
+
+func SetTruePositionsOfDynamicSprite(spr: DynamicSprite, charpos: Vector2, searchPoint: int) -> int:
+	var rSprite := spr.sprite
+	var logPos := spr.position - Vector3(0.0, 0.0, charpos.y)
+	var splitComp := splitAmtList[len(splitAmtList)-1].val
+	for i in range(splitAmtStartInd, len(splitAmtList)-1):
+		if spr.position.z >= splitAmtList[i].dist and spr.position.z < splitAmtList[i+1].dist:
+			splitComp = lerpf(splitAmtList[i].val, splitAmtList[i+1].val, (spr.position.z-splitAmtList[i].dist)/(splitAmtList[i+1].dist-splitAmtList[i].dist))
+	if spr.side == StaticSpriteDefWithDistance.SPAWNSIDE_RIGHT:
+		logPos.x += splitComp
+	elif spr.side == StaticSpriteDefWithDistance.SPAWNSIDE_LEFT:
+		logPos.x -= splitComp
+	rSprite.logicalPosition = logPos
+	logPos.x -= charpos.x
+	var sDist := logPos.z
+	if searchPoint >= splinePoints: return searchPoint
+	if sDist >= farClipPosition + 200.0: return -1
+	if sDist < farClipPosition:
+		if sDist >= nearClipPosition:
+			while sDist >= pointDists[searchPoint]:
+				searchPoint += 1
+			rSprite.layer = zeroPoint - searchPoint
+			if searchPoint >= crestPoint:
+				rSprite.layer -= 600
+			var lerpfac := (sDist - pointDists[searchPoint - 1])/(pointDists[searchPoint] - pointDists[searchPoint - 1])
+			var px := lerpf(pointXs[searchPoint - 1], pointXs[searchPoint], lerpfac)
+			var py := lerpf(pointYs[searchPoint - 1], pointYs[searchPoint], lerpfac)
+			var sc := lerpf(pointScales[searchPoint - 1], pointScales[searchPoint], lerpfac)
+			var cScale := 1 / spr.scale
+			rSprite.visSprite.scale = Vector2(sc, sc) * cScale
+			px += logPos.x
+			py += logPos.y - cameraRelativePosition.y + spr.size.y * 0.5 * cScale
 			var ps := Vector2(px, -py)
 			ps *= sc
 			rSprite.screenPosition = ps + screenSize * 0.5
@@ -538,6 +669,26 @@ func SetTruePositionsOfStrip(strip: TexturedStrip, charpos: Vector2, searchPoint
 		return 0
 	else: return 0
 
+#Returns 0 if no sprite passed this frame, returns positive if grazeable, returns negative if not grazeable
+func GetDynamicSpritePassDistance(curDist: float, curXPos: float) -> float:
+	var passDist: float = 0.0
+	for i in range(firstDynamicSprite, firstDynamicSprite + numDynamicSpritesRendered):
+		var realInd := i % len(dynamicSprmngPool)
+		var curspr := dynamicSprmngPool[realInd]
+		if curspr.position.z <= curDist and not curspr.behindPlayer:
+			curspr.behindPlayer = true
+			passDist = absf(curspr.sprite.logicalPosition.x - curXPos)
+			if curspr.alreadyGrazed: passDist = -passDist
+			elif passDist <= 24.0: curspr.alreadyGrazed = true
+			break
+		elif curspr.position.z > curDist and curspr.behindPlayer:
+			curspr.behindPlayer = false
+			passDist = absf(curspr.sprite.logicalPosition.x - curXPos)
+			if curspr.alreadyGrazed: passDist = -passDist
+			elif passDist <= 24.0: curspr.alreadyGrazed = true
+			break
+	return passDist
+
 func SetBGOffsets(accumOffset: float) -> void:
 	bg1Offset = bg1TravelFactor * accumOffset
 	bg2Offset = bg2TravelFactor * accumOffset
@@ -567,6 +718,26 @@ func _ready() -> void:
 	spriteSpawnerPool.resize(64)
 	for i in range(len(spriteSpawnerPool)):
 		spriteSpawnerPool[i] = SpriteSpawner.new()
+	dynamicSprmngPool.resize(128)
+	for i in range(len(dynamicSprmngPool)):
+		dynamicSprmngPool[i] = DynamicSprite.new()
+		var curspr := dynamicSpriteScene.instantiate()
+		add_child(curspr)
+		curspr.colBox.shape = RectangleShape2D.new()
+		curspr.logicalPosition = Vector3(-6969.0, 420.0, 393939.0)
+		curspr.screenPosition = Vector2(-6969.0, 393939.0)
+		curspr.scale = Vector2(1.0, 1.0)
+		curspr.visible = false
+		curspr.monitoring = false
+		curspr.monitorable = false
+		curspr.process_mode = Node.PROCESS_MODE_DISABLED
+		dynamicSprmngPool[i].sprite = curspr
+	stepsSinceLastDynamicSpriteSpawnedInLane.resize(6)
+	for i in range(len(stepsSinceLastDynamicSpriteSpawnedInLane)):
+		stepsSinceLastDynamicSpriteSpawnedInLane[i] = 100
+	stepsSinceLastDynamicSpriteSpawnedThisType.resize(len(possibleDynamicSprites))
+	for i in range(len(stepsSinceLastDynamicSpriteSpawnedThisType)):
+		stepsSinceLastDynamicSpriteSpawnedThisType[i] = 100
 	stripPool.resize(64)
 	for i in range(len(stripPool)):
 		stripPool[i] = TexturedStrip.new()
@@ -717,6 +888,24 @@ func _process(delta: float) -> void:
 				firstStaticSprite += 1
 				firstStaticSprite %= len(staticSprmngPool)
 			startSearchPoint = 0
+	
+	TrySpawnDynamicSprite(dist + farClipPosition + 100.0)
+	startSearchPoint = 0
+	for i in range(firstDynamicSprite, firstDynamicSprite + numDynamicSpritesRendered):
+		var realInd := i % len(dynamicSprmngPool)
+		var curspr := dynamicSprmngPool[realInd]
+		startSearchPoint = curspr.PositionSprite(Vector2(xpos, dist), startSearchPoint)
+		if startSearchPoint < 0:
+			curspr.sprite.visible = false
+			curspr.sprite.monitoring = false
+			curspr.sprite.monitorable = false
+			curspr.sprite.process_mode = Node.PROCESS_MODE_DISABLED
+			if i == firstDynamicSprite:
+				numDynamicSpritesRendered -= 1
+				firstDynamicSprite += 1
+				firstDynamicSprite %= len(dynamicSprmngPool)
+			startSearchPoint = 0
+		elif not paused: curspr.position += curspr.velocity * delta
 	
 	var curClosestStripDist := 9999999999999.0
 	if nextStripSpawner < 0:

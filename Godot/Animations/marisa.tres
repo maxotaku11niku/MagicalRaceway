@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://bykj3i3yrxe8x"]
+
+[ext_resource type="Texture2D" uid="uid://brga00xgyam8o" path="res://Images/EntitySprites/marisa.png" id="1_k3bit"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eo7qo"]
+atlas = ExtResource("1_k3bit")
+region = Rect2(0, 0, 64, 72)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_eo7qo")
+}],
+"loop": true,
+"name": &"front",
+"speed": 5.0
+}]

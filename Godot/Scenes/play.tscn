@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://dvr3wf81xo871"]
+[gd_scene load_steps=38 format=3 uid="uid://dvr3wf81xo871"]
 
 [ext_resource type="Script" path="res://Scripts/PlayMaster.gd" id="1_dxmhm"]
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="2_8i8yp"]
@@ -23,10 +23,16 @@
 [ext_resource type="AudioStream" uid="uid://c3vlc4lu76act" path="res://Sounds/SFX/flying.wav" id="13_qswb0"]
 [ext_resource type="Texture2D" uid="uid://b01sg464srnsh" path="res://Images/road.png" id="14_6frcd"]
 [ext_resource type="PackedScene" uid="uid://bdeipj28d31gv" path="res://Scenes/Play/staticSprite.tscn" id="14_otp3g"]
+[ext_resource type="PackedScene" uid="uid://bbjci1uctjtb1" path="res://Scenes/Play/dynamicSprite.tscn" id="17_o486x"]
+[ext_resource type="SpriteFrames" uid="uid://cwnsryxwnplde" path="res://Animations/selfflyer1.tres" id="19_sl137"]
 [ext_resource type="Material" uid="uid://c4gp2oawlvfmo" path="res://Shaders/colMixMat.tres" id="20_8wav0"]
 [ext_resource type="Texture2D" uid="uid://dnrn2a2cnesqr" path="res://Images/BGSprites/hometownbg.png" id="20_16sbs"]
+[ext_resource type="SpriteFrames" uid="uid://ca44ugm4gge6g" path="res://Animations/broomrider1.tres" id="20_ekqpa"]
+[ext_resource type="SpriteFrames" uid="uid://ddpvw04pkfekd" path="res://Animations/carpetrider1.tres" id="21_qksvo"]
+[ext_resource type="SpriteFrames" uid="uid://c6ntlbtrk0dae" path="res://Animations/rocketrider1.tres" id="22_t83ds"]
 [ext_resource type="AudioStream" uid="uid://3qt73mhv37tq" path="res://Sounds/SFX/hit.wav" id="26_hsp02"]
 [ext_resource type="AudioStream" uid="uid://cv36707dexdhv" path="res://Sounds/SFX/smack.wav" id="26_x7jon"]
+[ext_resource type="SpriteFrames" uid="uid://bykj3i3yrxe8x" path="res://Animations/marisa.tres" id="27_oojrp"]
 [ext_resource type="AudioStream" uid="uid://dtp7aea7g2psr" path="res://Sounds/SFX/flyby.wav" id="28_8yqan"]
 [ext_resource type="AudioStream" uid="uid://cxs2wo4etpl6s" path="res://Sounds/SFX/checkpoint.wav" id="29_tt8sv"]
 
@@ -579,11 +585,15 @@ frame_progress = 0.462341
 
 [node name="FlyingSoundPlayer" type="AudioStreamPlayer" parent="PlayerSprite"]
 stream = ExtResource("13_qswb0")
+volume_db = -6.0
 bus = &"SFX"
 
 [node name="SplineRenderer" type="Node" parent="." node_paths=PackedStringArray("road", "sky", "bgLayer1Part1", "bgLayer1Part2", "bgLayer2Part1", "bgLayer2Part2")]
 script = ExtResource("8_esje0")
 staticSpriteScene = ExtResource("14_otp3g")
+dynamicSpriteScene = ExtResource("17_o486x")
+possibleDynamicSprites = Array[SpriteFrames]([ExtResource("27_oojrp"), ExtResource("19_sl137"), ExtResource("20_ekqpa"), ExtResource("21_qksvo"), ExtResource("22_t83ds")])
+possibleDynamicSpriteSizes = PackedVector2Array(64, 72, 64, 72, 64, 72, 64, 56, 64, 88)
 road = NodePath("RoadSpline")
 sky = NodePath("Sky")
 bgLayer1Part1 = NodePath("BGLayer1_1")

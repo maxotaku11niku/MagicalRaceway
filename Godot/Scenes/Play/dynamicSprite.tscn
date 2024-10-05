@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbjci1uctjtb1"]
+
+[ext_resource type="Script" path="res://Scripts/AnimatedRoadSprite.gd" id="1_6rk6y"]
+[ext_resource type="SpriteFrames" uid="uid://bykj3i3yrxe8x" path="res://Animations/marisa.tres" id="2_j174w"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wko72"]
+size = Vector2(8, 8)
+
+[node name="AnimatedRoadSprite" type="Area2D" node_paths=PackedStringArray("colBox", "visSprite")]
+script = ExtResource("1_6rk6y")
+colBox = NodePath("CollisionShape2D")
+visSprite = NodePath("AnimatedSprite2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_wko72")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_j174w")
+animation = &"front"

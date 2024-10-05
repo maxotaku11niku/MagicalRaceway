@@ -1,0 +1,18 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3 uid="uid://c6ntlbtrk0dae"]
+
+[ext_resource type="Texture2D" uid="uid://c7hcm0r56t4xt" path="res://Images/EntitySprites/rocketrider1.png" id="1_ih4vb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_thakn"]
+atlas = ExtResource("1_ih4vb")
+region = Rect2(0, 0, 64, 88)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_thakn")
+}],
+"loop": true,
+"name": &"front",
+"speed": 5.0
+}]

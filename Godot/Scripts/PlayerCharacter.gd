@@ -48,6 +48,7 @@ func _ready() -> void:
 	prevState = PASTATE_NORMAL
 	animationType = PASTATE_NORMAL
 	flyingSoundPlayer.stream = normalFlyingSound
+	flyingSoundPlayer.volume_db = -6.0
 	visSprite.play(&"idle_front")
 	visSprite.flip_h = false
 	lyingOnFloor = false
@@ -67,6 +68,7 @@ func _process(delta: float) -> void:
 		PASTATE_NORMAL:
 			lyingOnFloor = false
 			if prevState != animationType: flyingSoundPlayer.stream = normalFlyingSound
+			flyingSoundPlayer.volume_db = -6.0
 			if animationSpeed > 0.6:
 				if animationDir > 0.5:
 					visSprite.play(&"fast_turnweak", animationSpeed)
@@ -100,6 +102,7 @@ func _process(delta: float) -> void:
 		PASTATE_SKID:
 			lyingOnFloor = false
 			if prevState != animationType: flyingSoundPlayer.stream = skiddingSound
+			flyingSoundPlayer.volume_db = 0.0
 			visSprite.play(&"fast_turnstrong", animationSpeed)
 			if animationDir > 0.0:
 				visSprite.flip_h = true
@@ -108,6 +111,8 @@ func _process(delta: float) -> void:
 		PASTATE_SPIN:
 			lyingOnFloor = false
 			if prevState != animationType: flyingSoundPlayer.stream = skiddingSound
+			flyingSoundPlayer.volume_db = 0.0
+			flyingSoundPlayer.pitch_scale = 1.0
 			stateTimer -= delta
 			if stateTimer <= 0.0:
 				animationType = PASTATE_NORMAL

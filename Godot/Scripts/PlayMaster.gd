@@ -117,6 +117,7 @@ func ResetWithNewTrack(newTrack: TrackDefinition) -> void:
 	splineRenderer.bgList = currentTrack.bgList
 	splineRenderer.spriteList = currentTrack.spriteList
 	splineRenderer.stripList = currentTrack.stripList
+	splineRenderer.curDynamicSpriteSeparation = currentTrack.spriteSeparation
 	Reset()
 
 func _ready() -> void:
@@ -129,6 +130,7 @@ func _ready() -> void:
 	splineRenderer.bgList = currentTrack.bgList
 	splineRenderer.spriteList = currentTrack.spriteList
 	splineRenderer.stripList = currentTrack.stripList
+	splineRenderer.curDynamicSpriteSeparation = currentTrack.spriteSeparation
 	Reset()
 	runTimer = true
 
@@ -138,6 +140,7 @@ func _process(delta: float) -> void:
 	var brakeAmount: float = 0.0
 	match state:
 		PSTATE_COUNTDOWN:
+			splineRenderer.paused = true
 			playerSprite.gamePaused = true
 		PSTATE_PLAY:
 			if dist > nextCheckDist:
@@ -152,6 +155,7 @@ func _process(delta: float) -> void:
 					dist = nextCheckDist
 					finalScore = score + currentTrack.endScoreBonusFactor * time
 				else:
+					splineRenderer.curDynamicSpriteSeparation *= currentTrack.separationFactor
 					if stageNum >= len(currentTrack.timeList):
 						isFinalStage = true
 					else:
@@ -223,19 +227,28 @@ func _process(delta: float) -> void:
 			yspeed += (accelAmount * accelPower - brakeAmount * brakePower) * delta
 			if yspeed <= 0.0: yspeed = 0.0
 			var xspeed: float = turnPower * steerStrength
-			var centrifugalForce: float = - centrifugalFactor * yspeed * yspeed * splineRenderer.curXcurve
+			var turnxspeed: float = splineRenderer.curXcurve
+			var centrifugalForce: float = - centrifugalFactor * yspeed * yspeed * turnxspeed
 			centrifugalBalance = (xspeed + centrifugalForce) * delta
 			xpos += centrifugalBalance
 			if xspeed != 0.0: centrifugalBalance *= signf(xspeed)
-			else: centrifugalBalance *= signf(splineRenderer.curXcurve)
+			else: centrifugalBalance *= signf(turnxspeed)
 			playerSprite.setSkidding(centrifugalBalance < 0.0 and absf(steerStrength) > 0.95)
 			var onRoad: bool = splineRenderer.IsPlayerOnRoad()
 			edgeGrazeMult = splineRenderer.GetEdgeGrazeMultiplier(centrifugalForce) if onRoad else 1.0
 			score += pow(yspeed, 1.4) * edgeGrazeMult * delta
 			dist += delta * yspeed
-			accumulatedXOffset -= splineRenderer.curXcurve * yspeed * delta
+			if yspeed <= 600.0: splineRenderer.nextDynamicSpriteSpawnDistance = dist + 1000.0
+			else: splineRenderer.nextDynamicSpriteSpawnDistance += 600.0 * delta
+			accumulatedXOffset -= turnxspeed * yspeed * delta
 			var dfac: float = dragFactor if onRoad else offRoadDragFactor
 			yspeed -= delta * dfac * yspeed * yspeed * signf(yspeed)
+			var thisPassDist := splineRenderer.GetDynamicSpritePassDistance(dist, xpos)
+			if thisPassDist != 0.0:
+				oneShotSFXPlayers[PSFX_FLYBY].volume_db = 8.0 - absf(thisPassDist)
+				oneShotSFXPlayers[PSFX_FLYBY].play()
+				if thisPassDist > 0.0 and thisPassDist <= 24.0: #Graze!
+					score += (yspeed - 600.0)*exp(-thisPassDist*0.25)*(absf(turnxspeed)*absf(turnxspeed)*2000000.0 + 0.1)*1000.0
 			if runTimer: time -= delta
 			if xpos > splineRenderer.curSplit + 128.0:
 				playUI.displayGoBackNotif(true, 1)
@@ -246,12 +259,14 @@ func _process(delta: float) -> void:
 			if Input.is_action_pressed("pause"):
 				state = PSTATE_PAUSED
 				playUI.displayPauseScreen(true)
+				splineRenderer.paused = true
 				playerSprite.gamePaused = true
 		PSTATE_PAUSED:
 			pass
 		PSTATE_TRANSITION_TO_SCORES:
 			pass
 		PSTATE_LOSE:
+			splineRenderer.paused = true
 			playerSprite.gamePaused = true
 			timeToTransition -= delta
 			if timeToTransition <= 0.0:
@@ -303,13 +318,16 @@ func _process(delta: float) -> void:
 			runTimer = false if runTimer else true
 		if Input.is_action_just_pressed("dev_skipcheck"):
 			dist = nextCheckDist - 200.0
+			splineRenderer.nextDynamicSpriteSpawnDistance = dist + 1000.0
 			yspeed = 600.0
 		if Input.is_action_just_pressed("dev_resetplay"):
+			splineRenderer.curDynamicSpriteSeparation = currentTrack.spriteSeparation
 			Reset()
 
 func _onCountdownAnimationLooped() -> void:
 	state = PSTATE_PLAY
 	countdownSprite.visible = false
+	splineRenderer.paused = false
 	playerSprite.gamePaused = false
 	countdownSprite.stop()
 
@@ -333,8 +351,13 @@ func _onPlayerCollideWithObject(area: Area2D) -> void:
 			canCollide = false
 			crashStage = CSTATE_FLYING
 			playerSprite.crash()
-	elif area is AnimatedRoadSprite: #dynamic sprite
-		pass
+	elif area is AnimatedRoadSprite: #dynamic sprite -> spin out
+		var rsprite := area as AnimatedRoadSprite
+		lastCollisionSpeedDelta = yspeed - 600.0
+		lastCollisionAngle = atan2(xpos - rsprite.logicalPosition.x, rsprite.logicalPosition.z)
+		yspeed -= yspeed * collisionStrength * cos(lastCollisionAngle)
+		canCollide = false
+		playerSprite.spinOut()
 
 func _onPlayerStoppedSpinning() -> void:
 	canCollide = true
@@ -346,6 +369,7 @@ func _onPlayerLandedAfterCrash() -> void:
 func _onBackToGameButtonPressed() -> void:
 	state = PSTATE_PLAY
 	playUI.displayPauseScreen(false)
+	splineRenderer.paused = false
 	playerSprite.gamePaused = false
 
 func _onQuitButtonPressed() -> void:
