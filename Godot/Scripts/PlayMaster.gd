@@ -71,6 +71,7 @@ var yspeed: float
 var centrifugalBalance: float
 var accumulatedXOffset: float
 var accelHold: bool
+var cheated: bool
 
 var lastCollisionAngle: float
 var lastCollisionSpeedDelta: float
@@ -81,6 +82,9 @@ var resetXpos: float
 var resetFromXpos: float
 
 var runTimer: bool
+var newhs: HighScore
+var curHSGroup: HighScoreGroup
+var textCursorPosition: int
 
 func Reset() -> void:
 	state = PSTATE_COUNTDOWN
@@ -98,6 +102,7 @@ func Reset() -> void:
 	score = 0.0
 	accumulatedXOffset = 0.0
 	stageNum = 1
+	cheated = false
 	time = currentTrack.timeList[0].val
 	lastCheckDist = currentTrack.timeList[0].dist
 	if len(currentTrack.timeList) == 1:
@@ -120,6 +125,18 @@ func ResetWithNewTrack(newTrack: TrackDefinition) -> void:
 	splineRenderer.curDynamicSpriteSeparation = currentTrack.spriteSeparation
 	Reset()
 
+func CheckHighscore() -> bool:
+	newhs = HighScore.new()
+	newhs.name = PersistentDataHandler.lastHighScoreName
+	var realTime: float = 0.0
+	for i in range(0, stageNum):
+		realTime += currentTrack.timeList[i].val
+	realTime -= time
+	newhs.SetFromRaw(score, stageNum, realTime)
+	curHSGroup = PersistentDataHandler.findHighScoreGroup(currentTrack.trackName)
+	textCursorPosition = len(newhs.name)
+	return curHSGroup.CanAddNewHighScore(newhs)
+
 func _ready() -> void:
 	accelHold = PersistentDataHandler.accelhold
 	pspriteDepth = (playerSprite.colBox.shape as RectangleShape2D).size.y/2.0
@@ -133,6 +150,28 @@ func _ready() -> void:
 	splineRenderer.curDynamicSpriteSeparation = currentTrack.spriteSeparation
 	Reset()
 	runTimer = true
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if state == PSTATE_LEADERBOARD:
+		if event.pressed:
+			if event.unicode != 0:
+				if (textCursorPosition >= 13): newhs.name = newhs.name.erase(textCursorPosition, 9999)
+				newhs.name = newhs.name + String.chr(event.unicode)
+				textCursorPosition += 1
+			if event.keycode == KEY_BACKSPACE:
+				textCursorPosition -= 1
+				newhs.name = newhs.name.erase(textCursorPosition, 9999)
+				if textCursorPosition < 0: textCursorPosition = 0
+			elif event.keycode == KEY_ENTER:
+				curHSGroup.TryAddNewHighScore(newhs)
+				PersistentDataHandler.saveHighScoreFile(currentTrack.scoreFileName, curHSGroup)
+				PersistentDataHandler.lastHighScoreName = newhs.name
+				PersistentDataHandler.writeConfig()
+				playUI.updateScoreEntryDone()
+				timeToTransition = 3.0
+				state = PSTATE_RETURN_TO_MENU
+			if textCursorPosition >= 13: textCursorPosition = 13
+			playUI.updateScoreEntryScreen(newhs, textCursorPosition)
 
 func _process(delta: float) -> void:
 	var steerStrength: float = 0.0
@@ -270,7 +309,23 @@ func _process(delta: float) -> void:
 			playerSprite.gamePaused = true
 			timeToTransition -= delta
 			if timeToTransition <= 0.0:
-				sigPlayEnd.emit()
+				playUI.displayGameoverNotif(false)
+				# The player has cheated! No highscore for you!
+				if cheated:
+					timeToTransition = 10.0
+					playUI.ThePlayerHasBeenACheaterSoWeMustLetThemKnowThatTheyveBeenACheater(true)
+					MusicMaster.PlaySong(5, true)
+					state = PSTATE_RETURN_TO_MENU
+				else:
+					if CheckHighscore():
+						playUI.displayScoreEntryScreen(true, newhs)
+						playUI.updateScoreEntryScreen(newhs, textCursorPosition)
+						MusicMaster.PlaySong(7)
+						state = PSTATE_LEADERBOARD
+					else:
+						timeToTransition = 5.0
+						playUI.displayDidntMakeLeaderboardNotif(true)
+						state = PSTATE_RETURN_TO_MENU
 		PSTATE_WIN:
 			match winAnimationStage:
 				WSTATE_MOVING_TO_CENTER:
@@ -289,18 +344,37 @@ func _process(delta: float) -> void:
 					yspeed = 0.0
 					dist = currentTrack.endDistance + 2250.0
 					if timeToTransition <= 0.0 and timeBonusCountdownNum <= 0.0:
-						sigPlayEnd.emit()
+						playUI.displayWinNotif(false)
+						# The player has cheated! No highscore for you!
+						if cheated:
+							timeToTransition = 10.0
+							playUI.ThePlayerHasBeenACheaterSoWeMustLetThemKnowThatTheyveBeenACheater(true)
+							MusicMaster.PlaySong(5, true)
+							state = PSTATE_RETURN_TO_MENU
+						else:
+							if CheckHighscore():
+								playUI.displayScoreEntryScreen(true, newhs)
+								playUI.updateScoreEntryScreen(newhs, textCursorPosition)
+								MusicMaster.PlaySong(7)
+								state = PSTATE_LEADERBOARD
+							else:
+								timeToTransition = 5.0
+								playUI.displayDidntMakeLeaderboardNotif(true)
+								state = PSTATE_RETURN_TO_MENU
 			dist += delta * yspeed
 			timeToTransition -= delta
 			if timeBonusCountdownNum > 0.0:
 				timeBonusCountdownNum -= delta * 10.0
 				score += delta * 10.0 * currentTrack.endScoreBonusFactor
+				if (timeBonusCountdownNum <= 0.0): score = finalScore
 				playUI.updateWinNotif(timeBonusCountdownNum)
 			else:
 				score = finalScore
 			playUI.updateMainUI(score, time, yspeed, stageNum, 1.0, isFinalStage, 1.0)
 		PSTATE_RETURN_TO_MENU:
-			pass
+			timeToTransition -= delta
+			if timeToTransition <= 0.0:
+				sigPlayEnd.emit()
 		PSTATE_LEADERBOARD:
 			pass
 	splineRenderer.dist = dist
@@ -316,10 +390,12 @@ func _process(delta: float) -> void:
 	if playUI.DevScreen.visible:
 		if Input.is_action_just_pressed("dev_toggletimer"):
 			runTimer = false if runTimer else true
+			cheated = true # stopping the timer is cheating
 		if Input.is_action_just_pressed("dev_skipcheck"):
 			dist = nextCheckDist - 200.0
 			splineRenderer.nextDynamicSpriteSpawnDistance = dist + 1000.0
 			yspeed = 600.0
+			cheated = true # skipping checkpoints is cheating
 		if Input.is_action_just_pressed("dev_resetplay"):
 			splineRenderer.curDynamicSpriteSeparation = currentTrack.spriteSeparation
 			Reset()
@@ -341,7 +417,7 @@ func _onPlayerCollideWithObject(area: Area2D) -> void:
 			dist -= backSet
 			accumulatedXOffset += splineRenderer.curXcurve * backSet
 			yspeed = 0.0
-		elif yspeed < 600.0: #medium speed -> spin out
+		elif yspeed < 240.0: #medium speed -> spin out
 			lastCollisionSpeedDelta = yspeed
 			lastCollisionAngle = atan2(xpos - rsprite.logicalPosition.x, rsprite.logicalPosition.z)
 			yspeed -= yspeed * collisionStrength * cos(lastCollisionAngle)
@@ -350,6 +426,7 @@ func _onPlayerCollideWithObject(area: Area2D) -> void:
 		else: #high speed -> crash
 			canCollide = false
 			crashStage = CSTATE_FLYING
+			splineRenderer.SpawnPlayerBroom(dist, xpos, yspeed)
 			playerSprite.crash()
 	elif area is AnimatedRoadSprite: #dynamic sprite -> spin out
 		var rsprite := area as AnimatedRoadSprite

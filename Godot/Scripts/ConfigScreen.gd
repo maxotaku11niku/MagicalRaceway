@@ -12,6 +12,7 @@ const optionDescriptions =\
 	"Rebind controls to make them more comfortable for you.",\
 	"Reset everything to the default, including control bindings.",\
 	"Save your settings, press the back button if you don't want to save your settings.",\
+	"Hold the confirm button for 5 seconds to reset all your high scores. No going back from this!",\
 ]
 
 const chipNames = ["Off", "YM2203", "YM2608"]
@@ -27,6 +28,8 @@ var midSFXVol: float
 var midEmuChip: int
 var midAccelHold: bool
 var midCRTFilter: bool
+var resetTimer: float
+var afterResetTimer: float
 
 enum
 {
@@ -39,7 +42,8 @@ enum
 	SETTING_CRTFILTER,
 	SETTING_REBIND,
 	SETTING_RESET,
-	SETTING_SAVE
+	SETTING_SAVE,
+	SETTING_RESETHIGHSCORES
 }
 
 signal sigSFXVolTest
@@ -98,8 +102,11 @@ func _ready():
 	(settings[SETTING_CHIP] as Label).text = chipNames[midEmuChip]
 	(settings[SETTING_ACCELHOLD] as Label).text = "On" if midAccelHold else "Off"
 	(settings[SETTING_CRTFILTER] as Label).text = "On" if midCRTFilter else "Off"
+	resetTimer = 0.0
+	afterResetTimer = -1.0
 
 func _process(delta):
+	afterResetTimer -= delta
 	match selectedSetting:
 		SETTING_DMODE:
 			if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
@@ -151,6 +158,18 @@ func _process(delta):
 			if Input.is_action_just_pressed("ui_left") or Input.is_action_just_pressed("ui_right"):
 				midCRTFilter = not midCRTFilter
 				(settings[SETTING_CRTFILTER] as Label).text = "On" if midCRTFilter else "Off"
+		SETTING_RESETHIGHSCORES:
+			if Input.is_action_pressed("ui_accept"):
+				resetTimer += delta
+				if (afterResetTimer < 0.0): descriptionLabel.text = "%.1f seconds to reset, are you sure?" % (5.0 - resetTimer)
+				if resetTimer > 5.0:
+					PersistentDataHandler.resetHighScores()
+					resetTimer = 0.0
+					afterResetTimer = 5.0
+			else:
+				resetTimer = 0.0
+				descriptionLabel.text = optionDescriptions[SETTING_RESETHIGHSCORES]
+			if (afterResetTimer >= 0.0): descriptionLabel.text = "High scores reset! Hope you didn't regret it."
 
 func _exit_tree():
 	PersistentDataHandler.resetSettingsAfterDecline()

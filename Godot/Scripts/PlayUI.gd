@@ -8,6 +8,9 @@ extends Control
 @export var PauseUI: Control
 @export var GameoverNotification: Control
 @export var WinNotification: Control
+@export var ScoreEntryUI: Control
+@export var DidntMakeLeaderboardNotification: Control
+@export var PlayerHasBeenAFilthyCheaterNotification: Control
 # Main UI elements
 var scoreNum: Label
 var timeNum: Label
@@ -28,6 +31,10 @@ var goBackDir: Sprite2D
 # Win notification
 var bonusTimeLeft: Label
 var perSecondBonus: Label
+# Score entry UI elements
+var newEntry: HighScoreEntry
+var textPointer: Sprite2D
+var entryExplanation: Label
 # Pause buttons
 var backToGameButton: Button
 var quitToMenuButton: Button
@@ -61,6 +68,13 @@ func updateWinNotif(timeLeft: int) -> void:
 	if timeLeft <= 0.0: bonusTimeLeft.text = "0"
 	else: bonusTimeLeft.text = "%d" % timeLeft
 
+func updateScoreEntryScreen(newHighScore: HighScore, cursorPos: int) -> void:
+	newEntry.SetHighScore(newHighScore)
+	textPointer.position.x = 8.0 + 8.0 * cursorPos
+
+func updateScoreEntryDone() -> void:
+	entryExplanation.text = "Score saved successfully!"
+
 func updateDevScreen(dist: float, nextCheck: float, xoff: float, time: float, turnStr: float, split: float, pitchStr: float, cfugb: float) -> void:
 	if not DevScreen.visible: return
 	distNum.text = "%d" % dist
@@ -90,6 +104,19 @@ func displayWinNotif(display: bool, bonusPerSecond: int = 0) -> void:
 	if display:
 		perSecondBonus.text = "x%d0" % bonusPerSecond
 
+func displayDidntMakeLeaderboardNotif(display: bool) -> void:
+	DidntMakeLeaderboardNotification.visible = display
+	MainUI.visible = not display
+
+func ThePlayerHasBeenACheaterSoWeMustLetThemKnowThatTheyveBeenACheater(display: bool) -> void:
+	PlayerHasBeenAFilthyCheaterNotification.visible = display
+	MainUI.visible = not display
+
+func displayScoreEntryScreen(display: bool, newHighScore: HighScore) -> void:
+	ScoreEntryUI.visible = display
+	newEntry.SetHighScore(newHighScore)
+	MainUI.visible = not display
+
 func displayPauseScreen(display: bool) -> void:
 	PauseUI.visible = display
 	if display:
@@ -118,6 +145,10 @@ func _ready() -> void:
 	
 	bonusTimeLeft = WinNotification.find_child("TimeLeftCounter")
 	perSecondBonus = WinNotification.find_child("PerSecondBonus")
+	
+	newEntry = ScoreEntryUI.find_child("HighScoreEntry")
+	textPointer = ScoreEntryUI.find_child("Pointer")
+	entryExplanation = ScoreEntryUI.find_child("Explanation")
 	
 	backToGameButton = PauseUI.find_child("BackButton")
 	quitToMenuButton = PauseUI.find_child("QuitButton")

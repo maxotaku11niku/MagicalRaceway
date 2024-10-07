@@ -6,6 +6,8 @@ extends Node
 @export var dynamicSpriteScene: PackedScene
 @export var possibleDynamicSprites: Array[SpriteFrames]
 @export var possibleDynamicSpriteSizes: PackedVector2Array
+@export var playerBroomDynamicSprite: SpriteFrames
+@export var playerBroomDynamicSpriteSize: Vector2
 @export var road: Pseudo3DSpline
 @export var sky: Sky2D
 @export var bgLayer1Part1: Sprite2D
@@ -448,6 +450,34 @@ func TrySpawnDynamicSprite(dist: float) -> bool:
 		numDynamicSpritesRendered += 1
 		return true
 	return false
+
+func SpawnPlayerBroom(dist: float, curxpos: float, curyspeed: float) -> bool:
+	var curSprMng := dynamicSprmngPool[(firstDynamicSprite + numDynamicSpritesRendered) % len(dynamicSprmngPool)]
+	var curSprite := curSprMng.sprite
+	var spwnSide: int = StaticSpriteDefWithDistance.SPAWNSIDE_LEFT if curxpos < 0.0 else StaticSpriteDefWithDistance.SPAWNSIDE_RIGHT
+	var sc := 4.0
+	if spwnSide == StaticSpriteDefWithDistance.SPAWNSIDE_RIGHT: curSprMng.position = GetLogicalPositionOfSprite(dist, Vector2(curxpos - curSplit, 8.0), 0)
+	elif spwnSide == StaticSpriteDefWithDistance.SPAWNSIDE_LEFT: curSprMng.position = GetLogicalPositionOfSprite(dist, Vector2(curxpos + curSplit, 8.0), 0)
+	curSprMng.velocity = Vector3(0.0, 0.0, curyspeed)
+	curSprMng.scale = sc
+	curSprMng.splRend = self
+	curSprMng.size = playerBroomDynamicSpriteSize
+	curSprMng.side = spwnSide
+	curSprMng.behindPlayer = false
+	curSprMng.alreadyGrazed = true
+	curSprite.visSprite.sprite_frames = playerBroomDynamicSprite
+	curSprite.visSprite.play(&"front")
+	curSprite.animationType = 0
+	curSprite.animationDir = 0.0
+	curSprite.animationSpeed = 0.0
+	curSprite.layer = -4080
+	(curSprite.colBox.shape as RectangleShape2D).size.x = 32.0/sc
+	(curSprite.colBox.shape as RectangleShape2D).size.y = 32.0/sc
+	curSprite.monitorable = true
+	curSprite.visible = true
+	curSprite.process_mode = Node.PROCESS_MODE_INHERIT
+	numDynamicSpritesRendered += 1
+	return true
 
 func TryMakeNewStripSpawner() -> void:
 	var curStripDef := stripList[stripStartInd]

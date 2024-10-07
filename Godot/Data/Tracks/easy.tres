@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="TrackDefinition" load_steps=880 format=3 uid="uid://b8lrf14u8jd6j"]
+[gd_resource type="Resource" script_class="TrackDefinition" load_steps=903 format=3 uid="uid://b8lrf14u8jd6j"]
 
 [ext_resource type="Resource" uid="uid://bnfdxy8ct80tv" path="res://Data/BGDefinitions/hometown.tres" id="1_a7q8s"]
 [ext_resource type="Script" path="res://Scripts/TrackDefinition.gd" id="1_ideiy"]
@@ -11,6 +11,8 @@
 [ext_resource type="Resource" uid="uid://m1py3rcyyojc" path="res://Data/BGDefinitions/sweetland.tres" id="6_oqupn"]
 [ext_resource type="Script" path="res://Scripts/HackyDataContainers/StaticSpriteDefWithDistance.gd" id="6_qm6ro"]
 [ext_resource type="Resource" uid="uid://c7l2mj47xdjq" path="res://Data/StaticSpriteDefinitions/startBanner.tres" id="7_4p8nm"]
+[ext_resource type="Script" path="res://Scripts/HighScoreGroup.gd" id="8_1dcxk"]
+[ext_resource type="Script" path="res://Scripts/HighScore.gd" id="8_q1mxr"]
 [ext_resource type="Resource" uid="uid://ck3icx8ktx86p" path="res://Data/StaticSpriteDefinitions/crowd.tres" id="12_xbwj0"]
 [ext_resource type="Resource" uid="uid://b1x2w30muec2d" path="res://Data/StaticSpriteDefinitions/telephonePole_upright.tres" id="13_schvr"]
 [ext_resource type="Resource" uid="uid://e8cfijjklkse" path="res://Data/StaticSpriteDefinitions/roadSignRight.tres" id="14_g5hvp"]
@@ -208,6 +210,151 @@ dist = 197500.0
 script = ExtResource("3_xqcgh")
 cols = PackedColorArray(1, 0.709804, 0.776471, 1, 1, 0.647059, 0.321569, 1, 1, 1, 1, 1, 1, 0.968627, 0.776471, 1, 0.937255, 0.647059, 0.709804, 1, 0.870588, 0.580392, 0.192157, 1, 1, 0, 0, 1, 0.968627, 0.937255, 0.709804, 1, 0.388235, 0.937255, 1, 1, 0.352941, 0.905882, 1, 1, 0.321569, 0.870588, 0.968627, 1, 0.290196, 0.839216, 0.968627, 1, 0.223529, 0.807843, 0.937255, 1, 0.160784, 0.776471, 0.905882, 1, 0.0941176, 0.709804, 0.870588, 1, 0, 0.647059, 0.839216, 1)
 dist = 198000.0
+
+[sub_resource type="Resource" id="Resource_tkhb7"]
+script = ExtResource("8_q1mxr")
+name = "Maxim Hoxha"
+score = 9179212
+stage = 5
+time = 31963
+
+[sub_resource type="Resource" id="Resource_74gbk"]
+script = ExtResource("8_q1mxr")
+name = "Raymoo Hackery"
+score = 3800000
+stage = 5
+time = 38000
+
+[sub_resource type="Resource" id="Resource_0ko23"]
+script = ExtResource("8_q1mxr")
+name = "Marisus Ksamey"
+score = 3600000
+stage = 5
+time = 36000
+
+[sub_resource type="Resource" id="Resource_t3ita"]
+script = ExtResource("8_q1mxr")
+name = "Succya Izaboi"
+score = 3400000
+stage = 5
+time = 34000
+
+[sub_resource type="Resource" id="Resource_60hqc"]
+script = ExtResource("8_q1mxr")
+name = "Sanooee Gotcha"
+score = 3200000
+stage = 4
+time = 32000
+
+[sub_resource type="Resource" id="Resource_fdcsn"]
+script = ExtResource("8_q1mxr")
+name = "Yummy Gonepack"
+score = 3000000
+stage = 4
+time = 30000
+
+[sub_resource type="Resource" id="Resource_deyqp"]
+script = ExtResource("8_q1mxr")
+name = "Raisin Udonge"
+score = 2800000
+stage = 4
+time = 28000
+
+[sub_resource type="Resource" id="Resource_841kb"]
+script = ExtResource("8_q1mxr")
+name = "Yucurri Yakky"
+score = 2600000
+stage = 4
+time = 26000
+
+[sub_resource type="Resource" id="Resource_qxnmq"]
+script = ExtResource("8_q1mxr")
+name = "Remilia Scrlt"
+score = 2400000
+stage = 3
+time = 24000
+
+[sub_resource type="Resource" id="Resource_hjrh5"]
+script = ExtResource("8_q1mxr")
+name = "MimaIsNotGone!"
+score = 2200000
+stage = 3
+time = 22000
+
+[sub_resource type="Resource" id="Resource_vw3qs"]
+script = ExtResource("8_q1mxr")
+name = "KanaccOfMoriya"
+score = 2000000
+stage = 3
+time = 20000
+
+[sub_resource type="Resource" id="Resource_aw4pc"]
+script = ExtResource("8_q1mxr")
+name = "YuyukoEatALot"
+score = 1800000
+stage = 3
+time = 18000
+
+[sub_resource type="Resource" id="Resource_jmmk4"]
+script = ExtResource("8_q1mxr")
+name = "    pilf ajieS"
+score = 1600000
+stage = 2
+time = 16000
+
+[sub_resource type="Resource" id="Resource_5pmkw"]
+script = ExtResource("8_q1mxr")
+name = "Purest Junko"
+score = 1400000
+stage = 2
+time = 14000
+
+[sub_resource type="Resource" id="Resource_r7c21"]
+script = ExtResource("8_q1mxr")
+name = "alway rember"
+score = 1200000
+stage = 2
+time = 12000
+
+[sub_resource type="Resource" id="Resource_mft3n"]
+script = ExtResource("8_q1mxr")
+name = "Utsuhoe NUCULR"
+score = 1000000
+stage = 2
+time = 10000
+
+[sub_resource type="Resource" id="Resource_nmgoa"]
+script = ExtResource("8_q1mxr")
+name = "lily white"
+score = 800000
+stage = 1
+time = 8000
+
+[sub_resource type="Resource" id="Resource_rq6d0"]
+script = ExtResource("8_q1mxr")
+name = "Clownpiss¤¤¤¤¤"
+score = 600000
+stage = 1
+time = 6000
+
+[sub_resource type="Resource" id="Resource_85acl"]
+script = ExtResource("8_q1mxr")
+name = "¤X-Æ-A-12¤µ¼ß£"
+score = 400000
+stage = 1
+time = 4000
+
+[sub_resource type="Resource" id="Resource_u5fud"]
+script = ExtResource("8_q1mxr")
+name = "crino"
+score = 200000
+stage = 1
+time = 2000
+
+[sub_resource type="Resource" id="Resource_51wk6"]
+script = ExtResource("8_1dcxk")
+name = "EASY"
+highScores = Array[ExtResource("8_q1mxr")]([SubResource("Resource_tkhb7"), SubResource("Resource_74gbk"), SubResource("Resource_0ko23"), SubResource("Resource_t3ita"), SubResource("Resource_60hqc"), SubResource("Resource_fdcsn"), SubResource("Resource_deyqp"), SubResource("Resource_841kb"), SubResource("Resource_qxnmq"), SubResource("Resource_hjrh5"), SubResource("Resource_vw3qs"), SubResource("Resource_aw4pc"), SubResource("Resource_jmmk4"), SubResource("Resource_5pmkw"), SubResource("Resource_r7c21"), SubResource("Resource_mft3n"), SubResource("Resource_nmgoa"), SubResource("Resource_rq6d0"), SubResource("Resource_85acl"), SubResource("Resource_u5fud")])
 
 [sub_resource type="Resource" id="Resource_23gn6"]
 script = ExtResource("4_vtvig")
@@ -6745,6 +6892,7 @@ dist = 250000.0
 script = ExtResource("1_ideiy")
 trackName = "EASY"
 scoreFileName = "easy"
+defaultHighScores = SubResource("Resource_51wk6")
 endDistance = 250000.0
 spriteSeparation = 200.0
 separationFactor = 0.9

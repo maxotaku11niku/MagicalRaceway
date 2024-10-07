@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=3 uid="uid://62qoxf5o08j6"]
+
+[ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_pvs34"]
+[ext_resource type="Script" path="res://Scripts/HighScoreEntry.gd" id="1_sm41r"]
+
+[node name="HighScoreEntry" type="Control" node_paths=PackedStringArray("nameLabel", "scoreLabel", "stageLabel", "timeLabel")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 304.0
+offset_bottom = 8.0
+theme = ExtResource("1_pvs34")
+script = ExtResource("1_sm41r")
+nameLabel = NodePath("NameLabel")
+scoreLabel = NodePath("ScoreLabel")
+stageLabel = NodePath("StageLabel")
+timeLabel = NodePath("TimeLabel")
+
+[node name="NameLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(112, 1.45519e-11)
+layout_mode = 0
+offset_right = 112.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "Name"
+
+[node name="ScoreLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(88, 1.45519e-11)
+layout_mode = 0
+offset_left = 112.0
+offset_right = 200.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "0"
+horizontal_alignment = 2
+
+[node name="StageLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(16, 1.45519e-11)
+layout_mode = 0
+offset_left = 208.0
+offset_right = 224.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "0"
+horizontal_alignment = 2
+
+[node name="TimeLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(72, 1.45519e-11)
+layout_mode = 0
+offset_left = 232.0
+offset_right = 304.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 0.776471, 0, 1)
+text = "0'00.00\""
+horizontal_alignment = 2

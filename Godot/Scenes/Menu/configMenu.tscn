@@ -11,7 +11,7 @@ offset_bottom = 240.0
 theme = ExtResource("1_2yf33")
 script = ExtResource("2_ui2i5")
 initSetting = NodePath("DisplayModeSetting")
-settings = [NodePath("DisplayModeSetting"), NodePath("ResolutionSetting"), NodePath("MusicVolSetting"), NodePath("SFXVolSetting"), NodePath("MusicEmuSetting"), NodePath("AccelholdSetting"), NodePath("CRTFilterSetting"), NodePath("RebindButton"), NodePath("ResetButton"), NodePath("SaveButton")]
+settings = [NodePath("DisplayModeSetting"), NodePath("ResolutionSetting"), NodePath("MusicVolSetting"), NodePath("SFXVolSetting"), NodePath("MusicEmuSetting"), NodePath("AccelholdSetting"), NodePath("CRTFilterSetting"), NodePath("RebindButton"), NodePath("ResetButton"), NodePath("SaveButton"), NodePath("ResetScoresButton")]
 descriptionLabel = NodePath("Description")
 
 [node name="DisplayModeLabel" type="Label" parent="."]
@@ -212,11 +212,33 @@ offset_left = 16.0
 offset_top = 152.0
 offset_right = 120.0
 offset_bottom = 160.0
+focus_neighbor_left = NodePath("../ResetScoresButton")
 focus_neighbor_top = NodePath("../ResetButton")
+focus_neighbor_right = NodePath("../ResetScoresButton")
 focus_neighbor_bottom = NodePath("../DisplayModeSetting")
 focus_next = NodePath("../DisplayModeSetting")
 focus_previous = NodePath("../ResetButton")
 text = "Save Settings"
+
+[node name="ResetScoresButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 152.0
+offset_right = 304.0
+offset_bottom = 160.0
+focus_neighbor_left = NodePath("../SaveButton")
+focus_neighbor_top = NodePath("../ResetButton")
+focus_neighbor_right = NodePath("../SaveButton")
+focus_neighbor_bottom = NodePath("../DisplayModeSetting")
+focus_next = NodePath("../DisplayModeSetting")
+focus_previous = NodePath("../ResetButton")
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+text = "Reset Highscores"
+alignment = 2
 
 [node name="Description" type="Label" parent="."]
 layout_mode = 0
@@ -240,3 +262,4 @@ text_overrun_behavior = 2
 [connection signal="focus_entered" from="ResetButton" to="." method="_onSettingSelected" binds= [8]]
 [connection signal="button_down" from="SaveButton" to="." method="_onSaveSettings"]
 [connection signal="focus_entered" from="SaveButton" to="." method="_onSettingSelected" binds= [9]]
+[connection signal="focus_entered" from="ResetScoresButton" to="." method="_onSettingSelected" binds= [10]]

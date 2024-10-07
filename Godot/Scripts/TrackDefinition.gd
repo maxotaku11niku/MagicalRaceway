@@ -4,6 +4,7 @@ extends Resource
 
 @export var trackName: String
 @export var scoreFileName: String
+@export var defaultHighScores: HighScoreGroup
 @export var endDistance: float
 @export var spriteSeparation: float
 @export var separationFactor: float

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="TrackDefinition" load_steps=235 format=3 uid="uid://bq5nrx5x6cix7"]
+[gd_resource type="Resource" script_class="TrackDefinition" load_steps=258 format=3 uid="uid://bq5nrx5x6cix7"]
 
 [ext_resource type="Resource" uid="uid://cmy3ropit2sh" path="res://Data/BGDefinitions/bluefields.tres" id="1_5fu51"]
 [ext_resource type="Script" path="res://Scripts/HackyDataContainers/ColourListWithDistance.gd" id="1_d4ysk"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://Scripts/HackyDataContainers/BGSpriteDefWithDistance.gd" id="2_6hhld"]
 [ext_resource type="Script" path="res://Scripts/HackyDataContainers/FloatWithDistance.gd" id="3_3w41p"]
 [ext_resource type="Resource" uid="uid://bnfdxy8ct80tv" path="res://Data/BGDefinitions/hometown.tres" id="3_kly2k"]
+[ext_resource type="Script" path="res://Scripts/HighScore.gd" id="5_yc3lv"]
+[ext_resource type="Script" path="res://Scripts/HighScoreGroup.gd" id="6_64y5b"]
 [ext_resource type="Script" path="res://Scripts/HackyDataContainers/StaticSpriteDefWithDistance.gd" id="7_qgwub"]
 [ext_resource type="Resource" uid="uid://dbmmrghdf8ajn" path="res://Data/StaticSpriteDefinitions/purplePole.tres" id="8_7nnqs"]
 [ext_resource type="Resource" uid="uid://c7l2mj47xdjq" path="res://Data/StaticSpriteDefinitions/startBanner.tres" id="9_qsp6c"]
@@ -56,6 +58,151 @@ dist = 47500.0
 script = ExtResource("1_d4ysk")
 cols = PackedColorArray(0.678431, 0.388235, 0.160784, 1, 0.741176, 0.45098, 0.223529, 1, 1, 1, 1, 1, 0.223529, 0.968627, 0.352941, 1, 0.741176, 0.45098, 0.223529, 1, 0.741176, 0.45098, 0.223529, 1, 1, 0.192157, 0.192157, 1, 0.290196, 1, 0.419608, 1, 0.517647, 1, 1, 1, 0.482353, 0.968627, 0.968627, 1, 0.482353, 0.937255, 0.937255, 1, 0.45098, 0.905882, 0.905882, 1, 0.45098, 0.870588, 0.870588, 1, 0.419608, 0.839216, 0.839216, 1, 0.419608, 0.807843, 0.807843, 1, 0.388235, 0.776471, 0.776471, 1)
 dist = 48000.0
+
+[sub_resource type="Resource" id="Resource_1q2q4"]
+script = ExtResource("5_yc3lv")
+name = "Maxim Hoxha"
+score = 5286004
+stage = 2
+time = 13441
+
+[sub_resource type="Resource" id="Resource_wpin5"]
+script = ExtResource("5_yc3lv")
+name = "Raymoo Hackery"
+score = 1900000
+stage = 2
+time = 19000
+
+[sub_resource type="Resource" id="Resource_mfd3s"]
+script = ExtResource("5_yc3lv")
+name = "Marisus Ksamey"
+score = 1800000
+stage = 2
+time = 18000
+
+[sub_resource type="Resource" id="Resource_uocmf"]
+script = ExtResource("5_yc3lv")
+name = "Succya Izaboi"
+score = 1700000
+stage = 2
+time = 17000
+
+[sub_resource type="Resource" id="Resource_jsluf"]
+script = ExtResource("5_yc3lv")
+name = "Sanooee Gotcha"
+score = 1600000
+stage = 2
+time = 16000
+
+[sub_resource type="Resource" id="Resource_b08dc"]
+script = ExtResource("5_yc3lv")
+name = "Yummy Gonepack"
+score = 1500000
+stage = 2
+time = 15000
+
+[sub_resource type="Resource" id="Resource_khanx"]
+script = ExtResource("5_yc3lv")
+name = "Raisin Udonge"
+score = 1400000
+stage = 2
+time = 14000
+
+[sub_resource type="Resource" id="Resource_6tlsj"]
+script = ExtResource("5_yc3lv")
+name = "Yucurri Yakky"
+score = 1300000
+stage = 2
+time = 13000
+
+[sub_resource type="Resource" id="Resource_x3t34"]
+script = ExtResource("5_yc3lv")
+name = "Remilia Scrlt"
+score = 1200000
+stage = 2
+time = 12000
+
+[sub_resource type="Resource" id="Resource_evqb7"]
+script = ExtResource("5_yc3lv")
+name = "MimaIsNotGone!"
+score = 1100000
+stage = 2
+time = 11000
+
+[sub_resource type="Resource" id="Resource_fkwjh"]
+script = ExtResource("5_yc3lv")
+name = "KanaccOfMoriya"
+score = 1000000
+stage = 1
+time = 10000
+
+[sub_resource type="Resource" id="Resource_jn0ch"]
+script = ExtResource("5_yc3lv")
+name = "YuyukoEatALot"
+score = 900000
+stage = 1
+time = 9000
+
+[sub_resource type="Resource" id="Resource_fqvw8"]
+script = ExtResource("5_yc3lv")
+name = "    pilf ajieS"
+score = 800000
+stage = 1
+time = 8000
+
+[sub_resource type="Resource" id="Resource_tg7x5"]
+script = ExtResource("5_yc3lv")
+name = "Purest Junko"
+score = 700000
+stage = 1
+time = 7000
+
+[sub_resource type="Resource" id="Resource_65fn4"]
+script = ExtResource("5_yc3lv")
+name = "alway rember"
+score = 600000
+stage = 1
+time = 6000
+
+[sub_resource type="Resource" id="Resource_es7p2"]
+script = ExtResource("5_yc3lv")
+name = "Utsuhoe NUCULR"
+score = 500000
+stage = 1
+time = 5000
+
+[sub_resource type="Resource" id="Resource_ed3v6"]
+script = ExtResource("5_yc3lv")
+name = "lily white"
+score = 400000
+stage = 1
+time = 4000
+
+[sub_resource type="Resource" id="Resource_x46ck"]
+script = ExtResource("5_yc3lv")
+name = "Clownpiss¤¤¤¤¤"
+score = 300000
+stage = 1
+time = 3000
+
+[sub_resource type="Resource" id="Resource_g05ef"]
+script = ExtResource("5_yc3lv")
+name = "¤X-Æ-A-12¤µ¼ß£"
+score = 200000
+stage = 1
+time = 2000
+
+[sub_resource type="Resource" id="Resource_o7lb5"]
+script = ExtResource("5_yc3lv")
+name = "crino"
+score = 100000
+stage = 1
+time = 1000
+
+[sub_resource type="Resource" id="Resource_kmy42"]
+script = ExtResource("6_64y5b")
+name = "TEST"
+highScores = Array[ExtResource("5_yc3lv")]([SubResource("Resource_1q2q4"), SubResource("Resource_wpin5"), SubResource("Resource_mfd3s"), SubResource("Resource_uocmf"), SubResource("Resource_jsluf"), SubResource("Resource_b08dc"), SubResource("Resource_khanx"), SubResource("Resource_6tlsj"), SubResource("Resource_x3t34"), SubResource("Resource_evqb7"), SubResource("Resource_fkwjh"), SubResource("Resource_jn0ch"), SubResource("Resource_fqvw8"), SubResource("Resource_tg7x5"), SubResource("Resource_65fn4"), SubResource("Resource_es7p2"), SubResource("Resource_ed3v6"), SubResource("Resource_x46ck"), SubResource("Resource_g05ef"), SubResource("Resource_o7lb5")])
 
 [sub_resource type="Resource" id="Resource_p2ria"]
 script = ExtResource("3_3w41p")
@@ -991,7 +1138,7 @@ offset = Vector2(-24, 32)
 baseScale = 1.0
 flip = false
 flipOnOtherSide = false
-canCollide = true
+canCollide = false
 dist = 96000.0
 
 [sub_resource type="Resource" id="Resource_mpr8s"]
@@ -1451,6 +1598,7 @@ dist = 100000.0
 script = ExtResource("1_qw6nd")
 trackName = "TEST"
 scoreFileName = "test"
+defaultHighScores = SubResource("Resource_kmy42")
 endDistance = 100000.0
 spriteSeparation = 130.0
 separationFactor = 0.6
