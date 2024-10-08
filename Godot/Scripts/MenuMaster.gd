@@ -188,6 +188,8 @@ func _process(delta: float) -> void:
 				nextScene = keybindsMenuScene
 			_:
 				return
+		# Force the title music back on if we were just in the muic room
+		if (prevScreenNum == MSCREEN_MUSICROOM): MusicMaster.PlaySong(0)
 		leftPointer.visible = false
 		rightPointer.visible = false
 		UIRoot.remove_child(currentScreen)

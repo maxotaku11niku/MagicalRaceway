@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dxryubh7uc4di"]
 
 [ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_2aoyw"]
-[ext_resource type="Script" path="res://Scripts/MenuScreen.gd" id="2_bnkud"]
+[ext_resource type="Script" path="res://Scripts/MusicRoom.gd" id="2_77gyv"]
 [ext_resource type="Texture2D" uid="uid://bqprbsprl6t3g" path="res://Images/UIElements/piano.png" id="3_rw666"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_q0e1x"]
@@ -26,13 +26,17 @@ texture_region_size = Vector2i(24, 8)
 tile_size = Vector2i(24, 8)
 sources/0 = SubResource("TileSetAtlasSource_q0e1x")
 
-[node name="MusicMenu" type="Control"]
+[node name="MusicMenu" type="Control" node_paths=PackedStringArray("songTitleLabel", "songDescLabel", "pianoTilemap")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
 offset_bottom = 240.0
 theme = ExtResource("1_2aoyw")
-script = ExtResource("2_bnkud")
+script = ExtResource("2_77gyv")
+songTitleLabel = NodePath("SongTitle")
+songDescLabel = NodePath("SongDescription")
+pianoTilemap = NodePath("Piano")
+songDescriptions = PackedStringArray("Title song\nThis one\'s very magical girl-like, which is very fitting, of course. I mean, this game is supposed to be quite silly, but the title song quickly gets a little serious. What does that mean? It means the composer had no idea what he was doing. Hope it gets you in the mood anyway.", "Game song 1\nBell-like magical sounds aplenty in this one. Its structure is very simple, but that also means it\'s quite boring. But it also happens to be what I think is the happiest in-game song. You can probably guess what that says about the other three.", "Game song 2\nYes, this one\'s more serious than the first game song, with a little silly bit in the middle. String-like instruments feature heavily in this song, which are a strength of FM synthesis. It still doesn\'t quite sound like a real instrument, but it\'s still pretty good!", "Game song 3\nMmm, serious as well, but I think this is my personal favourite so far. I think its structure is quite similar to the second game song (and the fourth one). Quite depressing that happened. Still, I guess the seriousness is quite justified because it certainly can\'t be relaxing gripping onto a stick for dear life flying at 270 km/h or so.", "Game song 4\nTime for something a bit slower, which is a bit unusual compared to the other fast-paced songs. Ok, it isn\'t slow at all. But it\'s quite mystic, and odd sometimes. Then it gets happy in the middle, even though the main melody is the same as an earlier part. But why the hell did all these songs turn out so serious?!", "Gameover jingle\nI call it a \'jingle\' because it\'s short. Anyway this depressing tune plays when you lose, so I bet you\'ll come to hate it. You\'re welcome.", "Win jingle\nHuzzah, a winner is you! It\'s gotta be happy because you just won the game when you hear this. Unless, of course you\'re here in the music room, then you haven\'t won anything. I almost think it\'s a bit too cliché of a jingle, but there we go.", "Score entry song\nThe happiest song in the game, and at a very appropriate time too. Or not, if you lost the game but still got enough points. You\'ll notice it doesn\'t take long for the song to loop, and there\'s a very good reason for that: it doesn\'t take long to enter your name. In fact, it may even be too long.", "Credits song\nThis song will be used for the credits roll. It\'s a slow song that reuses some of the melody of the title theme, because motifs or something like that. It suddenly changes midway through too. It\'s pretty short because the credits are short too: me, the software I used and some special thanks. I... don\'t even know what the point of it is, actually.")
 
 [node name="RoomTitle" type="Label" parent="."]
 layout_mode = 0
@@ -69,9 +73,9 @@ layer_0/tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 0, 1, 0, 0, 65537, 0, 0,
 layout_mode = 0
 offset_left = 16.0
 offset_top = 120.0
-offset_right = 120.0
+offset_right = 72.0
 offset_bottom = 128.0
-text = "0: Song Title"
+text = "0: oops"
 
 [node name="SongDescription" type="Label" parent="."]
 layout_mode = 0
