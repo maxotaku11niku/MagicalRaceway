@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://r3lotwoipgni"]
+[gd_scene load_steps=21 format=3 uid="uid://r3lotwoipgni"]
 
 [ext_resource type="Script" path="res://Scripts/GameMaster.gd" id="1_gajsv"]
 [ext_resource type="PackedScene" uid="uid://c5t43awjac242" path="res://Scenes/intro.tscn" id="2_cthp8"]
@@ -11,6 +11,9 @@
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="6_57tq2"]
 [ext_resource type="Material" uid="uid://bieiewe54142o" path="res://Shaders/crtMaskMat.tres" id="6_g3001"]
 [ext_resource type="Material" uid="uid://da3mp8s4tu8k2" path="res://Shaders/crtBeamMat.tres" id="7_y41ig"]
+[ext_resource type="Texture2D" uid="uid://bkn2l104amhl4" path="res://Images/UIElements/touchButtons.png" id="12_ft17q"]
+[ext_resource type="Script" path="res://Scripts/TouchControlScreen.gd" id="12_mbhvj"]
+[ext_resource type="Script" path="res://Scripts/TouchSlider.gd" id="14_ahbkj"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_70j5o"]
 viewport_path = NodePath("PostContainer/ScanlinedContainer")
@@ -18,7 +21,19 @@ viewport_path = NodePath("PostContainer/ScanlinedContainer")
 [sub_resource type="ViewportTexture" id="ViewportTexture_o3r2o"]
 viewport_path = NodePath("MainContainer/MainScreen")
 
-[node name="GameMaster" type="Node" node_paths=PackedStringArray("virtualScreen", "displayRoot", "mainContainer", "viewportCover", "fakeTextInterface", "scanlinedContainer", "postContainer", "postScreen", "crtScanlines")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_75wq0"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ow5na"]
+size = Vector2(72, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bl5gu"]
+size = Vector2(56, 72)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jb4rn"]
+size = Vector2(72, 72)
+
+[node name="GameMaster" type="Node" node_paths=PackedStringArray("virtualScreen", "displayRoot", "mainContainer", "viewportCover", "fakeTextInterface", "scanlinedContainer", "postContainer", "postScreen", "crtScanlines", "menuTouchControls", "playTouchControls")]
 script = ExtResource("1_gajsv")
 introScene = ExtResource("2_cthp8")
 menuScene = ExtResource("3_rvgnx")
@@ -33,6 +48,8 @@ scanlinedContainer = NodePath("PostContainer/ScanlinedContainer")
 postContainer = NodePath("PostContainer")
 postScreen = NodePath("PostScreen")
 crtScanlines = NodePath("PostContainer/ScanlinedContainer/CRTScanlines")
+menuTouchControls = NodePath("MenuTouchControls")
+playTouchControls = NodePath("PlayTouchControls")
 
 [node name="PostContainer" type="SubViewportContainer" parent="."]
 visible = false
@@ -117,3 +134,129 @@ size_flags_vertical = 3
 texture = SubResource("ViewportTexture_o3r2o")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="MenuTouchControls" type="Node2D" parent="." node_paths=PackedStringArray("controlNodes")]
+visible = false
+z_index = 4090
+script = ExtResource("12_mbhvj")
+controlNodes = [NodePath("DPad"), NodePath("ConfirmButton"), NodePath("CancelButton")]
+anchorPoints = PackedByteArray(3, 2, 2)
+basePositions = PackedVector2Array(272, 192, 48, 192, 128, 192)
+
+[node name="DPad" type="Sprite2D" parent="MenuTouchControls"]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(272, 192)
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(64, 48, 72, 80)
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="MenuTouchControls/DPad"]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_75wq0")
+action = "ui_up"
+
+[node name="TouchScreenButton2" type="TouchScreenButton" parent="MenuTouchControls/DPad"]
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_75wq0")
+action = "ui_down"
+
+[node name="TouchScreenButton3" type="TouchScreenButton" parent="MenuTouchControls/DPad"]
+position = Vector2(-28, -4)
+shape = SubResource("RectangleShape2D_75wq0")
+action = "ui_left"
+
+[node name="TouchScreenButton4" type="TouchScreenButton" parent="MenuTouchControls/DPad"]
+position = Vector2(28, -4)
+shape = SubResource("RectangleShape2D_75wq0")
+action = "ui_right"
+
+[node name="ConfirmButton" type="Sprite2D" parent="MenuTouchControls"]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(48, 192)
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(0, 64, 64, 64)
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="MenuTouchControls/ConfirmButton"]
+shape = SubResource("RectangleShape2D_ow5na")
+action = "ui_accept"
+
+[node name="CancelButton" type="Sprite2D" parent="MenuTouchControls"]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(128, 192)
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(136, 64, 64, 64)
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="MenuTouchControls/CancelButton"]
+shape = SubResource("RectangleShape2D_ow5na")
+action = "ui_cancel"
+
+[node name="PlayTouchControls" type="Node2D" parent="." node_paths=PackedStringArray("controlNodes")]
+visible = false
+z_index = 4090
+script = ExtResource("12_mbhvj")
+controlNodes = [NodePath("AccelButton"), NodePath("BrakeButton"), NodePath("PauseButton"), NodePath("SteerSlider")]
+anchorPoints = PackedByteArray(3, 3, 0, 2)
+basePositions = PackedVector2Array(280, 192, 216, 192, 40, 40, 72, 192)
+
+[node name="AccelButton" type="Sprite2D" parent="PlayTouchControls"]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(280, 192)
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(176, 0, 48, 64)
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="PlayTouchControls/AccelButton"]
+shape = SubResource("RectangleShape2D_bl5gu")
+action = "accel"
+
+[node name="BrakeButton" type="Sprite2D" parent="PlayTouchControls"]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(216, 192)
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(200, 64, 48, 64)
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="PlayTouchControls/BrakeButton"]
+shape = SubResource("RectangleShape2D_bl5gu")
+action = "brake"
+
+[node name="PauseButton" type="Sprite2D" parent="PlayTouchControls"]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(40, 40)
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="PlayTouchControls/PauseButton"]
+shape = SubResource("RectangleShape2D_jb4rn")
+action = "pause"
+
+[node name="SteerSlider" type="Node2D" parent="PlayTouchControls" node_paths=PackedStringArray("slider")]
+modulate = Color(1, 1, 1, 0.392157)
+position = Vector2(72, 192)
+script = ExtResource("14_ahbkj")
+slider = NodePath("Slider")
+baseRect = Rect2(-72, -40, 144, 80)
+maxLeft = 48.0
+maxRight = 48.0
+actionLeft = &"steer_left"
+actionRight = &"steer_right"
+
+[node name="SliderBackground" type="NinePatchRect" parent="PlayTouchControls/SteerSlider"]
+offset_left = -64.0
+offset_top = -24.0
+offset_right = 64.0
+offset_bottom = 24.0
+texture = ExtResource("12_ft17q")
+region_rect = Rect2(64, 0, 64, 48)
+patch_margin_left = 30
+patch_margin_right = 30
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Slider" type="Sprite2D" parent="PlayTouchControls/SteerSlider"]
+texture = ExtResource("12_ft17q")
+region_enabled = true
+region_rect = Rect2(128, 0, 48, 48)

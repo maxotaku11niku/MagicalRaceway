@@ -220,38 +220,26 @@ class TexturedStripSpawner:
 
 func SetSplinePositioningParameters() -> void:
 	# Calculate spline parameters
-	var xAngle: float
-	var yAngle: float
-	var xCurve: float
-	var yCurve: float
-	var xDev: float
-	var yDev: float
-	var xc0: float
-	var xc1: float
-	var yc0: float
-	var yc1: float
-	var sa0: float
-	var sa1: float
+	var xAngle: float = 0.0
+	var yAngle: float = 0.0
+	var xDev: float = 0.0
+	var yDev: float = 0.0
+	var xc0: float = 0.0
+	var xc1: float = 0.0
+	var yc0: float = 0.0
+	var yc1: float = 0.0
+	var sa0: float = 0.0
+	var sa1: float = 0.0
 	var tsInd := turnStrStartInd
 	var psInd := pitchStrStartInd
 	var saInd := splitAmtStartInd
-	xAngle = 0.0
-	yAngle = 0.0
-	xDev = 0.0
-	yDev = 0.0
-	xc0 = 0.0
-	xc1 = 0.0
-	yc0 = 0.0
-	yc1 = 0.0
-	sa0 = 0.0
-	sa1 = 0.0
 	var dlerpx: float = 0.0
 	var dlerpy: float = 0.0
 	var dlerps: float = 0.0
 	# Backwards trace to near clipping plane
 	for i in range(zeroPoint, -1, -1):
-		xCurve = lerpf(xc0, xc1, dlerpx)
-		yCurve = lerpf(yc0, yc1, dlerpy)
+		var xCurve: float = lerpf(xc0, xc1, dlerpx)
+		var yCurve: float = lerpf(yc0, yc1, dlerpy)
 		pointSplits[i] = lerpf(sa0, sa1, dlerps)
 		pointXs[i] = 0.0
 		pointYs[i] = 0.0
@@ -292,8 +280,8 @@ func SetSplinePositioningParameters() -> void:
 				saInd += 1
 				sa0 = splitAmtList[saInd].val
 				sa1 = splitAmtList[saInd + 1].val
-		xCurve = clampf(remap(realDist, turnStrList[tsInd].dist, turnStrList[tsInd + 1].dist, xc0, xc1), minf(xc0, xc1), maxf(xc0, xc1))
-		yCurve = clampf(remap(realDist, pitchStrList[psInd].dist, pitchStrList[psInd + 1].dist, yc0, yc1), minf(yc0, yc1), maxf(yc0, yc1))
+		var xCurve: float = clampf(remap(realDist, turnStrList[tsInd].dist, turnStrList[tsInd + 1].dist, xc0, xc1), minf(xc0, xc1), maxf(xc0, xc1))
+		var yCurve: float = clampf(remap(realDist, pitchStrList[psInd].dist, pitchStrList[psInd + 1].dist, yc0, yc1), minf(yc0, yc1), maxf(yc0, yc1))
 		pointSplits[i] = clampf(remap(realDist, splitAmtList[saInd].dist, splitAmtList[saInd + 1].dist, sa0, sa1), minf(sa0, sa1), maxf(sa0, sa1))
 		var dy: float = pointDists[i] - pointDists[i-1]
 		if xAngle <= (-PI * 0.5): # Extreme angle -> escape value

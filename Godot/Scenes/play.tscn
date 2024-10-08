@@ -637,6 +637,7 @@ autowrap_mode = 2
 
 [node name="FilthyEffingCheaterNotif" type="Label" parent="PlayUIRoot"]
 visible = false
+layout_mode = 0
 offset_left = 16.0
 offset_top = 32.0
 offset_right = 160.0

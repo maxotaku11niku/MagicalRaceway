@@ -93,8 +93,12 @@ func readConfig() -> void:
 		writeDefaultConfig()
 
 func setAccordingToConfigSettings() -> void:
-	get_tree().root.mode = Window.MODE_FULLSCREEN if fullscreen else Window.MODE_WINDOWED
-	get_tree().root.size = Vector2i(320 * resmult, 240 * resmult)
+	if DisplayServer.has_feature(DisplayServer.FEATURE_SUBWINDOWS):
+		get_tree().root.mode = Window.MODE_FULLSCREEN if fullscreen else Window.MODE_WINDOWED
+		get_tree().root.size = Vector2i(320 * resmult, 240 * resmult)
+	else: # Force fullscreen display if we can't use windows
+		get_tree().root.mode = Window.MODE_FULLSCREEN
+		get_tree().root.size = DisplayServer.screen_get_size()
 	AudioServer.set_bus_volume_db(2, linear_to_db(float(bgmvol)/100.0))
 	AudioServer.set_bus_volume_db(1, linear_to_db(float(sfxvol)/100.0))
 	if gm != null: gm.configureCRTFilter(CRTfilter)

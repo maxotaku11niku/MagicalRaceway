@@ -63,6 +63,8 @@ enum
 @export var postContainer: SubViewportContainer
 @export var postScreen: TextureRect
 @export var crtScanlines: ColorRect
+@export var menuTouchControls: TouchControlScreen
+@export var playTouchControls: TouchControlScreen
 
 var YM2608Regs: Array[int]
 var currTrack: TrackDefinition
@@ -107,6 +109,26 @@ func _onMenuEnd(selectedTrack: int, songNum: int) -> void:
 func _onPlayEnd() -> void:
 	curState = MSTATE_MENU
 
+func _onShowMenuControls() -> void:
+	if (OS.has_feature("mobile")):
+		menuTouchControls.visible = true
+		playTouchControls.visible = false
+		menuTouchControls.process_mode = Node.PROCESS_MODE_INHERIT
+		playTouchControls.process_mode = Node.PROCESS_MODE_DISABLED
+
+func _onShowPlayControls() -> void:
+	if (OS.has_feature("mobile")):
+		menuTouchControls.visible = false
+		playTouchControls.visible = true
+		menuTouchControls.process_mode = Node.PROCESS_MODE_DISABLED
+		playTouchControls.process_mode = Node.PROCESS_MODE_INHERIT
+
+func _onShowNoControls() -> void:
+	menuTouchControls.visible = false
+	playTouchControls.visible = false
+	menuTouchControls.process_mode = Node.PROCESS_MODE_DISABLED
+	playTouchControls.process_mode = Node.PROCESS_MODE_DISABLED
+
 func _ready() -> void:
 	curState = -1
 	prevState = -1
@@ -117,6 +139,7 @@ func _ready() -> void:
 	CRTfilteron = false
 	PersistentDataHandler.setAsGameMaster(self)
 	YM2608Regs.resize(0x1D0)
+	_onShowNoControls()
 
 func _process(delta: float) -> void:
 	#State change -> need to load a new root scene
@@ -133,11 +156,16 @@ func _process(delta: float) -> void:
 				screenRoot = menuScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigMenuEnd.connect(_onMenuEnd)
+				_onShowMenuControls()
 			MSTATE_PLAYTIME:
 				screenRoot = playScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigPlayEnd.connect(_onPlayEnd)
+				screenRoot.sigShowMenuControls.connect(_onShowMenuControls)
+				screenRoot.sigShowPlayControls.connect(_onShowPlayControls)
+				screenRoot.sigShowNoControls.connect(_onShowNoControls)
 				screenRoot.ResetWithNewTrack(currTrack)
+				_onShowPlayControls()
 			_:
 				fakeTextInterface.visible = true
 		prevState = curState

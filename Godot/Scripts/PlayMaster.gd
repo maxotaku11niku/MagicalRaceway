@@ -1,6 +1,9 @@
 extends Node
 
 signal sigPlayEnd
+signal sigShowMenuControls
+signal sigShowPlayControls
+signal sigShowNoControls
 
 enum
 {
@@ -169,6 +172,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				PersistentDataHandler.writeConfig()
 				playUI.updateScoreEntryDone()
 				timeToTransition = 3.0
+				if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+					DisplayServer.virtual_keyboard_hide()
 				state = PSTATE_RETURN_TO_MENU
 			if textCursorPosition >= 13: textCursorPosition = 13
 			playUI.updateScoreEntryScreen(newhs, textCursorPosition)
@@ -187,6 +192,7 @@ func _process(delta: float) -> void:
 					playUI.displayWinNotif(true, currentTrack.endScoreBonusFactor)
 					state = PSTATE_WIN
 					MusicMaster.PlaySong(6)
+					sigShowNoControls.emit()
 					winAnimationStage = WSTATE_MOVING_TO_CENTER
 					timeBonusCountdownNum = time
 					timeToTransition = 4.0
@@ -223,6 +229,7 @@ func _process(delta: float) -> void:
 					if yspeed <= 0.0:
 						playUI.displayGameoverNotif(true)
 						state = PSTATE_LOSE
+						sigShowNoControls.emit()
 						MusicMaster.PlaySong(5)
 						playerSprite.gamePaused = true
 						timeToTransition = 10.0
@@ -243,6 +250,7 @@ func _process(delta: float) -> void:
 						if time <= 0.0: #if this happens, it would be extra embarassing for the player
 							playUI.displayGameoverNotif(true)
 							state = PSTATE_LOSE
+							sigShowNoControls.emit()
 							MusicMaster.PlaySong(5)
 							playerSprite.gamePaused = true
 							timeToTransition = 10.0
@@ -300,6 +308,7 @@ func _process(delta: float) -> void:
 				playUI.displayPauseScreen(true)
 				splineRenderer.paused = true
 				playerSprite.gamePaused = true
+				sigShowMenuControls.emit()
 		PSTATE_PAUSED:
 			pass
 		PSTATE_TRANSITION_TO_SCORES:
@@ -321,6 +330,8 @@ func _process(delta: float) -> void:
 						playUI.displayScoreEntryScreen(true, newhs)
 						playUI.updateScoreEntryScreen(newhs, textCursorPosition)
 						MusicMaster.PlaySong(7)
+						if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+							DisplayServer.virtual_keyboard_show(PersistentDataHandler.lastHighScoreName)
 						state = PSTATE_LEADERBOARD
 					else:
 						timeToTransition = 5.0
@@ -356,6 +367,8 @@ func _process(delta: float) -> void:
 								playUI.displayScoreEntryScreen(true, newhs)
 								playUI.updateScoreEntryScreen(newhs, textCursorPosition)
 								MusicMaster.PlaySong(7)
+								if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+									DisplayServer.virtual_keyboard_show(PersistentDataHandler.lastHighScoreName)
 								state = PSTATE_LEADERBOARD
 							else:
 								timeToTransition = 5.0
@@ -376,7 +389,8 @@ func _process(delta: float) -> void:
 			if timeToTransition <= 0.0:
 				sigPlayEnd.emit()
 		PSTATE_LEADERBOARD:
-			pass
+			# Prevent a softlock on mobile platforms
+			if (DisplayServer.virtual_keyboard_get_height() <= 0): DisplayServer.virtual_keyboard_show("")
 	splineRenderer.dist = dist
 	splineRenderer.xpos = xpos
 	splineRenderer.SetBGOffsets(accumulatedXOffset)
@@ -448,6 +462,8 @@ func _onBackToGameButtonPressed() -> void:
 	playUI.displayPauseScreen(false)
 	splineRenderer.paused = false
 	playerSprite.gamePaused = false
+	sigShowPlayControls.emit()
 
 func _onQuitButtonPressed() -> void:
+	sigShowNoControls.emit()
 	sigPlayEnd.emit()
