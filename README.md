@@ -9,6 +9,4 @@ This game is licensed under CC-BY-NC (Creative Commons Attribution-Noncommercial
 ## This repository
 This is the source code and assets to Magical Raceway. Although this game is a Unity project, all that is contained here would be enough to reconstruct the game in pretty much any environment, if you have enough time, that is. You can open an issue if you have a bug to report or something to request, and I will respond.
 
-Code from [Bamboo Tracker](https://github.com/BambooTracker/BambooTracker) used for Yamaha YM2608 (PC-9801-86) emulation and .btm file playback.
-
-Code from ymfm used for Yamaha YM2608 (PC-9801-86) emulation. I've used the version embedded in PMDWin available [here](http://c60.la.coocan.jp/index.html) under their downloads page, which has the source code.
+Code from [Bamboo Tracker](https://github.com/BambooTracker/BambooTracker) used for Yamaha YM2608 (PC-9801-86) emulation and .btm file playback. See [BambooTrackerPlayer](https://github.com/maxotaku11niku/BambooTrackerPlayer) for more details. If you clone this repository remember to put the release files from there into `Godot/bin/`.
