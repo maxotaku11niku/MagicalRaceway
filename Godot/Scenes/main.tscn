@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://r3lotwoipgni"]
+[gd_scene load_steps=23 format=3 uid="uid://r3lotwoipgni"]
 
 [ext_resource type="Script" path="res://Scripts/GameMaster.gd" id="1_gajsv"]
 [ext_resource type="PackedScene" uid="uid://c5t43awjac242" path="res://Scenes/intro.tscn" id="2_cthp8"]
@@ -11,9 +11,16 @@
 [ext_resource type="Resource" uid="uid://bq5nrx5x6cix7" path="res://Data/Tracks/test.tres" id="6_57tq2"]
 [ext_resource type="Material" uid="uid://bieiewe54142o" path="res://Shaders/crtMaskMat.tres" id="6_g3001"]
 [ext_resource type="Material" uid="uid://da3mp8s4tu8k2" path="res://Shaders/crtBeamMat.tres" id="7_y41ig"]
+[ext_resource type="Texture2D" uid="uid://dvea7s8p7gyxt" path="res://Images/UIElements/fadeanim.png" id="10_t5gvh"]
 [ext_resource type="Texture2D" uid="uid://bkn2l104amhl4" path="res://Images/UIElements/touchButtons.png" id="12_ft17q"]
 [ext_resource type="Script" path="res://Scripts/TouchControlScreen.gd" id="12_mbhvj"]
 [ext_resource type="Script" path="res://Scripts/TouchSlider.gd" id="14_ahbkj"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h5l0e"]
+texture = ExtResource("10_t5gvh")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+region_rect = Rect2(24, 24, 8, 8)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_70j5o"]
 viewport_path = NodePath("PostContainer/ScanlinedContainer")
@@ -48,6 +55,7 @@ scanlinedContainer = NodePath("PostContainer/ScanlinedContainer")
 postContainer = NodePath("PostContainer")
 postScreen = NodePath("PostScreen")
 crtScanlines = NodePath("PostContainer/ScanlinedContainer/CRTScanlines")
+transitionPanel = SubResource("StyleBoxTexture_h5l0e")
 menuTouchControls = NodePath("MenuTouchControls")
 playTouchControls = NodePath("PlayTouchControls")
 
@@ -105,6 +113,12 @@ size_2d_override = Vector2i(320, 240)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
+[node name="TransitionPanel" type="Panel" parent="MainContainer/MainScreen"]
+z_index = 4079
+offset_right = 320.0
+offset_bottom = 240.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_h5l0e")
+
 [node name="TextLayer" type="Label" parent="MainContainer/MainScreen"]
 z_index = 4080
 custom_minimum_size = Vector2(320, 240)
@@ -145,7 +159,7 @@ basePositions = PackedVector2Array(272, 192, 48, 192, 128, 192)
 
 [node name="DPad" type="Sprite2D" parent="MenuTouchControls"]
 modulate = Color(1, 1, 1, 0.392157)
-position = Vector2(272, 192)
+position = Vector2(48, 192)
 texture = ExtResource("12_ft17q")
 region_enabled = true
 region_rect = Rect2(64, 48, 72, 80)
@@ -172,7 +186,7 @@ action = "ui_right"
 
 [node name="ConfirmButton" type="Sprite2D" parent="MenuTouchControls"]
 modulate = Color(1, 1, 1, 0.392157)
-position = Vector2(48, 192)
+position = Vector2(272, 192)
 texture = ExtResource("12_ft17q")
 region_enabled = true
 region_rect = Rect2(0, 64, 64, 64)
@@ -183,7 +197,7 @@ action = "ui_accept"
 
 [node name="CancelButton" type="Sprite2D" parent="MenuTouchControls"]
 modulate = Color(1, 1, 1, 0.392157)
-position = Vector2(128, 192)
+position = Vector2(192, 192)
 texture = ExtResource("12_ft17q")
 region_enabled = true
 region_rect = Rect2(136, 64, 64, 64)

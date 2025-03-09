@@ -1,5 +1,6 @@
 extends Node
 
+signal sigMenuTransition(inTime: float, outTime: float)
 signal sigPlayEnd
 signal sigShowMenuControls
 signal sigShowPlayControls
@@ -14,7 +15,8 @@ enum
 	PSTATE_LOSE,
 	PSTATE_WIN,
 	PSTATE_RETURN_TO_MENU,
-	PSTATE_LEADERBOARD
+	PSTATE_LEADERBOARD,
+	PSTATE_TRANSITION_ANIMATION
 }
 
 enum
@@ -387,10 +389,16 @@ func _process(delta: float) -> void:
 		PSTATE_RETURN_TO_MENU:
 			timeToTransition -= delta
 			if timeToTransition <= 0.0:
-				sigPlayEnd.emit()
+				state = PSTATE_TRANSITION_ANIMATION
+				sigMenuTransition.emit(1.0, 0.25)
+				timeToTransition = 1.0
 		PSTATE_LEADERBOARD:
 			# Prevent a softlock on mobile platforms
 			if (DisplayServer.virtual_keyboard_get_height() <= 0): DisplayServer.virtual_keyboard_show("")
+		PSTATE_TRANSITION_ANIMATION:
+			timeToTransition -= delta
+			if timeToTransition <= 0.0:
+				sigPlayEnd.emit()
 	splineRenderer.dist = dist
 	splineRenderer.xpos = xpos
 	splineRenderer.SetBGOffsets(accumulatedXOffset)
@@ -466,4 +474,6 @@ func _onBackToGameButtonPressed() -> void:
 
 func _onQuitButtonPressed() -> void:
 	sigShowNoControls.emit()
-	sigPlayEnd.emit()
+	state = PSTATE_TRANSITION_ANIMATION
+	sigMenuTransition.emit(1.0, 0.25)
+	timeToTransition = 1.0

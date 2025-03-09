@@ -50,6 +50,14 @@ enum
 	MSTATE_MAX
 }
 
+enum
+{
+	TSTATE_OFF,
+	TSTATE_IN,
+	TSTATE_LOAD,
+	TSTATE_OUT
+}
+
 @export var introScene: PackedScene
 @export var menuScene: PackedScene
 @export var playScene: PackedScene
@@ -63,6 +71,7 @@ enum
 @export var postContainer: SubViewportContainer
 @export var postScreen: TextureRect
 @export var crtScanlines: ColorRect
+@export var transitionPanel: StyleBoxTexture
 @export var menuTouchControls: TouchControlScreen
 @export var playTouchControls: TouchControlScreen
 
@@ -76,6 +85,11 @@ var prevState: int
 var screenRoot: Node
 var ym2608RegViewVisible: bool
 var CRTfilteron: bool
+var transitionStage: int
+var transitionState: int
+var transitionInTime: float
+var transitionOutTime: float
+var transitionNextStageTime: float
 
 func configureCRTFilter(enabled: bool) -> void:
 	if enabled == CRTfilteron: return
@@ -109,6 +123,13 @@ func _onMenuEnd(selectedTrack: int, songNum: int) -> void:
 func _onPlayEnd() -> void:
 	curState = MSTATE_MENU
 
+func _onDoTransitionAnimation(inTime: float, outTime: float) -> void:
+	transitionInTime = inTime
+	transitionOutTime = outTime
+	transitionState = TSTATE_IN
+	transitionStage = 15
+	transitionNextStageTime = inTime/15.0
+
 func _onShowMenuControls() -> void:
 	if (OS.has_feature("mobile")):
 		menuTouchControls.visible = true
@@ -134,6 +155,8 @@ func _ready() -> void:
 	prevState = -1
 	startupLine = 0
 	framesToNextLine = 5
+	transitionStage = 15
+	transitionState = TSTATE_OFF
 	startupDone = false
 	ym2608RegViewVisible = false
 	CRTfilteron = false
@@ -142,8 +165,32 @@ func _ready() -> void:
 	_onShowNoControls()
 
 func _process(delta: float) -> void:
+	if transitionState == TSTATE_LOAD: transitionState = TSTATE_OUT
+	match(transitionState):
+		TSTATE_OFF:
+			transitionStage = 15
+			transitionPanel.region_rect = Rect2(24, 24, 8, 8)
+		TSTATE_IN:
+			if transitionNextStageTime <= 0.0:
+				transitionStage -= 1
+				transitionNextStageTime = transitionInTime/15.0
+				if transitionStage <= 0:
+					transitionState = TSTATE_LOAD
+			transitionNextStageTime -= delta
+			transitionPanel.region_rect = Rect2((transitionStage % 4) * 8, (transitionStage/4) * 8, 8, 8)
+		TSTATE_LOAD:
+			transitionStage = 0
+			transitionPanel.region_rect = Rect2(0, 0, 8, 8)
+		TSTATE_OUT:
+			if transitionNextStageTime <= 0.0:
+				transitionStage += 1
+				transitionNextStageTime = transitionOutTime/15.0
+				if transitionStage >= 15:
+					transitionState = TSTATE_OFF
+			transitionNextStageTime -= delta
+			transitionPanel.region_rect = Rect2((transitionStage % 4) * 8 + 8, (transitionStage/4) * 8, -8, 8)
 	#State change -> need to load a new root scene
-	if curState != prevState:
+	if curState != prevState and (transitionState == TSTATE_OFF or transitionState == TSTATE_LOAD):
 		if screenRoot != null:
 			displayRoot.remove_child(screenRoot)
 			screenRoot.free()
@@ -156,11 +203,13 @@ func _process(delta: float) -> void:
 				screenRoot = menuScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigMenuEnd.connect(_onMenuEnd)
+				screenRoot.sigMenuTransition.connect(_onDoTransitionAnimation)
 				_onShowMenuControls()
 			MSTATE_PLAYTIME:
 				screenRoot = playScene.instantiate()
 				displayRoot.add_child(screenRoot)
 				screenRoot.sigPlayEnd.connect(_onPlayEnd)
+				screenRoot.sigMenuTransition.connect(_onDoTransitionAnimation)
 				screenRoot.sigShowMenuControls.connect(_onShowMenuControls)
 				screenRoot.sigShowPlayControls.connect(_onShowPlayControls)
 				screenRoot.sigShowNoControls.connect(_onShowNoControls)

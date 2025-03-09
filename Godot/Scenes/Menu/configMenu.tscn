@@ -3,18 +3,26 @@
 [ext_resource type="Theme" uid="uid://dtf1n084l1n64" path="res://Images/UIElements/defaultTheme.tres" id="1_2yf33"]
 [ext_resource type="Script" path="res://Scripts/ConfigScreen.gd" id="2_ui2i5"]
 
-[node name="ConfigMenu" type="Control" node_paths=PackedStringArray("initSetting", "settings", "descriptionLabel")]
+[node name="ConfigMenu" type="Control" node_paths=PackedStringArray("initSetting", "settings", "descriptionLabel", "mainScreen", "controlsScreen")]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
 offset_bottom = 240.0
+focus_mode = 2
 theme = ExtResource("1_2yf33")
 script = ExtResource("2_ui2i5")
-initSetting = NodePath("DisplayModeSetting")
-settings = [NodePath("DisplayModeSetting"), NodePath("ResolutionSetting"), NodePath("MusicVolSetting"), NodePath("SFXVolSetting"), NodePath("MusicEmuSetting"), NodePath("AccelholdSetting"), NodePath("CRTFilterSetting"), NodePath("RebindButton"), NodePath("ResetButton"), NodePath("SaveButton"), NodePath("ResetScoresButton")]
-descriptionLabel = NodePath("Description")
+initSetting = NodePath("MainConfigScreen/DisplayModeSetting")
+settings = [NodePath("MainConfigScreen/DisplayModeSetting"), NodePath("MainConfigScreen/ResolutionSetting"), NodePath("MainConfigScreen/MusicVolSetting"), NodePath("MainConfigScreen/SFXVolSetting"), NodePath("MainConfigScreen/MusicEmuSetting"), NodePath("MainConfigScreen/AccelholdSetting"), NodePath("MainConfigScreen/CRTFilterSetting"), NodePath("MainConfigScreen/RebindButton"), NodePath("MainConfigScreen/ResetButton"), NodePath("MainConfigScreen/SaveButton"), NodePath("MainConfigScreen/ResetScoresButton"), NodePath("ControlConfigScreen/DeviceSetting"), NodePath("ControlConfigScreen/AccelSetting"), NodePath("ControlConfigScreen/BrakeSetting"), NodePath("ControlConfigScreen/RightSetting"), NodePath("ControlConfigScreen/LeftSetting"), NodePath("ControlConfigScreen/PauseSetting"), NodePath("ControlConfigScreen/SaveControlsButton")]
+descriptionLabel = NodePath("MainConfigScreen/Description")
+mainScreen = NodePath("MainConfigScreen")
+controlsScreen = NodePath("ControlConfigScreen")
 
-[node name="DisplayModeLabel" type="Label" parent="."]
+[node name="MainConfigScreen" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+
+[node name="DisplayModeLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 8.0
@@ -22,7 +30,7 @@ offset_right = 104.0
 offset_bottom = 16.0
 text = "Display Mode"
 
-[node name="DisplayModeSetting" type="Label" parent="."]
+[node name="DisplayModeSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 8.0
@@ -38,15 +46,15 @@ focus_mode = 2
 text = "Windowed"
 horizontal_alignment = 2
 
-[node name="ResolutionLabel" type="Label" parent="."]
+[node name="ResolutionLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 24.0
-offset_right = 104.0
+offset_right = 144.0
 offset_bottom = 32.0
 text = "Window Resolution"
 
-[node name="ResolutionSetting" type="Label" parent="."]
+[node name="ResolutionSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 24.0
@@ -62,7 +70,7 @@ focus_mode = 2
 text = "640x480"
 horizontal_alignment = 2
 
-[node name="MusicVolLabel" type="Label" parent="."]
+[node name="MusicVolLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 40.0
@@ -70,7 +78,7 @@ offset_right = 104.0
 offset_bottom = 48.0
 text = "Music Volume"
 
-[node name="MusicVolSetting" type="Label" parent="."]
+[node name="MusicVolSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 40.0
@@ -86,7 +94,7 @@ focus_mode = 2
 text = "100%"
 horizontal_alignment = 2
 
-[node name="SFXVolLabel" type="Label" parent="."]
+[node name="SFXVolLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 56.0
@@ -94,7 +102,7 @@ offset_right = 88.0
 offset_bottom = 64.0
 text = "SFX Volume"
 
-[node name="SFXVolSetting" type="Label" parent="."]
+[node name="SFXVolSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 56.0
@@ -110,15 +118,15 @@ focus_mode = 2
 text = "100%"
 horizontal_alignment = 2
 
-[node name="MusicEmuLabel" type="Label" parent="."]
+[node name="MusicEmuLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 72.0
-offset_right = 104.0
+offset_right = 160.0
 offset_bottom = 80.0
 text = "Soundchip Emulation"
 
-[node name="MusicEmuSetting" type="Label" parent="."]
+[node name="MusicEmuSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 72.0
@@ -134,7 +142,7 @@ focus_mode = 2
 text = "YM2608"
 horizontal_alignment = 2
 
-[node name="AccelholdLabel" type="Label" parent="."]
+[node name="AccelholdLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 88.0
@@ -142,7 +150,7 @@ offset_right = 136.0
 offset_bottom = 96.0
 text = "Accelerator Hold"
 
-[node name="AccelholdSetting" type="Label" parent="."]
+[node name="AccelholdSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 88.0
@@ -158,7 +166,7 @@ focus_mode = 2
 text = "Off"
 horizontal_alignment = 2
 
-[node name="CRTFilterLabel" type="Label" parent="."]
+[node name="CRTFilterLabel" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 104.0
@@ -166,7 +174,7 @@ offset_right = 88.0
 offset_bottom = 112.0
 text = "CRT Filter"
 
-[node name="CRTFilterSetting" type="Label" parent="."]
+[node name="CRTFilterSetting" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 104.0
@@ -182,7 +190,7 @@ focus_mode = 2
 text = "Off"
 horizontal_alignment = 2
 
-[node name="RebindButton" type="Button" parent="."]
+[node name="RebindButton" type="Button" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 120.0
@@ -194,7 +202,7 @@ focus_next = NodePath("../ResetButton")
 focus_previous = NodePath("../CRTFilterSetting")
 text = "Rebind Controls"
 
-[node name="ResetButton" type="Button" parent="."]
+[node name="ResetButton" type="Button" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 136.0
@@ -206,7 +214,7 @@ focus_next = NodePath("../SaveButton")
 focus_previous = NodePath("../RebindButton")
 text = "Reset to Defaults"
 
-[node name="SaveButton" type="Button" parent="."]
+[node name="SaveButton" type="Button" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 16.0
 offset_top = 152.0
@@ -220,7 +228,7 @@ focus_next = NodePath("../DisplayModeSetting")
 focus_previous = NodePath("../ResetButton")
 text = "Save Settings"
 
-[node name="ResetScoresButton" type="Button" parent="."]
+[node name="ResetScoresButton" type="Button" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 176.0
 offset_top = 152.0
@@ -240,7 +248,7 @@ theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 text = "Reset Highscores"
 alignment = 2
 
-[node name="Description" type="Label" parent="."]
+[node name="Description" type="Label" parent="MainConfigScreen"]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 168.0
@@ -250,16 +258,176 @@ text = "Describe setting here"
 autowrap_mode = 2
 text_overrun_behavior = 2
 
-[connection signal="focus_entered" from="DisplayModeSetting" to="." method="_onSettingSelected" binds= [0]]
-[connection signal="focus_entered" from="ResolutionSetting" to="." method="_onSettingSelected" binds= [1]]
-[connection signal="focus_entered" from="MusicVolSetting" to="." method="_onSettingSelected" binds= [2]]
-[connection signal="focus_entered" from="SFXVolSetting" to="." method="_onSettingSelected" binds= [3]]
-[connection signal="focus_entered" from="MusicEmuSetting" to="." method="_onSettingSelected" binds= [4]]
-[connection signal="focus_entered" from="AccelholdSetting" to="." method="_onSettingSelected" binds= [5]]
-[connection signal="focus_entered" from="CRTFilterSetting" to="." method="_onSettingSelected" binds= [6]]
-[connection signal="focus_entered" from="RebindButton" to="." method="_onSettingSelected" binds= [7]]
-[connection signal="button_down" from="ResetButton" to="." method="_onResetSettings"]
-[connection signal="focus_entered" from="ResetButton" to="." method="_onSettingSelected" binds= [8]]
-[connection signal="button_down" from="SaveButton" to="." method="_onSaveSettings"]
-[connection signal="focus_entered" from="SaveButton" to="." method="_onSettingSelected" binds= [9]]
-[connection signal="focus_entered" from="ResetScoresButton" to="." method="_onSettingSelected" binds= [10]]
+[node name="ControlConfigScreen" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 240.0
+
+[node name="DeviceLabel" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 48.0
+offset_bottom = 16.0
+text = "Device"
+
+[node name="DeviceSetting" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 8.0
+offset_right = 304.0
+offset_bottom = 16.0
+focus_neighbor_top = NodePath("../SaveControlsButton")
+focus_neighbor_bottom = NodePath("../AccelSetting")
+focus_next = NodePath("../AccelSetting")
+focus_previous = NodePath("../SaveControlsButton")
+focus_mode = 2
+text = "Keyboard"
+horizontal_alignment = 2
+
+[node name="AccelLabel" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 40.0
+offset_right = 88.0
+offset_bottom = 48.0
+text = "Accelerate"
+
+[node name="AccelSetting" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 40.0
+offset_right = 304.0
+offset_bottom = 48.0
+focus_neighbor_top = NodePath("../DeviceSetting")
+focus_neighbor_bottom = NodePath("../BrakeSetting")
+focus_next = NodePath("../BrakeSetting")
+focus_previous = NodePath("../DeviceSetting")
+focus_mode = 2
+text = "W"
+horizontal_alignment = 2
+
+[node name="BrakeLabel" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 56.0
+offset_right = 48.0
+offset_bottom = 64.0
+text = "Brake
+"
+
+[node name="BrakeSetting" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 56.0
+offset_right = 304.0
+offset_bottom = 64.0
+focus_neighbor_top = NodePath("../AccelSetting")
+focus_neighbor_bottom = NodePath("../RightSetting")
+focus_next = NodePath("../RightSetting")
+focus_previous = NodePath("../AccelSetting")
+focus_mode = 2
+text = "S"
+horizontal_alignment = 2
+
+[node name="RightLabel" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 72.0
+offset_right = 96.0
+offset_bottom = 80.0
+text = "Steer Right"
+
+[node name="RightSetting" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 72.0
+offset_right = 304.0
+offset_bottom = 80.0
+focus_neighbor_top = NodePath("../BrakeSetting")
+focus_neighbor_bottom = NodePath("../LeftSetting")
+focus_next = NodePath("../LeftSetting")
+focus_previous = NodePath("../BrakeSetting")
+focus_mode = 2
+text = "D"
+horizontal_alignment = 2
+
+[node name="LeftLabel" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 88.0
+offset_right = 88.0
+offset_bottom = 96.0
+text = "Steer Left"
+
+[node name="LeftSetting" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 88.0
+offset_right = 304.0
+offset_bottom = 96.0
+focus_neighbor_top = NodePath("../RightSetting")
+focus_neighbor_bottom = NodePath("../PauseSetting")
+focus_next = NodePath("../PauseSetting")
+focus_previous = NodePath("../RightSetting")
+focus_mode = 2
+text = "A"
+horizontal_alignment = 2
+
+[node name="PauseLabel" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 104.0
+offset_right = 48.0
+offset_bottom = 112.0
+text = "Pause"
+
+[node name="PauseSetting" type="Label" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 104.0
+offset_right = 304.0
+offset_bottom = 112.0
+focus_neighbor_top = NodePath("../LeftSetting")
+focus_neighbor_bottom = NodePath("../SaveControlsButton")
+focus_next = NodePath("../SaveControlsButton")
+focus_previous = NodePath("../LeftSetting")
+focus_mode = 2
+text = "Esc"
+horizontal_alignment = 2
+
+[node name="SaveControlsButton" type="Button" parent="ControlConfigScreen"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 136.0
+offset_right = 184.0
+offset_bottom = 144.0
+focus_neighbor_top = NodePath("../PauseSetting")
+focus_neighbor_bottom = NodePath("../DeviceSetting")
+focus_next = NodePath("../DeviceSetting")
+focus_previous = NodePath("../PauseSetting")
+text = "Save Control Bindings"
+
+[connection signal="focus_entered" from="MainConfigScreen/DisplayModeSetting" to="." method="_onSettingSelected" binds= [0]]
+[connection signal="focus_entered" from="MainConfigScreen/ResolutionSetting" to="." method="_onSettingSelected" binds= [1]]
+[connection signal="focus_entered" from="MainConfigScreen/MusicVolSetting" to="." method="_onSettingSelected" binds= [2]]
+[connection signal="focus_entered" from="MainConfigScreen/SFXVolSetting" to="." method="_onSettingSelected" binds= [3]]
+[connection signal="focus_entered" from="MainConfigScreen/MusicEmuSetting" to="." method="_onSettingSelected" binds= [4]]
+[connection signal="focus_entered" from="MainConfigScreen/AccelholdSetting" to="." method="_onSettingSelected" binds= [5]]
+[connection signal="focus_entered" from="MainConfigScreen/CRTFilterSetting" to="." method="_onSettingSelected" binds= [6]]
+[connection signal="button_down" from="MainConfigScreen/RebindButton" to="." method="_onEnterControlConfig"]
+[connection signal="focus_entered" from="MainConfigScreen/RebindButton" to="." method="_onSettingSelected" binds= [7]]
+[connection signal="button_down" from="MainConfigScreen/ResetButton" to="." method="_onResetSettings"]
+[connection signal="focus_entered" from="MainConfigScreen/ResetButton" to="." method="_onSettingSelected" binds= [8]]
+[connection signal="button_down" from="MainConfigScreen/SaveButton" to="." method="_onSaveSettings"]
+[connection signal="focus_entered" from="MainConfigScreen/SaveButton" to="." method="_onSettingSelected" binds= [9]]
+[connection signal="focus_entered" from="MainConfigScreen/ResetScoresButton" to="." method="_onSettingSelected" binds= [10]]
+[connection signal="focus_entered" from="ControlConfigScreen/DeviceSetting" to="." method="_onSettingSelected" binds= [11]]
+[connection signal="focus_entered" from="ControlConfigScreen/AccelSetting" to="." method="_onSettingSelected" binds= [12]]
+[connection signal="focus_entered" from="ControlConfigScreen/BrakeSetting" to="." method="_onSettingSelected" binds= [13]]
+[connection signal="focus_entered" from="ControlConfigScreen/RightSetting" to="." method="_onSettingSelected" binds= [14]]
+[connection signal="focus_entered" from="ControlConfigScreen/LeftSetting" to="." method="_onSettingSelected" binds= [15]]
+[connection signal="focus_entered" from="ControlConfigScreen/PauseSetting" to="." method="_onSettingSelected" binds= [16]]
+[connection signal="button_down" from="ControlConfigScreen/SaveControlsButton" to="." method="_onLeaveControlConfig" binds= [true]]
+[connection signal="focus_entered" from="ControlConfigScreen/SaveControlsButton" to="." method="_onSettingSelected" binds= [17]]
