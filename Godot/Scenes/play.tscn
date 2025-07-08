@@ -693,8 +693,8 @@ backSplinePoints = 20
 cameraRelativePosition = Vector2(-30, 30)
 nearClipPosition = -25.0
 farClipPosition = 700.0
-bg1TravelFactor = 200.0
-bg2TravelFactor = 100.0
+bg1TravelFactor = 182.0
+bg2TravelFactor = 145.0
 
 [node name="RoadSpline" type="Node2D" parent="SplineRenderer"]
 z_index = -512
@@ -714,38 +714,38 @@ bottomY = 128.0
 [node name="BGLayer1_1" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3800
 material = ExtResource("20_8wav0")
-position = Vector2(0, 88)
+position = Vector2(0, 80)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 512, 24)
+region_rect = Rect2(0, 96, 512, 32)
 
 [node name="BGLayer2_1" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3900
 material = ExtResource("20_8wav0")
-position = Vector2(0, 56)
+position = Vector2(0, 16)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 32, 512, 56)
+region_rect = Rect2(0, 0, 512, 96)
 
 [node name="BGLayer1_2" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3800
 material = ExtResource("20_8wav0")
-position = Vector2(-512, 88)
+position = Vector2(-512, 80)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 512, 24)
+region_rect = Rect2(0, 96, 512, 32)
 
 [node name="BGLayer2_2" type="Sprite2D" parent="SplineRenderer"]
 z_index = -3900
 material = ExtResource("20_8wav0")
-position = Vector2(-512, 56)
+position = Vector2(-512, 16)
 texture = ExtResource("20_16sbs")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 32, 512, 56)
+region_rect = Rect2(0, 0, 512, 96)
 
 [node name="SmackSoundPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("26_x7jon")

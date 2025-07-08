@@ -203,7 +203,7 @@ anchor_bottom = 1.0
 offset_top = -8.0
 offset_right = 200.0
 grow_vertical = 0
-text = "CC-BY-NC 2024 Maxim Hoxha"
+text = "CC-BY-NC 2025 Maxim Hoxha"
 
 [node name="VersionLabel" type="Label" parent="."]
 layout_mode = 1

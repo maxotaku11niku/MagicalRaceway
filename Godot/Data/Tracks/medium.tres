@@ -292,142 +292,142 @@ dist = 299500.0
 [sub_resource type="Resource" id="Resource_xipo5"]
 script = ExtResource("10_bjh6s")
 name = "Maxim Hoxha"
-score = 694206942
-stage = 69
-time = 418229
+score = 6000000
+stage = 7
+time = 50000
 
 [sub_resource type="Resource" id="Resource_pjcdh"]
 script = ExtResource("10_bjh6s")
 name = "Raymoo Hackery"
-score = 87329134
-stage = 20
-time = 137378
+score = 5700000
+stage = 7
+time = 47500
 
 [sub_resource type="Resource" id="Resource_g2a2t"]
 script = ExtResource("10_bjh6s")
 name = "Marisus Ksamey"
-score = 72389495
-stage = 18
-time = 121745
+score = 5400000
+stage = 6
+time = 45000
 
 [sub_resource type="Resource" id="Resource_r1umy"]
 script = ExtResource("10_bjh6s")
 name = "Succya Izaboi"
-score = 64529324
-stage = 17
-time = 1
+score = 5100000
+stage = 6
+time = 42500
 
 [sub_resource type="Resource" id="Resource_n57rd"]
 script = ExtResource("10_bjh6s")
 name = "Sanooee Gotcha"
-score = 59389245
-stage = 16
-time = 105219
+score = 4800000
+stage = 6
+time = 40000
 
 [sub_resource type="Resource" id="Resource_x7bfg"]
 script = ExtResource("10_bjh6s")
 name = "Yummy Gonepack"
-score = 55398593
-stage = 15
-time = 98589
+score = 4500000
+stage = 5
+time = 37500
 
 [sub_resource type="Resource" id="Resource_frprl"]
 script = ExtResource("10_bjh6s")
 name = "Raisin Udonge"
-score = 48387824
-stage = 14
-time = 94542
+score = 4200000
+stage = 5
+time = 35000
 
 [sub_resource type="Resource" id="Resource_53gpw"]
 script = ExtResource("10_bjh6s")
 name = "Yucurri Yakky"
-score = 42042042
-stage = 13
-time = 85876
+score = 3900000
+stage = 5
+time = 32500
 
 [sub_resource type="Resource" id="Resource_3eqa8"]
 script = ExtResource("10_bjh6s")
 name = "Remilia Scrlt"
-score = 36839459
-stage = 12
-time = 81465
+score = 3600000
+stage = 4
+time = 30000
 
 [sub_resource type="Resource" id="Resource_cop18"]
 script = ExtResource("10_bjh6s")
 name = "MimaIsNotGone!"
-score = 31234532
-stage = 11
-time = 73234
+score = 3300000
+stage = 4
+time = 27500
 
 [sub_resource type="Resource" id="Resource_2gpv0"]
 script = ExtResource("10_bjh6s")
 name = "KanaccOfMoriya"
-score = 24953643
-stage = 10
-time = 70303
+score = 3000000
+stage = 4
+time = 25000
 
 [sub_resource type="Resource" id="Resource_pb3ac"]
 script = ExtResource("10_bjh6s")
 name = "YuyukoEatALot"
-score = 19292929
-stage = 9
-time = 62143
+score = 2700000
+stage = 3
+time = 22500
 
 [sub_resource type="Resource" id="Resource_mu2ql"]
 script = ExtResource("10_bjh6s")
 name = "    pilf ajieS"
-score = 16482345
-stage = 8
-time = 52907
+score = 2400000
+stage = 3
+time = 20000
 
 [sub_resource type="Resource" id="Resource_nehnl"]
 script = ExtResource("10_bjh6s")
 name = "Purest Junko"
-score = 11111111
-stage = 7
-time = 42395
+score = 2100000
+stage = 3
+time = 17500
 
 [sub_resource type="Resource" id="Resource_qkccw"]
 script = ExtResource("10_bjh6s")
 name = "alway rember"
-score = 9992384
-stage = 6
-time = 36912
+score = 1800000
+stage = 2
+time = 15000
 
 [sub_resource type="Resource" id="Resource_ywfoy"]
 script = ExtResource("10_bjh6s")
 name = "Utsuhoe NUCULR"
-score = 7583924
-stage = 5
-time = 34543
+score = 1500000
+stage = 2
+time = 12500
 
 [sub_resource type="Resource" id="Resource_mhii3"]
 script = ExtResource("10_bjh6s")
 name = "lily white"
-score = 5578243
-stage = 4
-time = 27227
+score = 1200000
+stage = 2
+time = 10000
 
 [sub_resource type="Resource" id="Resource_cgbnw"]
 script = ExtResource("10_bjh6s")
 name = "Clownpiss¤¤¤¤¤"
-score = 4148782
-stage = 3
-time = 19529
+score = 900000
+stage = 1
+time = 7500
 
 [sub_resource type="Resource" id="Resource_m7pju"]
 script = ExtResource("10_bjh6s")
 name = "¤X-Æ-A-12¤µ¼ß£"
-score = 2348478
-stage = 2
-time = 14592
+score = 600000
+stage = 1
+time = 5000
 
 [sub_resource type="Resource" id="Resource_ouhdd"]
 script = ExtResource("10_bjh6s")
 name = "crino"
-score = 9
+score = 300000
 stage = 1
-time = 9100
+time = 2500
 
 [sub_resource type="Resource" id="Resource_1t8ie"]
 script = ExtResource("11_60bmf")

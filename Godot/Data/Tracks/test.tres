@@ -62,9 +62,9 @@ dist = 48000.0
 [sub_resource type="Resource" id="Resource_1q2q4"]
 script = ExtResource("5_yc3lv")
 name = "Maxim Hoxha"
-score = 5286004
+score = 5962280
 stage = 2
-time = 13441
+time = 12944
 
 [sub_resource type="Resource" id="Resource_wpin5"]
 script = ExtResource("5_yc3lv")

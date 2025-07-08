@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1_wm0mx")
 bgTexture = ExtResource("1_4xri6")
-bg1Region = Rect2i(0, 0, 512, 32)
-bg2Region = Rect2i(0, 32, 512, 48)
-bg1ZeroY = 32.0
-bg2ZeroY = 48.0
+bg1Region = Rect2i(0, 72, 512, 24)
+bg2Region = Rect2i(0, 0, 512, 72)
+bg1ZeroY = 24.0
+bg2ZeroY = 72.0

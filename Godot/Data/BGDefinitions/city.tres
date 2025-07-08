@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1_u2v1p")
 bgTexture = ExtResource("1_ex5kk")
-bg1Region = Rect2i(0, 0, 512, 32)
-bg2Region = Rect2i(0, 32, 512, 64)
-bg1ZeroY = 32.0
-bg2ZeroY = 64.0
+bg1Region = Rect2i(0, 88, 512, 40)
+bg2Region = Rect2i(0, 0, 512, 88)
+bg1ZeroY = 40.0
+bg2ZeroY = 88.0

@@ -93,10 +93,6 @@ class StaticSprite:
 	var sprite: RoadSprite
 	var position: Vector3
 	var scale: float
-	
-	func PositionSprite(charpos: Vector2, searchPoint: int) -> int:
-		if searchPoint < 0: return -1
-		return splRend.SetTruePositionsOfSprite(self, charpos, searchPoint)
 
 class DynamicSprite:
 	var splRend: SplineRenderer
@@ -895,7 +891,37 @@ func _process(delta: float) -> void:
 	for i in range(firstStaticSprite, firstStaticSprite + numStaticSpritesRendered):
 		var realInd := i % len(staticSprmngPool)
 		var curspr := staticSprmngPool[realInd]
-		startSearchPoint = curspr.PositionSprite(Vector2(xpos, dist), startSearchPoint)
+		#inlined for performance
+		if startSearchPoint >= 0:
+			#startSearchPoint = SetTruePositionsOfSprite(curspr, Vector2(xpos, dist), startSearchPoint)
+			var rSprite := curspr.sprite
+			var logPos := curspr.position - Vector3(0.0, 0.0, dist)
+			rSprite.logicalPosition = logPos
+			logPos.x -= xpos
+			var sDist := logPos.z
+			if startSearchPoint < splinePoints:
+				if sDist < farClipPosition:
+					if sDist >= nearClipPosition:
+						while sDist >= pointDists[startSearchPoint]:
+							startSearchPoint += 1
+						rSprite.layer = zeroPoint - startSearchPoint
+						if startSearchPoint >= crestPoint:
+							rSprite.layer -= 600
+						var lerpfac := (sDist - pointDists[startSearchPoint - 1])/(pointDists[startSearchPoint] - pointDists[startSearchPoint - 1])
+						var px := lerpf(pointXs[startSearchPoint - 1], pointXs[startSearchPoint], lerpfac)
+						var py := lerpf(pointYs[startSearchPoint - 1], pointYs[startSearchPoint], lerpfac)
+						var sc := lerpf(pointScales[startSearchPoint - 1], pointScales[startSearchPoint], lerpfac)
+						var cScale := 1 / curspr.scale
+						rSprite.visSprite.scale = Vector2(sc, sc) * cScale
+						px += logPos.x
+						py += logPos.y - cameraRelativePosition.y + rSprite.visSprite.region_rect.size.y * 0.5 * cScale
+						var ps := Vector2(px, -py)
+						ps *= sc
+						rSprite.screenPosition = ps + screenSize * 0.5
+					elif sDist >= nearClipPosition - 100.0:
+						rSprite.layer = -4080
+						startSearchPoint = 0
+					else: startSearchPoint = -1
 		if startSearchPoint < 0:
 			curspr.sprite.visible = false
 			curspr.sprite.monitoring = false
