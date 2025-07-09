@@ -73,6 +73,7 @@ var finalScore: int
 var edgeGrazeMult: float
 var xpos: float
 var yspeed: float
+var yaccel: float
 var centrifugalBalance: float
 var accumulatedXOffset: float
 var accelHold: bool
@@ -104,6 +105,7 @@ func Reset() -> void:
 	splineRenderer.dist = 0.0
 	splineRenderer.xpos = 0.0
 	yspeed = 0.0
+	yaccel = 0.0
 	score = 0.0
 	accumulatedXOffset = 0.0
 	stageNum = 1
@@ -184,6 +186,8 @@ func _process(delta: float) -> void:
 	var steerStrength: float = 0.0
 	var accelAmount: float = 0.0
 	var brakeAmount: float = 0.0
+	var yspeedold: float = yspeed
+	var yaccelold: float = yaccel
 	match state:
 		PSTATE_COUNTDOWN:
 			splineRenderer.paused = true
@@ -273,31 +277,34 @@ func _process(delta: float) -> void:
 							playerSprite.logicalPosition.y = 8.0
 							crashStage = CSTATE_NOTCRASHING
 							playerSprite.animationType = PlayerCharacter.PASTATE_NORMAL
-			yspeed += (accelAmount * accelPower - brakeAmount * brakePower) * delta
+			yspeed += yaccelold * delta
+			var avyspeed: float = (yspeed + yspeedold) * 0.5
+			var onRoad: bool = splineRenderer.IsPlayerOnRoad()
+			var dfac: float = dragFactor if onRoad else offRoadDragFactor
+			yaccel = (accelAmount * accelPower - brakeAmount * brakePower) - dfac * avyspeed * avyspeed * signf(avyspeed)
+			yspeed += (yaccel - yaccelold) * 0.5 * delta
 			if yspeed <= 0.0: yspeed = 0.0
+			avyspeed = (yspeed + yspeedold) * 0.5
 			var xspeed: float = turnPower * steerStrength
 			var turnxspeed: float = splineRenderer.curXcurve
-			var centrifugalForce: float = - centrifugalFactor * yspeed * yspeed * turnxspeed
+			var centrifugalForce: float = - centrifugalFactor * avyspeed * avyspeed * turnxspeed
 			centrifugalBalance = (xspeed + centrifugalForce) * delta
 			xpos += centrifugalBalance
 			if xspeed != 0.0: centrifugalBalance *= signf(xspeed)
 			else: centrifugalBalance *= signf(turnxspeed)
 			playerSprite.setSkidding(centrifugalBalance < 0.0 and absf(steerStrength) > 0.95)
-			var onRoad: bool = splineRenderer.IsPlayerOnRoad()
 			edgeGrazeMult = splineRenderer.GetEdgeGrazeMultiplier(centrifugalForce) if onRoad else 1.0
-			score += pow(yspeed, 1.4) * edgeGrazeMult * delta
-			dist += delta * yspeed
+			score += pow(avyspeed, 1.4) * edgeGrazeMult * delta
+			dist += delta * avyspeed
 			if yspeed <= 600.0: splineRenderer.nextDynamicSpriteSpawnDistance = dist + 1000.0
 			else: splineRenderer.nextDynamicSpriteSpawnDistance += 600.0 * delta
-			accumulatedXOffset -= turnxspeed * yspeed * delta
-			var dfac: float = dragFactor if onRoad else offRoadDragFactor
-			yspeed -= delta * dfac * yspeed * yspeed * signf(yspeed)
+			accumulatedXOffset -= turnxspeed * avyspeed * delta
 			var thisPassDist := splineRenderer.GetDynamicSpritePassDistance(dist, xpos)
 			if thisPassDist != 0.0:
 				oneShotSFXPlayers[PSFX_FLYBY].volume_db = 8.0 - absf(thisPassDist)
 				oneShotSFXPlayers[PSFX_FLYBY].play()
 				if thisPassDist > 0.0 and thisPassDist <= 24.0: #Graze!
-					score += (yspeed - 600.0)*exp(-thisPassDist*0.25)*(absf(turnxspeed)*absf(turnxspeed)*2000000.0 + 0.1)*1000.0
+					score += (avyspeed - 600.0)*exp(-thisPassDist*0.25)*(absf(turnxspeed)*absf(turnxspeed)*2000000.0 + 0.1)*1000.0
 			if runTimer: time -= delta
 			if xpos > splineRenderer.curSplit + 128.0:
 				playUI.displayGoBackNotif(true, 1)
@@ -342,17 +349,18 @@ func _process(delta: float) -> void:
 		PSTATE_WIN:
 			match winAnimationStage:
 				WSTATE_MOVING_TO_CENTER:
-					yspeed = 448.0
+					yspeed = 450.0
 					xpos = lerpf(-splineRenderer.curSplit, resetFromXpos, timeToTransition/4.0)
 					if timeToTransition <= 0.0:
 						winAnimationStage = WSTATE_SLOWING_DOWN
-						timeToTransition = 2.0
+						dist = currentTrack.endDistance + 1800.0
+						timeToTransition += 2.0
 				WSTATE_SLOWING_DOWN:
-					yspeed = 224.0 * timeToTransition
+					yspeed = 225.0 * timeToTransition
 					xpos = -splineRenderer.curSplit
 					if timeToTransition <= 0.0:
 						winAnimationStage = WSTATE_STATIONARY
-						timeToTransition = 5.0
+						timeToTransition += 5.0
 				WSTATE_STATIONARY:
 					yspeed = 0.0
 					dist = currentTrack.endDistance + 2250.0
@@ -376,7 +384,8 @@ func _process(delta: float) -> void:
 								timeToTransition = 5.0
 								playUI.displayDidntMakeLeaderboardNotif(true)
 								state = PSTATE_RETURN_TO_MENU
-			dist += delta * yspeed
+			var avyspeed: float = (yspeed + yspeedold) * 0.5
+			dist += delta * avyspeed
 			timeToTransition -= delta
 			if timeBonusCountdownNum > 0.0:
 				timeBonusCountdownNum -= delta * 10.0

@@ -5,10 +5,10 @@ shader_type canvas_item;
 
 uniform sampler2D screenTex : hint_screen_texture, repeat_disable, filter_nearest;
 
-const float minSigFac = 0.16;
-const float maxSigFac = 0.55;
-const float brightAdjust = 0.20;
-const float gamAdjust = 0.55;
+const float minSigFac = 0.2;
+const float maxSigFac = 0.6;
+const float brightAdjust = 0.25;
+const float gamAdjust = 0.60;
 
 const float fCoordOffsets1[7] = { -1.0, -0.6, -0.3, 0.0, 0.3, 0.6, 1.0 };
 const float fCoordOffsets2[3] = { -0.5, 0.0, 0.5 };
@@ -31,7 +31,9 @@ vec3 SampleBeam(vec2 sampCoord, vec2 origCoord, vec4 screenDim, float maxsig, fl
 
     //Simulate beam-phosphor glow characteristics
     vec3 widthFac = mix(vec3(maxsig), vec3(minsig), sqrt(max(sample1.rgb, vec3(0.0))));
-    vec3 linefac = distance(origCoord, sampCoord) * widthFac;
+    vec3 linefac1 = distance(origCoord, sampCoord) * widthFac;
+    vec3 linefac2 = linefac1 * linefac1;
+    vec3 linefac = mix(linefac1, linefac2, sqrt(sqrt(max(sample1.rgb, vec3(0.0)))));
     vec3 linegauss = GaussianApprox(linefac);
     return sample1.rgb * linegauss;
 }
@@ -39,14 +41,14 @@ vec3 SampleBeam(vec2 sampCoord, vec2 origCoord, vec4 screenDim, float maxsig, fl
 void fragment()
 {
     vec2 fragCoord = FRAGCOORD.xy;
-	vec4 screenDim;
-	screenDim.xy = vec2(textureSize(screenTex, 0)); 
-	screenDim.zw = vec2(1.0)/screenDim.xy;
+    vec4 screenDim;
+    screenDim.xy = vec2(textureSize(screenTex, 0)); 
+    screenDim.zw = vec2(1.0)/screenDim.xy;
     //Some constants that depend on the size of the output screen
     float downsamp = screenDim.y / 240.0;
     float minsig = (1.0/maxSigFac)/downsamp;
     float maxsig = (1.0/minSigFac)/downsamp;
-    float samplewidth = screenDim.x / 460.8;
+    float samplewidth = screenDim.x / 400.0;
     //Sample from the middle of a line to simulate actual scanline behaviour
     vec2 fragCoordNorm1 = vec2(fragCoord.x, (floor(fragCoord.y/downsamp) + 0.5) * downsamp);
     vec2 fragCoordNorm2;

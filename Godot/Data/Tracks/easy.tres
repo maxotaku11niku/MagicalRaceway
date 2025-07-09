@@ -220,133 +220,133 @@ time = 31963
 
 [sub_resource type="Resource" id="Resource_74gbk"]
 script = ExtResource("8_q1mxr")
-name = "Raymoo Hackery"
+name = "ILoveFutomaki"
 score = 3800000
 stage = 5
 time = 38000
 
 [sub_resource type="Resource" id="Resource_0ko23"]
 script = ExtResource("8_q1mxr")
-name = "Marisus Ksamey"
+name = "Crimson Fire"
 score = 3600000
 stage = 5
 time = 36000
 
 [sub_resource type="Resource" id="Resource_t3ita"]
 script = ExtResource("8_q1mxr")
-name = "Succya Izaboi"
+name = "Ice Of Justice"
 score = 3400000
 stage = 5
 time = 34000
 
 [sub_resource type="Resource" id="Resource_60hqc"]
 script = ExtResource("8_q1mxr")
-name = "Sanooee Gotcha"
+name = "Honour Of Evil"
 score = 3200000
 stage = 4
 time = 32000
 
 [sub_resource type="Resource" id="Resource_fdcsn"]
 script = ExtResource("8_q1mxr")
-name = "Yummy Gonepack"
+name = "PARTY RAIDEN!!"
 score = 3000000
 stage = 4
 time = 30000
 
 [sub_resource type="Resource" id="Resource_deyqp"]
 script = ExtResource("8_q1mxr")
-name = "Raisin Udonge"
+name = "BeansproutsNo1"
 score = 2800000
 stage = 4
 time = 28000
 
 [sub_resource type="Resource" id="Resource_841kb"]
 script = ExtResource("8_q1mxr")
-name = "Yucurri Yakky"
+name = "ILikeTyping"
 score = 2600000
 stage = 4
 time = 26000
 
 [sub_resource type="Resource" id="Resource_qxnmq"]
 script = ExtResource("8_q1mxr")
-name = "Remilia Scrlt"
+name = "ssssssssssssss"
 score = 2400000
 stage = 3
 time = 24000
 
 [sub_resource type="Resource" id="Resource_hjrh5"]
 script = ExtResource("8_q1mxr")
-name = "MimaIsNotGone!"
+name = "CaseClosed"
 score = 2200000
 stage = 3
 time = 22000
 
 [sub_resource type="Resource" id="Resource_vw3qs"]
 script = ExtResource("8_q1mxr")
-name = "KanaccOfMoriya"
+name = "SpringFlowers"
 score = 2000000
 stage = 3
 time = 20000
 
 [sub_resource type="Resource" id="Resource_aw4pc"]
 script = ExtResource("8_q1mxr")
-name = "YuyukoEatALot"
+name = "UmbrellaSquid"
 score = 1800000
 stage = 3
 time = 18000
 
 [sub_resource type="Resource" id="Resource_jmmk4"]
 script = ExtResource("8_q1mxr")
-name = "    pilf ajieS"
+name = "totes spooky"
 score = 1600000
 stage = 2
 time = 16000
 
 [sub_resource type="Resource" id="Resource_5pmkw"]
 script = ExtResource("8_q1mxr")
-name = "Purest Junko"
+name = "ISnipeYouIdiot"
 score = 1400000
 stage = 2
 time = 14000
 
 [sub_resource type="Resource" id="Resource_r7c21"]
 script = ExtResource("8_q1mxr")
-name = "alway rember"
+name = "punish me :3"
 score = 1200000
 stage = 2
 time = 12000
 
 [sub_resource type="Resource" id="Resource_mft3n"]
 script = ExtResource("8_q1mxr")
-name = "Utsuhoe NUCULR"
+name = "Futsure"
 score = 1000000
 stage = 2
 time = 10000
 
 [sub_resource type="Resource" id="Resource_nmgoa"]
 script = ExtResource("8_q1mxr")
-name = "lily white"
+name = "lightningbunny"
 score = 800000
 stage = 1
 time = 8000
 
 [sub_resource type="Resource" id="Resource_rq6d0"]
 script = ExtResource("8_q1mxr")
-name = "Clownpiss¤¤¤¤¤"
+name = "leave me alone"
 score = 600000
 stage = 1
 time = 6000
 
 [sub_resource type="Resource" id="Resource_85acl"]
 script = ExtResource("8_q1mxr")
-name = "¤X-Æ-A-12¤µ¼ß£"
+name = "minori ¤¤¤¤¤¤¤"
 score = 400000
 stage = 1
 time = 4000
 
 [sub_resource type="Resource" id="Resource_u5fud"]
 script = ExtResource("8_q1mxr")
-name = "crino"
+name = "DOKAAAAN!!1!1!"
 score = 200000
 stage = 1
 time = 2000
